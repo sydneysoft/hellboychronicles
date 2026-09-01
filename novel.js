@@ -5,13 +5,14 @@ const novelLanguage=document.body.dataset.novelLanguage||'en';
 const languageSelect=document.getElementById('languageSelect');
 const savedLanguage=localStorage.getItem('hellboy-language');
 const browserLanguage=(navigator.languages||[navigator.language||'']).some(language=>/^(uk|ru)(-|$)/i.test(language))?'uk':'en';
-if(!savedLanguage&&novelLanguage==='en'&&browserLanguage==='uk')location.replace('novel-uk.html');
+if(novelLanguage==='uk'&&!/^\/ua\/novel\/?$/.test(location.pathname))location.replace('/ua/novel');
+if(novelLanguage==='en'&&(savedLanguage==='uk'||(!savedLanguage&&browserLanguage==='uk')))location.replace('/ua/novel');
 document.body.classList.toggle('lang-uk',novelLanguage==='uk');
 languageSelect.value=novelLanguage;
 languageSelect.onchange=()=>{
   const language=languageSelect.value;
   localStorage.setItem('hellboy-language',language);
-  location.href=language==='uk'?'novel-uk.html':'novel.html';
+  location.href=language==='uk'?'/ua/novel':'/novel';
 };
 const setProgress=()=>{
   const available=document.documentElement.scrollHeight-innerHeight;

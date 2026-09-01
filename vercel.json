@@ -1,5 +1,9 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/ua", "destination": "/index.html" },
+    { "source": "/ua/novel", "destination": "/novel-uk.html" }
+  ],
   "headers": [
     {
       "source": "/pages/(.*)",

@@ -6,8 +6,15 @@ const params=new URLSearchParams(location.search);
 const requested=params.get('lang');
 const saved=localStorage.getItem('hellboy-language');
 const browserLanguage=(navigator.languages||[navigator.language||'']).some(language=>/^(uk|ru)(-|$)/i.test(language))?'uk':'en';
-let siteLanguage=requested==='uk'||requested==='en'?requested:(saved||browserLanguage);
+const isUkrainianRoute=/^\/ua(?:\/|$)/.test(location.pathname);
+const pathLanguage=isUkrainianRoute?'uk':null;
+let siteLanguage=pathLanguage||(requested==='uk'||requested==='en'?requested:(saved||browserLanguage));
 if(!translations[siteLanguage])siteLanguage='en';
+if(!isUkrainianRoute&&siteLanguage==='uk')location.replace('/ua');
+if(isUkrainianRoute){
+  const canonical=document.querySelector('link[rel="canonical"]');
+  if(canonical)canonical.href='https://hellboychronicles.vercel.app/ua';
+}
 const select=document.getElementById('languageSelect');
 const applyLanguage=language=>{
   siteLanguage=language;
@@ -17,9 +24,13 @@ const applyLanguage=language=>{
   document.querySelectorAll('[data-i18n]').forEach(element=>{const value=translations[language][element.dataset.i18n];if(value)element.textContent=value});
   document.querySelectorAll('[data-i18n-html]').forEach(element=>{const value=translations[language][element.dataset.i18nHtml];if(value)element.innerHTML=value});
   const novelLink=document.getElementById('novelLink');
-  if(novelLink)novelLink.href=language==='uk'?'novel-uk.html':'novel.html';
+  if(novelLink)novelLink.href=language==='uk'?'/ua/novel':'/novel';
   document.dispatchEvent(new CustomEvent('languagechange',{detail:{language,labels:translations[language]}}));
 };
 select.value=siteLanguage;
-select.onchange=()=>applyLanguage(select.value);
+select.onchange=()=>{
+  const language=select.value;
+  localStorage.setItem('hellboy-language',language);
+  location.href=language==='uk'?'/ua':'/';
+};
 applyLanguage(siteLanguage);
