@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="reader-modes.css">
 </head>
 <body>
   <header class="topbar">
@@ -17,7 +18,7 @@
       <span class="brand-mark">HC</span>
       <span><strong>HELLBOY</strong><small>CHRONICLES</small></span>
     </a>
-    <div class="chapter-status"><span>CHAPTER 01</span><strong id="progressText">PAGE 1 OF 20</strong></div>
+    <div class="chapter-status"><span>CHAPTER 01</span><strong id="progressText">CHOOSE YOUR FORMAT</strong></div>
     <a class="instagram" href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer">@HELLBOYCHRONICLES</a>
   </header>
 
@@ -28,7 +29,10 @@
       <p class="eyebrow">THE STONES OF SPARTA</p>
       <h1>THE FIRST<br>AWAKENING</h1>
       <p>Misha chooses Sparta—and begins a journey across Europe to recover the stones capable of protecting it from the Dark Empire.</p>
-      <button id="startReading" type="button">START READING <span>↓</span></button>
+      <div class="format-picker" aria-label="Choose reading format">
+        <button id="startReading" type="button"><small>ILLUSTRATED EDITION</small>READ THE COMIC <span>↓</span></button>
+        <a href="novel.html"><small>TEXT EDITION</small>READ THE NOVEL <span>→</span></a>
+      </div>
     </section>
 
     <section class="reader" id="reader" aria-label="Chapter 1 comic pages">

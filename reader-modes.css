@@ -1,0 +1,24 @@
+.format-picker{display:flex;gap:12px;margin-top:22px}
+.format-picker button,.format-picker a{min-width:210px;border:0;background:#d62f25;color:#fff;padding:16px 23px;font:800 16px 'Barlow Condensed';letter-spacing:.08em;cursor:pointer;text-decoration:none}
+.format-picker a{background:#f0e8d6;color:#080706}
+.format-picker small{display:block;font:600 10px Inter,sans-serif;letter-spacing:.12em;opacity:.7;margin-bottom:4px}
+.format-picker span{margin-left:18px}
+.novel-body{background:#0b0908}
+.library-link{color:#f0e8d6;font:700 14px 'Barlow Condensed';letter-spacing:.08em;text-decoration:none}
+.novel-hero{padding:100px 24px 70px;text-align:center;background:radial-gradient(circle at 50% 15%,#441713 0,transparent 35%)}
+.novel-hero .edition{color:#d7a83f;font:700 13px 'Barlow Condensed';letter-spacing:.22em}
+.novel-hero h1{max-width:850px;margin:14px auto 20px;font:800 clamp(48px,9vw,108px)/.82 'Barlow Condensed';letter-spacing:-.025em}
+.novel-hero p{max-width:620px;margin:auto;color:#bdb4a5;line-height:1.65}
+.novel-shell{display:grid;grid-template-columns:190px minmax(0,720px) 190px;justify-content:center;gap:36px;padding:40px 24px 140px}
+.novel-tools{position:sticky;top:110px;align-self:start;padding:18px;background:#13110f;border:1px solid #302b25}
+.novel-tools span{display:block;color:#d7a83f;font:700 11px 'Barlow Condensed';letter-spacing:.14em;margin-bottom:12px}
+.novel-tools button{width:42px;height:38px;background:#211d19;color:#f0e8d6;border:1px solid #3a342d;font-weight:700;cursor:pointer}
+.novel-tools a{display:block;color:#f0e8d6;font:700 13px 'Barlow Condensed';letter-spacing:.08em;text-decoration:none;margin-top:22px}
+.novel-copy{font-family:Georgia,'Times New Roman',serif;font-size:20px;line-height:1.9;color:#e7dece}
+.novel-copy p{margin:0 0 1.45em}
+.novel-copy .chapter-label,.novel-copy .chapter-end{text-align:center;color:#d7a83f;font:700 13px 'Barlow Condensed';letter-spacing:.18em}
+.novel-copy .chapter-title{text-align:center;font:800 clamp(36px,6vw,62px)/.9 'Barlow Condensed';margin:12px 0 50px}
+.novel-copy blockquote{margin:38px 0;padding:4px 28px;border-left:3px solid #d62f25;color:#f6ead7;font-style:italic;font-size:1.08em}
+.novel-copy .scene-break{text-align:center;color:#d62f25;letter-spacing:.8em;margin:42px 0}
+@media(max-width:900px){.novel-shell{grid-template-columns:minmax(0,720px)}.novel-tools{position:fixed;z-index:24;left:12px;right:12px;bottom:12px;top:auto;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#151310ed;backdrop-filter:blur(12px)}.novel-tools span{margin:0 auto 0 4px}.novel-tools a{margin:0 0 0 8px}.novel-copy{font-size:19px}}
+@media(max-width:720px){.format-picker{flex-direction:column;width:min(100%,320px)}.format-picker button,.format-picker a{width:100%}.novel-hero{padding-top:74px}.novel-shell{padding:25px 18px 110px}.novel-copy{font-size:18px;line-height:1.78}.novel-tools a{font-size:11px}}
