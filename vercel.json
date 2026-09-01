@@ -2,11 +2,28 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/ua", "destination": "/" },
-    { "source": "/ua/novel", "destination": "/novel-uk" }
+    { "source": "/ua/novel", "destination": "/novel-uk" },
+    { "source": "/folk-tales/turnip", "destination": "/turnip" },
+    { "source": "/ua/folk-tales/turnip", "destination": "/turnip-uk" },
+    { "source": "/folk-tales/turnip/comic", "destination": "/turnip-comic" },
+    { "source": "/ua/folk-tales/turnip/comic", "destination": "/turnip-comic-uk" },
+    { "source": "/ua/library", "destination": "/library" }
   ],
   "headers": [
     {
       "source": "/pages/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/pages-uk/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/turnip-pages/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/turnip-pages-uk/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     }
   ]

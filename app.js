@@ -1,11 +1,13 @@
 const totalPages=20;
+const comicLanguage=/^\/ua(?:\/|$)/.test(location.pathname)?'uk':'en';
+const pagesFolder=comicLanguage==='uk'?'/pages-uk':'/pages';
 const pages=document.getElementById('pages');
 for(let page=1;page<=totalPages;page++){
   const number=String(page).padStart(2,'0');
   const figure=document.createElement('figure');
   figure.className='comic-page';
   figure.dataset.page=page;
-  figure.innerHTML=`<img loading="${page<3?'eager':'lazy'}" decoding="async" src="pages/page-${number}.webp" alt="Hellboy Chronicles chapter 1, page ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
+  figure.innerHTML=`<img loading="${page<3?'eager':'lazy'}" decoding="async" src="${pagesFolder}/page-${number}.webp" alt="Hellboy Chronicles chapter 1, page ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
