@@ -41,6 +41,10 @@
         <span>READING SIZE</span>
         <button id="fontDown" type="button" aria-label="Decrease text size">A−</button>
         <button id="fontUp" type="button" aria-label="Increase text size">A+</button>
+        <button id="openVocabulary" class="vocab-open" type="button" aria-label="Open saved words">
+          <span aria-hidden="true">★</span><span>SAVED WORDS</span><b id="vocabCount">0</b>
+        </button>
+        <p class="vocab-hint">Select a word in the text to see its Ukrainian translation.</p>
         <a href="index.html">← COMIC EDITION</a>
       </aside>
 
@@ -233,6 +237,7 @@
       <div aria-hidden="true"></div>
     </div>
   </main>
+  <script src="/vocabulary.js"></script>
   <script src="/novel.js"></script>
 </body>
 </html>
