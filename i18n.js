@@ -5,7 +5,8 @@ const translations={
 const params=new URLSearchParams(location.search);
 const requested=params.get('lang');
 const saved=localStorage.getItem('hellboy-language');
-let siteLanguage=requested==='uk'||requested==='en'?requested:(saved||'en');
+const browserLanguage=(navigator.languages||[navigator.language||'']).some(language=>/^(uk|ru)(-|$)/i.test(language))?'uk':'en';
+let siteLanguage=requested==='uk'||requested==='en'?requested:(saved||browserLanguage);
 if(!translations[siteLanguage])siteLanguage='en';
 const select=document.getElementById('languageSelect');
 const applyLanguage=language=>{
