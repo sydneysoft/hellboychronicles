@@ -41,7 +41,11 @@
         <span>РОЗМІР ТЕКСТУ</span>
         <button id="fontDown" type="button" aria-label="Зменшити текст">A−</button>
         <button id="fontUp" type="button" aria-label="Збільшити текст">A+</button>
-        <a href="index.html?lang=uk">← КОМІКС</a>
+        <button id="openVocabulary" class="vocab-open" type="button" aria-label="Відкрити збережені слова">
+          <span aria-hidden="true">★</span><span>ЗБЕРЕЖЕНІ СЛОВА</span><b id="vocabCount">0</b>
+        </button>
+        <p class="vocab-hint">Виділіть слово в тексті, щоб побачити переклад.</p>
+        <a href="/ua">← КОМІКС</a>
       </aside>
 
       <article class="novel-copy">
@@ -233,6 +237,8 @@
       <div aria-hidden="true"></div>
     </div>
   </main>
+  <script src="/ua-lemmas.js"></script>
+  <script src="/vocabulary.js"></script>
   <script src="/novel.js"></script>
 </body>
 </html>
