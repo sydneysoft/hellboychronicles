@@ -5,14 +5,15 @@ for(let page=1;page<=totalPages;page++){
   const figure=document.createElement('figure');
   figure.className='comic-page';
   figure.dataset.page=page;
-  figure.innerHTML=`<img loading="${page<3?'eager':'lazy'}" decoding="async" src="pages/page-${number}.webp" alt="Hellboy Chronicles chapter 1, page ${page}"><figcaption>PAGE ${number}</figcaption>`;
+  figure.innerHTML=`<img loading="${page<3?'eager':'lazy'}" decoding="async" src="pages/page-${number}.webp" alt="Hellboy Chronicles chapter 1, page ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
 let currentPage=1;
 const updateStatus=page=>{
   currentPage=page;
-  document.getElementById('progressText').textContent=`PAGE ${page} OF ${totalPages}`;
+  const labels=translations[siteLanguage];
+  document.getElementById('progressText').textContent=`${labels.page} ${page} ${labels.of} ${totalPages}`;
   document.getElementById('controlPage').textContent=`${page} / ${totalPages}`;
   document.getElementById('progressBar').style.width=`${page/totalPages*100}%`;
   history.replaceState(null,'',`#page-${page}`);
@@ -35,3 +36,7 @@ lightbox.onclick=event=>{if(event.target===lightbox)lightbox.close()};
 addEventListener('keydown',event=>{if(event.key==='ArrowLeft')goTo(currentPage-1);if(event.key==='ArrowRight')goTo(currentPage+1);if(event.key==='Escape'&&lightbox.open)lightbox.close()});
 const initial=location.hash.match(/page-(\d+)/);
 if(initial)setTimeout(()=>goTo(Number(initial[1])),200);
+document.addEventListener('languagechange',event=>{
+  figures.forEach((figure,index)=>figure.querySelector('figcaption').textContent=`${event.detail.labels.page} ${String(index+1).padStart(2,'0')}`);
+  updateStatus(currentPage);
+});

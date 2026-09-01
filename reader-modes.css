@@ -3,6 +3,7 @@
 .format-picker a{background:#f0e8d6;color:#080706}
 .format-picker small{display:block;font:600 10px Inter,sans-serif;letter-spacing:.12em;opacity:.7;margin-bottom:4px}
 .format-picker span{margin-left:18px}
+.top-actions{display:flex;align-items:center;gap:15px}.language-control select{appearance:none;border:1px solid #51493f;background:#171411;color:#f0e8d6;padding:8px 25px 8px 10px;border-radius:4px;font:700 13px 'Barlow Condensed';letter-spacing:.06em;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#d7a83f 50%),linear-gradient(135deg,#d7a83f 50%,transparent 50%);background-position:calc(100% - 11px) 50%,calc(100% - 7px) 50%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .novel-body{background:#0b0908}
 .library-link{color:#f0e8d6;font:700 14px 'Barlow Condensed';letter-spacing:.08em;text-decoration:none}
 .novel-hero{padding:100px 24px 70px;text-align:center;background:radial-gradient(circle at 50% 15%,#441713 0,transparent 35%)}
@@ -21,4 +22,4 @@
 .novel-copy blockquote{margin:38px 0;padding:4px 28px;border-left:3px solid #d62f25;color:#f6ead7;font-style:italic;font-size:1.08em}
 .novel-copy .scene-break{text-align:center;color:#d62f25;letter-spacing:.8em;margin:42px 0}
 @media(max-width:900px){.novel-shell{grid-template-columns:minmax(0,720px)}.novel-tools{position:fixed;z-index:24;left:12px;right:12px;bottom:12px;top:auto;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#151310ed;backdrop-filter:blur(12px)}.novel-tools span{margin:0 auto 0 4px}.novel-tools a{margin:0 0 0 8px}.novel-copy{font-size:19px}}
-@media(max-width:720px){.format-picker{flex-direction:column;width:min(100%,320px)}.format-picker button,.format-picker a{width:100%}.novel-hero{padding-top:74px}.novel-shell{padding:25px 18px 110px}.novel-copy{font-size:18px;line-height:1.78}.novel-tools a{font-size:11px}}
+@media(max-width:720px){.format-picker{flex-direction:column;width:min(100%,320px)}.format-picker button,.format-picker a{width:100%}.top-actions{gap:8px}.language-control select{padding-block:7px}.novel-hero{padding-top:74px}.novel-shell{padding:25px 18px 110px}.novel-copy{font-size:18px;line-height:1.78}.novel-tools a{font-size:11px}}

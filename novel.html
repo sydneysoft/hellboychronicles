@@ -12,14 +12,17 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="reader-modes.css">
 </head>
-<body class="novel-body">
+<body class="novel-body" data-edition="novel" data-novel-language="en">
   <header class="topbar">
     <a class="brand" href="index.html" aria-label="Hellboy Chronicles library">
       <span class="brand-mark">HC</span>
       <span><strong>HELLBOY</strong><small>CHRONICLES</small></span>
     </a>
     <div class="chapter-status"><span>TEXT EDITION · CHAPTER I</span><strong id="novelProgress">0% READ</strong></div>
-    <a class="library-link" href="index.html">COMIC EDITION</a>
+    <div class="top-actions">
+      <label class="language-control"><span class="sr-only">Language</span><select id="languageSelect" aria-label="Language"><option value="en">EN</option><option value="uk">УКР</option></select></label>
+      <a class="library-link" href="index.html?lang=en">COMIC EDITION</a>
+    </div>
   </header>
   <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 

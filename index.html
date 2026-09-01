@@ -12,42 +12,45 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="reader-modes.css">
 </head>
-<body>
+<body data-edition="comic">
   <header class="topbar">
     <a class="brand" href="#top" aria-label="Hellboy Chronicles home">
       <span class="brand-mark">HC</span>
       <span><strong>HELLBOY</strong><small>CHRONICLES</small></span>
     </a>
-    <div class="chapter-status"><span>CHAPTER 01</span><strong id="progressText">CHOOSE YOUR FORMAT</strong></div>
-    <a class="instagram" href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer">@HELLBOYCHRONICLES</a>
+    <div class="chapter-status"><span data-i18n="chapter">CHAPTER 01</span><strong id="progressText" data-i18n="chooseFormat">CHOOSE YOUR FORMAT</strong></div>
+    <div class="top-actions">
+      <label class="language-control"><span class="sr-only">Language</span><select id="languageSelect" aria-label="Language"><option value="en">EN</option><option value="uk">УКР</option></select></label>
+      <a class="instagram" href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer">@HELLBOYCHRONICLES</a>
+    </div>
   </header>
 
   <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
   <main id="top">
     <section class="hero">
-      <p class="eyebrow">THE STONES OF SPARTA</p>
-      <h1>THE FIRST<br>AWAKENING</h1>
-      <p>Misha chooses Sparta—and begins a journey across Europe to recover the stones capable of protecting it from the Dark Empire.</p>
+      <p class="eyebrow" data-i18n="series">THE STONES OF SPARTA</p>
+      <h1 data-i18n-html="title">THE FIRST<br>AWAKENING</h1>
+      <p data-i18n="description">Misha chooses Sparta—and begins a journey across Europe to recover the stones capable of protecting it from the Dark Empire.</p>
       <div class="format-picker" aria-label="Choose reading format">
-        <button id="startReading" type="button"><small>ILLUSTRATED EDITION</small>READ THE COMIC <span>↓</span></button>
-        <a href="novel.html"><small>TEXT EDITION</small>READ THE NOVEL <span>→</span></a>
+        <button id="startReading" type="button"><small data-i18n="illustratedEdition">ILLUSTRATED EDITION</small><span data-i18n="readComic">READ THE COMIC</span> <span>↓</span></button>
+        <a id="novelLink" href="novel.html"><small data-i18n="textEdition">TEXT EDITION</small><span data-i18n="readNovel">READ THE NOVEL</span> <span>→</span></a>
       </div>
     </section>
 
     <section class="reader" id="reader" aria-label="Chapter 1 comic pages">
       <div class="reader-heading">
-        <div><span>CHAPTER 01</span><h2>PRECISION &amp; RHYTHM</h2></div>
-        <p>Scroll to read · Tap any page to focus</p>
+        <div><span data-i18n="chapter">CHAPTER 01</span><h2 data-i18n="precisionRhythm">PRECISION &amp; RHYTHM</h2></div>
+        <p data-i18n="comicHint">Scroll to read · Tap any page to focus</p>
       </div>
       <div class="pages" id="pages"></div>
     </section>
 
     <section class="ending">
-      <span>END OF CHAPTER 01</span>
-      <h2>THE JOURNEY HAS JUST BEGUN.</h2>
-      <p>Follow the chronicle for the next stone.</p>
-      <a href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer">FOLLOW ON INSTAGRAM</a>
+      <span data-i18n="endChapter">END OF CHAPTER 01</span>
+      <h2 data-i18n="journeyBegun">THE JOURNEY HAS JUST BEGUN.</h2>
+      <p data-i18n="followNext">Follow the chronicle for the next stone.</p>
+      <a href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer" data-i18n="followInstagram">FOLLOW ON INSTAGRAM</a>
     </section>
   </main>
 
@@ -59,6 +62,7 @@
   </nav>
 
   <dialog id="lightbox"><button id="closeLightbox" aria-label="Close">×</button><img id="lightboxImage" alt="Focused comic page"></dialog>
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,11 +1,19 @@
 const copy=document.querySelector('.novel-copy');
 const progressBar=document.getElementById('progressBar');
 const progressText=document.getElementById('novelProgress');
+const novelLanguage=document.body.dataset.novelLanguage||'en';
+const languageSelect=document.getElementById('languageSelect');
+languageSelect.value=novelLanguage;
+languageSelect.onchange=()=>{
+  const language=languageSelect.value;
+  localStorage.setItem('hellboy-language',language);
+  location.href=language==='uk'?'novel-uk.html':'novel.html';
+};
 const setProgress=()=>{
   const available=document.documentElement.scrollHeight-innerHeight;
   const percent=available>0?Math.min(100,Math.max(0,scrollY/available*100)):0;
   progressBar.style.width=`${percent}%`;
-  progressText.textContent=`${Math.round(percent)}% READ`;
+  progressText.textContent=novelLanguage==='uk'?`${Math.round(percent)}% ПРОЧИТАНО`:`${Math.round(percent)}% READ`;
   localStorage.setItem('hellboy-novel-progress',String(scrollY));
 };
 addEventListener('scroll',setProgress,{passive:true});
