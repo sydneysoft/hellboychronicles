@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080706">
+  <meta name="description" content="Hellboy Chronicles — a cinematic graphic novel about Misha, Sparta, and the Infinity Stones.">
+  <title>Hellboy Chronicles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Hellboy Chronicles home">
+      <span class="brand-mark">HC</span>
+      <span><strong>HELLBOY</strong><small>CHRONICLES</small></span>
+    </a>
+    <div class="chapter-status"><span>CHAPTER 01</span><strong id="progressText">PAGE 1 OF 20</strong></div>
+    <a class="instagram" href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer">@HELLBOYCHRONICLES</a>
+  </header>
+
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">THE STONES OF SPARTA</p>
+      <h1>THE FIRST<br>AWAKENING</h1>
+      <p>Misha chooses Sparta—and begins a journey across Europe to recover the stones capable of protecting it from the Dark Empire.</p>
+      <button id="startReading" type="button">START READING <span>↓</span></button>
+    </section>
+
+    <section class="reader" id="reader" aria-label="Chapter 1 comic pages">
+      <div class="reader-heading">
+        <div><span>CHAPTER 01</span><h2>PRECISION &amp; RHYTHM</h2></div>
+        <p>Scroll to read · Tap any page to focus</p>
+      </div>
+      <div class="pages" id="pages"></div>
+    </section>
+
+    <section class="ending">
+      <span>END OF CHAPTER 01</span>
+      <h2>THE JOURNEY HAS JUST BEGUN.</h2>
+      <p>Follow the chronicle for the next stone.</p>
+      <a href="https://instagram.com/hellboychronicles" target="_blank" rel="noreferrer">FOLLOW ON INSTAGRAM</a>
+    </section>
+  </main>
+
+  <nav class="reader-controls" aria-label="Reader controls">
+    <button id="previousPage" type="button" aria-label="Previous page">←</button>
+    <span id="controlPage">1 / 20</span>
+    <button id="nextPage" type="button" aria-label="Next page">→</button>
+    <button id="toTop" type="button" aria-label="Back to top">↑</button>
+  </nav>
+
+  <dialog id="lightbox"><button id="closeLightbox" aria-label="Close">×</button><img id="lightboxImage" alt="Focused comic page"></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
