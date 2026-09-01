@@ -23,3 +23,30 @@
 .novel-copy .scene-break{text-align:center;color:#d62f25;letter-spacing:.8em;margin:42px 0}
 @media(max-width:900px){.novel-shell{grid-template-columns:minmax(0,720px)}.novel-tools{position:fixed;z-index:24;left:12px;right:12px;bottom:12px;top:auto;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#151310ed;backdrop-filter:blur(12px)}.novel-tools span{margin:0 auto 0 4px}.novel-tools a{margin:0 0 0 8px}.novel-copy{font-size:19px}}
 @media(max-width:720px){.format-picker{flex-direction:column;width:min(100%,320px)}.format-picker button,.format-picker a{width:100%}.top-actions{gap:8px}.language-control select{padding-block:7px}.novel-hero{padding-top:74px}.novel-shell{padding:25px 18px 110px}.novel-copy{font-size:18px;line-height:1.78}.novel-tools a{font-size:11px}}
+
+/* Ukrainian edition: a restrained Kobzar / Shevchenko-inspired visual language. */
+body.lang-uk{--red:#0057b7;--gold:#ffd700;--cream:#f4ead2;--panel:#111820;--muted:#b9ad94;background:#0b1218}
+body.lang-uk .topbar{background:rgba(7,17,25,.95);border-bottom-color:#35506a}
+body.lang-uk .topbar:after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:6px;background:repeating-linear-gradient(90deg,#0057b7 0 8px,#ffd700 8px 16px,#7b1c22 16px 20px,#f4ead2 20px 24px)}
+body.lang-uk .brand-mark{background:linear-gradient(#0057b7 0 50%,#ffd700 50%);color:#101820;text-shadow:0 1px #fff6}
+body.lang-uk .language-control select{border-color:#d6b800;background-color:#102438}
+body.lang-uk .hero{background:radial-gradient(circle at 50% 35%,#073b6580 0,transparent 38%),linear-gradient(#07111aaa,#07111a),url('pages/page-01.webp') center 18%/cover}
+body.lang-uk .hero:before,body.lang-uk .novel-hero:before{content:"";position:absolute;z-index:1;left:0;right:0;top:0;height:11px;background:repeating-linear-gradient(45deg,#7b1c22 0 5px,#f4ead2 5px 10px,#0057b7 10px 15px,#ffd700 15px 20px)}
+body.lang-uk .hero h1,body.lang-uk .reader-heading h2,body.lang-uk .ending h2,body.lang-uk .novel-hero h1,body.lang-uk .novel-copy .chapter-title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;letter-spacing:.015em}
+body.lang-uk .hero h1{text-shadow:0 5px 0 #07111a,0 10px 40px #000}
+body.lang-uk .format-picker button{background:#0057b7}
+body.lang-uk .format-picker a{background:#ffd700;color:#101820}
+body.lang-uk .comic-page{border-color:#3a5265;box-shadow:0 18px 70px #02070b}
+body.lang-uk .comic-page figcaption{border-color:#d6b800;background:#0a1b29e8;color:#ffd700}
+body.lang-uk .ending{background:linear-gradient(#0b1218,#061c30)}
+body.lang-uk.novel-body{background:#17130e}
+body.lang-uk .novel-hero{position:relative;background:radial-gradient(circle at 50% 15%,#17466a 0,transparent 38%),linear-gradient(#0b1218,#17130e)}
+body.lang-uk .novel-copy{position:relative;background:#e9dec4;color:#281f17;padding:clamp(28px,6vw,70px);border:1px solid #b9a77f;box-shadow:0 25px 80px #0009;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;line-height:1.78}
+body.lang-uk .novel-copy:before,body.lang-uk .novel-copy:after{content:"◆ ◇ ◆ ◇ ◆ ◇ ◆";display:block;text-align:center;color:#7b1c22;letter-spacing:.42em;font-size:13px}
+body.lang-uk .novel-copy:before{margin-bottom:40px}body.lang-uk .novel-copy:after{margin-top:50px}
+body.lang-uk .novel-copy .chapter-label,body.lang-uk .novel-copy .chapter-end{color:#0057b7}
+body.lang-uk .novel-copy blockquote{color:#13283a;border-left-color:#0057b7;font-weight:700}
+body.lang-uk .novel-copy .scene-break{color:#7b1c22}
+body.lang-uk .novel-tools{background:#10202d;border-color:#405b70}
+body.lang-uk .novel-tools button{background:#17364d;border-color:#d6b800}
+@media(max-width:720px){body.lang-uk .topbar:after{bottom:-5px;height:4px}body.lang-uk .novel-copy{padding:30px 22px;font-size:20px}}

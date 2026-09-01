@@ -13,6 +13,7 @@ const applyLanguage=language=>{
   siteLanguage=language;
   localStorage.setItem('hellboy-language',language);
   document.documentElement.lang=language;
+  document.body.classList.toggle('lang-uk',language==='uk');
   document.querySelectorAll('[data-i18n]').forEach(element=>{const value=translations[language][element.dataset.i18n];if(value)element.textContent=value});
   document.querySelectorAll('[data-i18n-html]').forEach(element=>{const value=translations[language][element.dataset.i18nHtml];if(value)element.innerHTML=value});
   const novelLink=document.getElementById('novelLink');

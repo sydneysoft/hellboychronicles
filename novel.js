@@ -6,6 +6,7 @@ const languageSelect=document.getElementById('languageSelect');
 const savedLanguage=localStorage.getItem('hellboy-language');
 const browserLanguage=(navigator.languages||[navigator.language||'']).some(language=>/^(uk|ru)(-|$)/i.test(language))?'uk':'en';
 if(!savedLanguage&&novelLanguage==='en'&&browserLanguage==='uk')location.replace('novel-uk.html');
+document.body.classList.toggle('lang-uk',novelLanguage==='uk');
 languageSelect.value=novelLanguage;
 languageSelect.onchange=()=>{
   const language=languageSelect.value;
