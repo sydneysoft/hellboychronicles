@@ -10,10 +10,10 @@ const isUkrainianRoute=/^\/ua(?:\/|$)/.test(location.pathname);
 const pathLanguage=isUkrainianRoute?'uk':null;
 let siteLanguage=pathLanguage||(requested==='uk'||requested==='en'?requested:(saved||browserLanguage));
 if(!translations[siteLanguage])siteLanguage='en';
-if(!isUkrainianRoute&&siteLanguage==='uk')location.replace('/ua');
+if(!isUkrainianRoute&&siteLanguage==='uk')location.replace('/ua/hellboy/comic');
 if(isUkrainianRoute){
   const canonical=document.querySelector('link[rel="canonical"]');
-  if(canonical)canonical.href='https://hellboychronicles.vercel.app/ua';
+  if(canonical)canonical.href='https://hellboychronicles.vercel.app/ua/hellboy/comic';
 }
 const select=document.getElementById('languageSelect');
 const applyLanguage=language=>{
@@ -31,6 +31,6 @@ select.value=siteLanguage;
 select.onchange=()=>{
   const language=select.value;
   localStorage.setItem('hellboy-language',language);
-  location.href=language==='uk'?'/ua':'/';
+  location.href=language==='uk'?'/ua/hellboy/comic':'/hellboy/comic';
 };
 applyLanguage(siteLanguage);
