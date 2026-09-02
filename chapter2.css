@@ -1,0 +1,18 @@
+.comic-chapter-break {
+  display: grid;
+  gap: 8px;
+  margin-top: 50px;
+  padding: 72px 20px 34px;
+  border-top: 1px solid #302c26;
+  text-align: center;
+}
+
+.comic-chapter-break span {
+  color: var(--gold);
+  font: 700 13px "Barlow Condensed";
+  letter-spacing: 0.18em;
+}
+
+.comic-chapter-break strong {
+  font: 800 clamp(34px, 6vw, 66px) / 0.9 "Barlow Condensed";
+}

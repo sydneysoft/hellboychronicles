@@ -1,9 +1,22 @@
-const totalPages=20;
 const comicLanguage=siteLanguage;
+const totalPages=comicLanguage==='uk'?20:21;
 const pagesFolder=comicLanguage==='uk'?'/pages-uk':'/pages';
+if(comicLanguage==='uk'){
+  document.getElementById('comicChapterRange').textContent='РОЗДІЛ 01';
+  document.getElementById('comicReaderRange').textContent='РОЗДІЛ 01';
+  document.getElementById('comicReaderTitle').textContent='ТОЧНІСТЬ І РИТМ';
+  document.getElementById('comicEndingLabel').textContent='КІНЕЦЬ РОЗДІЛУ 01';
+  document.getElementById('comicEndingTitle').textContent='ПОДОРОЖ ЛИШЕ ПОЧАЛАСЯ.';
+}
 document.body.dataset.comicLanguage=comicLanguage;
 const pages=document.getElementById('pages');
 for(let page=1;page<=totalPages;page++){
+  if(page===21){
+    const divider=document.createElement('div');
+    divider.className='comic-chapter-break';
+    divider.innerHTML='<span>CHAPTER 02</span><strong>THE GARDEN BESIDE THE BUS STOP</strong>';
+    pages.appendChild(divider);
+  }
   const number=String(page).padStart(2,'0');
   const figure=document.createElement('figure');
   figure.className='comic-page';
@@ -12,6 +25,7 @@ for(let page=1;page<=totalPages;page++){
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
+document.getElementById('controlPage').textContent=`1 / ${totalPages}`;
 let currentPage=1;
 const updateStatus=page=>{
   currentPage=page;
