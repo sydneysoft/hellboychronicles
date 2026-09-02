@@ -3,23 +3,23 @@
   "rewrites": [
     {
       "source": "/ua",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/library",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/ua/library",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/hellboy/comic",
-      "destination": "/hellboy-comic.html"
+      "destination": "/hellboy-comic"
     },
     {
       "source": "/ua/hellboy/comic",
-      "destination": "/hellboy-comic.html"
+      "destination": "/hellboy-comic"
     },
     {
       "source": "/ua/novel",
