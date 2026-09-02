@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#080706">
   <meta name="description" content="Hellboy Chronicles — a cinematic graphic novel about Misha, Sparta, and the Infinity Stones.">
   <title>Hellboy Chronicles</title>
-  <link rel="canonical" href="https://hellboychronicles.vercel.app/">
+  <link rel="canonical" href="https://hellboychronicles.vercel.app/hellboy/comic">
   <link rel="alternate" hreflang="en" href="https://hellboychronicles.vercel.app/">
-  <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua">
+  <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua/hellboy/comic">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="reader-modes.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/reader-modes.css">
 </head>
 <body data-edition="comic">
   <header class="topbar">
@@ -38,7 +38,7 @@
       <p data-i18n="description">Misha chooses Sparta—and begins a journey across Europe to recover the stones capable of protecting it from the Dark Empire.</p>
       <div class="format-picker" aria-label="Choose reading format">
         <button id="startReading" type="button"><small data-i18n="illustratedEdition">ILLUSTRATED EDITION</small><span data-i18n="readComic">READ THE COMIC</span> <span>↓</span></button>
-        <a id="novelLink" href="novel.html"><small data-i18n="textEdition">TEXT EDITION</small><span data-i18n="readNovel">READ THE NOVEL</span> <span>→</span></a>
+        <a id="novelLink" href="/novel"><small data-i18n="textEdition">TEXT EDITION</small><span data-i18n="readNovel">READ THE NOVEL</span> <span>→</span></a>
       </div>
     </section>
 
@@ -66,7 +66,7 @@
   </nav>
 
   <dialog id="lightbox"><button id="closeLightbox" aria-label="Close">×</button><img id="lightboxImage" alt="Focused comic page"></dialog>
-  <script src="i18n.js"></script>
-  <script src="app.js"></script>
+  <script src="/i18n.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>
