@@ -2,28 +2,24 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/library.html"
-    },
-    {
       "source": "/ua",
-      "destination": "/library.html"
+      "destination": "/index.html"
     },
     {
       "source": "/library",
-      "destination": "/library.html"
+      "destination": "/index.html"
     },
     {
       "source": "/ua/library",
-      "destination": "/library.html"
+      "destination": "/index.html"
     },
     {
       "source": "/hellboy/comic",
-      "destination": "/index.html"
+      "destination": "/hellboy-comic.html"
     },
     {
       "source": "/ua/hellboy/comic",
-      "destination": "/index.html"
+      "destination": "/hellboy-comic.html"
     },
     {
       "source": "/ua/novel",
