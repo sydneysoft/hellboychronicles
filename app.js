@@ -1,6 +1,7 @@
 const comicLanguage=siteLanguage;
 const totalPages=comicLanguage==='uk'?20:21;
 const pagesFolder=comicLanguage==='uk'?'/pages-uk':'/pages';
+const pageDimensions=[[864,1821],[863,1822],[864,1820],[864,1821],[864,1821],[1024,1536],[1024,1536],[971,1620],[1013,1552],[1013,1552],[1014,1551],[1013,1552],[1014,1551],[1014,1551],[1013,1552],[1014,1551],[1014,1551],[1014,1551],[1014,1551],[1014,1551],[864,1821]];
 if(comicLanguage==='uk'){
   document.getElementById('comicChapterRange').textContent='РОЗДІЛ 01';
   document.getElementById('comicReaderRange').textContent='РОЗДІЛ 01';
@@ -20,11 +21,12 @@ for(let page=1;page<=totalPages;page++){
     pages.appendChild(divider);
   }
   const number=String(page).padStart(2,'0');
+  const [imageWidth,imageHeight]=pageDimensions[page-1];
   const figure=document.createElement('figure');
   figure.className='comic-page';
   figure.id=`page-${page}`;
   figure.dataset.page=page;
-  figure.innerHTML=`<img loading="${page<3?'eager':'lazy'}" decoding="async" src="${pagesFolder}/page-${number}.webp" alt="${comicLanguage==='uk'?'Хроніки Геллбоя, розділ 1, сторінка':'Hellboy Chronicles chapter 1, page'} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
+  figure.innerHTML=`<img width="${imageWidth}" height="${imageHeight}" loading="${page<3?'eager':'lazy'}" decoding="async" src="${pagesFolder}/page-${number}.webp" alt="${comicLanguage==='uk'?'Хроніки Геллбоя, розділ 1, сторінка':'Hellboy Chronicles chapter 1, page'} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
