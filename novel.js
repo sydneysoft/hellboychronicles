@@ -22,8 +22,14 @@ languageSelect.onchange=()=>{
   localStorage.setItem('hellboy-language',language);
   location.href=language==='uk'?`${ukrainianRoute}?lang=uk`:`${englishRoute}?lang=en`;
 };
-if(novelChapterOneJump&&novelChapterOne)novelChapterOneJump.onclick=event=>{event.preventDefault();novelChapterOne.scrollIntoView({behavior:'auto',block:'start'});history.replaceState(null,'','#chapter-1')};
-if(novelChapterTwoJump&&novelChapterTwo)novelChapterTwoJump.onclick=event=>{event.preventDefault();novelChapterTwo.scrollIntoView({behavior:'auto',block:'start'});history.replaceState(null,'','#chapter-2')};
+const jumpToNovelChapter=chapter=>{
+  const previousBehavior=document.documentElement.style.scrollBehavior;
+  document.documentElement.style.scrollBehavior='auto';
+  chapter.scrollIntoView({behavior:'auto',block:'start'});
+  document.documentElement.style.scrollBehavior=previousBehavior;
+};
+if(novelChapterOneJump&&novelChapterOne)novelChapterOneJump.onclick=event=>{event.preventDefault();jumpToNovelChapter(novelChapterOne);history.replaceState(null,'','#chapter-1')};
+if(novelChapterTwoJump&&novelChapterTwo)novelChapterTwoJump.onclick=event=>{event.preventDefault();jumpToNovelChapter(novelChapterTwo);history.replaceState(null,'','#chapter-2')};
 const setProgress=()=>{
   const available=document.documentElement.scrollHeight-innerHeight;
   const percent=available>0?Math.min(100,Math.max(0,scrollY/available*100)):0;
@@ -51,6 +57,6 @@ const savedSize=localStorage.getItem('hellboy-font-size');
 if(savedSize)copy.style.fontSize=`${savedSize}px`;
 const savedProgress=Number(localStorage.getItem(progressKey));
 const requestedChapter=location.hash==='#chapter-2'?novelChapterTwo:location.hash==='#chapter-1'?novelChapterOne:null;
-if(requestedChapter)setTimeout(()=>requestedChapter.scrollIntoView({behavior:'auto',block:'start'}),120);
+if(requestedChapter)setTimeout(()=>jumpToNovelChapter(requestedChapter),120);
 else if(savedProgress>0)setTimeout(()=>scrollTo({top:savedProgress}),120);
 setProgress();
