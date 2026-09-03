@@ -48,6 +48,8 @@ const observer=new IntersectionObserver(entries=>{
 },{threshold:[.2,.45,.7]});
 figures.forEach(figure=>observer.observe(figure));
 const goTo=page=>figures[Math.max(0,Math.min(totalPages-1,page-1))].scrollIntoView({behavior:'smooth',block:'start'});
+document.getElementById('comicChapter1Jump').onclick=event=>{event.preventDefault();goTo(1)};
+document.getElementById('comicChapter2Jump').onclick=event=>{event.preventDefault();goTo(21)};
 document.getElementById('previousPage').onclick=()=>goTo(currentPage-1);
 document.getElementById('nextPage').onclick=()=>goTo(currentPage+1);
 document.getElementById('toTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});

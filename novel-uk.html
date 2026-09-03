@@ -14,6 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/reader-modes.css">
+  <link rel="stylesheet" href="/chapter2.css">
 </head>
 <body class="novel-body" data-edition="novel" data-novel-language="uk">
   <header class="topbar">
@@ -49,7 +50,11 @@
       </aside>
 
       <article class="novel-copy">
-        <p class="chapter-label">РОЗДІЛ I</p>
+        <nav class="chapter-switcher novel-chapter-switcher" aria-label="Оберіть розділ">
+          <a class="is-active" href="#chapter-1">РОЗДІЛ 1</a>
+          <a href="/novel?lang=en#chapter-2">CHAPTER 2 · EN</a>
+        </nav>
+        <p class="chapter-label" id="chapter-1">РОЗДІЛ I</p>
         <h1 class="chapter-title">ПЕРШІ ДВА КАМЕНІ НЕСКІНЧЕННОСТІ</h1>
 
         <p>На краю Європи вітер спускався з височини, немов попередження. Міша стояв на хребті над Спартою й дивився, як уздовж далекого східного кордону палають вогні. То були не багаття. Це було світло, яке пожирало міста й залишало по собі лише чутки.</p>

@@ -6,19 +6,24 @@ const englishRoute=document.body.dataset.englishRoute||'/novel';
 const ukrainianRoute=document.body.dataset.ukrainianRoute||'/ua/novel';
 const progressKey=document.body.dataset.progressKey||'hellboy-novel-progress';
 const languageSelect=document.getElementById('languageSelect');
+const requestedLanguage=new URLSearchParams(location.search).get('lang');
 const novelChapterOneJump=document.getElementById('novelChapter1Jump');
 const novelChapterTwoJump=document.getElementById('novelChapter2Jump');
+const novelChapterOne=document.getElementById('chapter-1');
 const novelChapterTwo=document.getElementById('chapter-2');
 const savedLanguage=localStorage.getItem('hellboy-language');
 const browserLanguage=(navigator.languages||[navigator.language||'']).some(language=>/^(uk|ru)(-|$)/i.test(language))?'uk':'en';
-if(novelLanguage==='en'&&(savedLanguage==='uk'||(!savedLanguage&&browserLanguage==='uk')))location.replace(ukrainianRoute);
+if(requestedLanguage==='en'||requestedLanguage==='uk')localStorage.setItem('hellboy-language',requestedLanguage);
+if(novelLanguage==='en'&&requestedLanguage!=='en'&&(savedLanguage==='uk'||(!savedLanguage&&browserLanguage==='uk')))location.replace(ukrainianRoute);
 document.body.classList.toggle('lang-uk',novelLanguage==='uk');
 languageSelect.value=novelLanguage;
 languageSelect.onchange=()=>{
   const language=languageSelect.value;
   localStorage.setItem('hellboy-language',language);
-  location.href=language==='uk'?ukrainianRoute:englishRoute;
+  location.href=language==='uk'?`${ukrainianRoute}?lang=uk`:`${englishRoute}?lang=en`;
 };
+if(novelChapterOneJump&&novelChapterOne)novelChapterOneJump.onclick=event=>{event.preventDefault();novelChapterOne.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','#chapter-1')};
+if(novelChapterTwoJump&&novelChapterTwo)novelChapterTwoJump.onclick=event=>{event.preventDefault();novelChapterTwo.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','#chapter-2')};
 const setProgress=()=>{
   const available=document.documentElement.scrollHeight-innerHeight;
   const percent=available>0?Math.min(100,Math.max(0,scrollY/available*100)):0;
