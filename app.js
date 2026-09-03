@@ -1,15 +1,15 @@
 const comicLanguage=siteLanguage;
-const totalPages=comicLanguage==='uk'?20:21;
+const totalPages=21;
 const pagesFolder=comicLanguage==='uk'?'/pages-uk':'/pages';
 const pageDimensions=[[864,1821],[863,1822],[864,1820],[864,1821],[864,1821],[1024,1536],[1024,1536],[971,1620],[1013,1552],[1013,1552],[1014,1551],[1013,1552],[1014,1551],[1014,1551],[1013,1552],[1014,1551],[1014,1551],[1014,1551],[1014,1551],[1014,1551],[864,1821]];
 if(comicLanguage==='uk'){
-  document.getElementById('comicChapterRange').textContent='РОЗДІЛ 01';
-  document.getElementById('comicReaderRange').textContent='РОЗДІЛ 01';
-  document.getElementById('comicReaderTitle').textContent='ТОЧНІСТЬ І РИТМ';
-  document.getElementById('comicEndingLabel').textContent='КІНЕЦЬ РОЗДІЛУ 01';
-  document.getElementById('comicEndingTitle').textContent='ПОДОРОЖ ЛИШЕ ПОЧАЛАСЯ.';
+  document.getElementById('comicChapterRange').textContent='РОЗДІЛИ 01–02';
+  document.getElementById('comicReaderRange').textContent='РОЗДІЛИ 01–02';
+  document.getElementById('comicReaderTitle').textContent='ТОЧНІСТЬ, РИТМ І БЕРЛІНСЬКА НІЧ';
+  document.getElementById('comicEndingLabel').textContent='КІНЕЦЬ РОЗДІЛУ 02';
+  document.getElementById('comicEndingTitle').textContent='ПОДОРОЖ ТРИВАЄ.';
   document.getElementById('comicChapter1Jump').textContent='РОЗДІЛ 1';
-  document.getElementById('comicChapter2Jump').hidden=true;
+  document.getElementById('comicChapter2Jump').textContent='РОЗДІЛ 2';
 }
 document.body.dataset.comicLanguage=comicLanguage;
 const pages=document.getElementById('pages');
@@ -17,7 +17,7 @@ for(let page=1;page<=totalPages;page++){
   if(page===21){
     const divider=document.createElement('div');
     divider.className='comic-chapter-break';
-    divider.innerHTML='<span>CHAPTER 02</span><strong>THE GARDEN BESIDE THE BUS STOP</strong>';
+    divider.innerHTML=comicLanguage==='uk'?'<span>РОЗДІЛ 02</span><strong>САД БІЛЯ АВТОБУСНОЇ ЗУПИНКИ</strong>':'<span>CHAPTER 02</span><strong>THE GARDEN BESIDE THE BUS STOP</strong>';
     pages.appendChild(divider);
   }
   const number=String(page).padStart(2,'0');
@@ -26,7 +26,8 @@ for(let page=1;page<=totalPages;page++){
   figure.className='comic-page';
   figure.id=`page-${page}`;
   figure.dataset.page=page;
-  figure.innerHTML=`<img width="${imageWidth}" height="${imageHeight}" loading="${page<3?'eager':'lazy'}" decoding="async" src="${pagesFolder}/page-${number}.webp" alt="${comicLanguage==='uk'?'Хроніки Геллбоя, розділ 1, сторінка':'Hellboy Chronicles chapter 1, page'} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
+  const chapterNumber=page===21?2:1;
+  figure.innerHTML=`<img width="${imageWidth}" height="${imageHeight}" loading="${page<3?'eager':'lazy'}" decoding="async" src="${pagesFolder}/page-${number}.webp" alt="${comicLanguage==='uk'?`Хроніки Геллбоя, розділ ${chapterNumber}, сторінка`:`Hellboy Chronicles chapter ${chapterNumber}, page`} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
