@@ -14,6 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/reader-modes.css">
+  <link rel="stylesheet" href="/chapter2.css">
 </head>
 <body class="novel-body" data-edition="novel" data-novel-language="en">
   <header class="topbar">
@@ -49,7 +50,11 @@
       </aside>
 
       <article class="novel-copy">
-        <p class="chapter-label">CHAPTER I</p>
+        <nav class="chapter-switcher novel-chapter-switcher" aria-label="Choose novel chapter">
+          <a id="novelChapter1Jump" class="is-active" href="#chapter-1">CHAPTER 1</a>
+          <a id="novelChapter2Jump" href="#chapter-2">CHAPTER 2</a>
+        </nav>
+        <p class="chapter-label" id="chapter-1">CHAPTER I</p>
         <h1 class="chapter-title">THE FIRST TWO INFINITY STONES</h1>
 
         <p>At the edge of Europe the wind came down off the high ground like a warning. Misha stood on a ridge above Sparta and watched distant fires burn along the eastern frontier. They were not campfires. They were the kind of light that ate towns and left only rumor.</p>
@@ -235,7 +240,7 @@
         <p class="chapter-end">END OF CHAPTER I</p>
 
         <p class="scene-break">◆</p>
-        <p class="chapter-label">CHAPTER II</p>
+        <p class="chapter-label" id="chapter-2">CHAPTER II</p>
         <h2 class="chapter-title">THE GARDEN BESIDE THE BUS STOP</h2>
 
         <p><strong>Berlin — 2:00 a.m.</strong></p>

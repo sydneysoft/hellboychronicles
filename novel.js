@@ -6,6 +6,9 @@ const englishRoute=document.body.dataset.englishRoute||'/novel';
 const ukrainianRoute=document.body.dataset.ukrainianRoute||'/ua/novel';
 const progressKey=document.body.dataset.progressKey||'hellboy-novel-progress';
 const languageSelect=document.getElementById('languageSelect');
+const novelChapterOneJump=document.getElementById('novelChapter1Jump');
+const novelChapterTwoJump=document.getElementById('novelChapter2Jump');
+const novelChapterTwo=document.getElementById('chapter-2');
 const savedLanguage=localStorage.getItem('hellboy-language');
 const browserLanguage=(navigator.languages||[navigator.language||'']).some(language=>/^(uk|ru)(-|$)/i.test(language))?'uk':'en';
 if(novelLanguage==='en'&&(savedLanguage==='uk'||(!savedLanguage&&browserLanguage==='uk')))location.replace(ukrainianRoute);
@@ -22,6 +25,11 @@ const setProgress=()=>{
   progressBar.style.width=`${percent}%`;
   progressText.textContent=novelLanguage==='uk'?`${Math.round(percent)}% ПРОЧИТАНО`:`${Math.round(percent)}% READ`;
   localStorage.setItem(progressKey,String(scrollY));
+  if(novelChapterOneJump&&novelChapterTwoJump&&novelChapterTwo){
+    const inChapterTwo=scrollY+220>=novelChapterTwo.offsetTop;
+    novelChapterOneJump.classList.toggle('is-active',!inChapterTwo);
+    novelChapterTwoJump.classList.toggle('is-active',inChapterTwo);
+  }
 };
 addEventListener('scroll',setProgress,{passive:true});
 document.getElementById('fontDown').onclick=()=>{

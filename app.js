@@ -7,6 +7,8 @@ if(comicLanguage==='uk'){
   document.getElementById('comicReaderTitle').textContent='ТОЧНІСТЬ І РИТМ';
   document.getElementById('comicEndingLabel').textContent='КІНЕЦЬ РОЗДІЛУ 01';
   document.getElementById('comicEndingTitle').textContent='ПОДОРОЖ ЛИШЕ ПОЧАЛАСЯ.';
+  document.getElementById('comicChapter1Jump').textContent='РОЗДІЛ 1';
+  document.getElementById('comicChapter2Jump').hidden=true;
 }
 document.body.dataset.comicLanguage=comicLanguage;
 const pages=document.getElementById('pages');
@@ -20,6 +22,7 @@ for(let page=1;page<=totalPages;page++){
   const number=String(page).padStart(2,'0');
   const figure=document.createElement('figure');
   figure.className='comic-page';
+  figure.id=`page-${page}`;
   figure.dataset.page=page;
   figure.innerHTML=`<img loading="${page<3?'eager':'lazy'}" decoding="async" src="${pagesFolder}/page-${number}.webp" alt="${comicLanguage==='uk'?'Хроніки Геллбоя, розділ 1, сторінка':'Hellboy Chronicles chapter 1, page'} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
   pages.appendChild(figure);
@@ -33,6 +36,8 @@ const updateStatus=page=>{
   document.getElementById('progressText').textContent=`${labels.page} ${page} ${labels.of} ${totalPages}`;
   document.getElementById('controlPage').textContent=`${page} / ${totalPages}`;
   document.getElementById('progressBar').style.width=`${page/totalPages*100}%`;
+  document.getElementById('comicChapter1Jump').classList.toggle('is-active',page<21);
+  document.getElementById('comicChapter2Jump').classList.toggle('is-active',page>=21);
   history.replaceState(null,'',`#page-${page}`);
 };
 const observer=new IntersectionObserver(entries=>{
