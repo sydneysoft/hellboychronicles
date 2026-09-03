@@ -47,9 +47,9 @@ const observer=new IntersectionObserver(entries=>{
   if(visible)updateStatus(Number(visible.target.dataset.page));
 },{threshold:[.2,.45,.7]});
 figures.forEach(figure=>observer.observe(figure));
-const goTo=page=>figures[Math.max(0,Math.min(totalPages-1,page-1))].scrollIntoView({behavior:'smooth',block:'start'});
-document.getElementById('comicChapter1Jump').onclick=event=>{event.preventDefault();goTo(1)};
-document.getElementById('comicChapter2Jump').onclick=event=>{event.preventDefault();goTo(21)};
+const goTo=(page,behavior='smooth')=>figures[Math.max(0,Math.min(totalPages-1,page-1))].scrollIntoView({behavior,block:'start'});
+document.getElementById('comicChapter1Jump').onclick=event=>{event.preventDefault();goTo(1,'auto')};
+document.getElementById('comicChapter2Jump').onclick=event=>{event.preventDefault();goTo(21,'auto')};
 document.getElementById('previousPage').onclick=()=>goTo(currentPage-1);
 document.getElementById('nextPage').onclick=()=>goTo(currentPage+1);
 document.getElementById('toTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});
@@ -61,7 +61,7 @@ document.getElementById('closeLightbox').onclick=()=>lightbox.close();
 lightbox.onclick=event=>{if(event.target===lightbox)lightbox.close()};
 addEventListener('keydown',event=>{if(event.key==='ArrowLeft')goTo(currentPage-1);if(event.key==='ArrowRight')goTo(currentPage+1);if(event.key==='Escape'&&lightbox.open)lightbox.close()});
 const initial=location.hash.match(/page-(\d+)/);
-if(initial)setTimeout(()=>goTo(Number(initial[1])),200);
+if(initial)setTimeout(()=>goTo(Number(initial[1]),'auto'),200);
 document.addEventListener('languagechange',event=>{
   figures.forEach((figure,index)=>figure.querySelector('figcaption').textContent=`${event.detail.labels.page} ${String(index+1).padStart(2,'0')}`);
   updateStatus(currentPage);
