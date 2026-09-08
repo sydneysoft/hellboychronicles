@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#24150c">
+  <meta name="description" content="Read the complete text edition of thirteen Ukrainian folk tales in English or Ukrainian.">
+  <title>Ukrainian Folk Tales — Text Collection</title>
+  <link rel="canonical" href="https://hellboychronicles.vercel.app/folk-tales/collection">
+  <link rel="alternate" hreflang="en" href="https://hellboychronicles.vercel.app/folk-tales/collection">
+  <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua/folk-tales/collection">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/reader-modes.css?v=collection-text-1">
+</head>
+<body class="novel-body collection-text-body">
+  <header class="topbar">
+    <a class="brand" id="brandLink" href="/library"><span class="brand-mark">FT</span><span><strong id="brandName">FOLK</strong><small id="brandSub">TALES</small></span></a>
+    <div class="chapter-status"><span id="editionLabel">TEXT EDITION</span><strong id="storyStatus">13 STORIES · VOLUME I</strong></div>
+    <div class="top-actions"><label class="language-control"><span class="sr-only">Language</span><select id="languageSelect"><option value="en">🇬🇧</option><option value="uk">🇺🇦</option></select></label><a class="library-link" id="libraryLink" href="/library">LIBRARY</a></div>
+  </header>
+  <div class="progress"><span id="readingProgress"></span></div>
+  <main id="top">
+    <section class="novel-hero collection-text-hero">
+      <p class="edition" id="heroEyebrow">EXPANDED PROSE · VOLUME I</p>
+      <h1 id="heroTitle">UKRAINIAN FOLK TALES</h1>
+      <p id="heroCopy">Thirteen beloved tales retold with fuller scenes, dialogue, atmosphere, and endings.</p>
+      <div class="format-picker collection-format-picker"><a id="graphicLink" href="/folk-tales/collection/comic"><small id="graphicSmall">ILLUSTRATED PAGES</small><span id="graphicText">GRAPHIC EDITION</span></a><a class="is-current" href="#contents"><small id="textSmall">EXPANDED STORIES</small><span id="textText">TEXT EDITION</span></a></div>
+    </section>
+    <section class="collection-contents" id="contents" aria-labelledby="contentsTitle">
+      <span id="contentsEyebrow">VOLUME I</span><h2 id="contentsTitle">CONTENTS</h2><p id="contentsHint">Choose a tale. Your place is remembered on this device.</p>
+      <ol id="storyMenu"></ol>
+    </section>
+    <section class="collection-reading-shell">
+      <aside class="novel-tools collection-tools" aria-label="Reading controls">
+        <span id="readingSizeLabel">READING SIZE</span><div><button id="smallerText" aria-label="Smaller text">A−</button> <button id="largerText" aria-label="Larger text">A+</button></div>
+        <a id="contentsLink" href="#contents">CONTENTS ↑</a><a id="sideGraphicLink" href="/folk-tales/collection/comic">GRAPHIC EDITION →</a>
+      </aside>
+      <article class="novel-copy collection-copy" id="storyReader" aria-live="polite"></article>
+      <aside class="story-jump" aria-label="Story navigation"><span id="storyJumpLabel">IN THIS VOLUME</span><ol id="storyJumpMenu"></ol></aside>
+    </section>
+    <nav class="collection-story-nav" aria-label="Story navigation"><button id="previousStory">← <span>PREVIOUS TALE</span></button><strong id="storyCounter">1 / 13</strong><button id="nextStory"><span>NEXT TALE</span> →</button></nav>
+    <section class="ending collection-text-ending"><span id="endingLabel">END OF VOLUME I</span><h2 id="endingTitle">EVERY TALE LIVES WHEN IT IS RETOLD.</h2><a id="endingLibraryLink" href="/library">BACK TO LIBRARY</a></section>
+  </main>
+  <script src="/folk-collection-text.js?v=collection-text-1"></script>
+</body>
+</html>

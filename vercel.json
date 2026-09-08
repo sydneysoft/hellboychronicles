@@ -50,6 +50,14 @@
       "destination": "/folk-collection-comic"
     },
     {
+      "source": "/folk-tales/collection",
+      "destination": "/folk-collection-text"
+    },
+    {
+      "source": "/ua/folk-tales/collection",
+      "destination": "/folk-collection-text"
+    },
+    {
       "source": "/folk-tales/mitten",
       "destination": "/mitten"
     },
