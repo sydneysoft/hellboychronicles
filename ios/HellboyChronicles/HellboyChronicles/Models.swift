@@ -35,6 +35,13 @@ struct Story: Identifiable, Hashable {
     func body(for language: ReaderLanguage) -> String {
         language == .english ? englishBody : ukrainianBody
     }
+
+    func paragraphs(for language: ReaderLanguage) -> [String] {
+        body(for: language)
+            .components(separatedBy: "\n\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
 }
 
 struct SavedWord: Identifiable, Codable, Hashable {
