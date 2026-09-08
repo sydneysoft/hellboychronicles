@@ -51,22 +51,19 @@ jobs:
                   image = original.convert('RGB')
                   original_size = source.stat().st_size
                   original_dims = image.size
-                  scale = 1.0
                   chosen = None
                   chosen_q = None
+                  chosen_scale = None
 
-                  # Keep original resolution whenever possible. If even a conservative
-                  # WebP quality cannot hit the cap, reduce dimensions gradually.
-                  for scale_try in (1.0, 0.94, 0.88, 0.82, 0.76):
-                      if scale_try == 1.0:
-                          candidate = image
-                      else:
-                          candidate = image.resize(
-                              (round(original_dims[0] * scale_try), round(original_dims[1] * scale_try)),
-                              Image.Resampling.LANCZOS,
-                          )
+                  # Preserve resolution first. If necessary, reduce dimensions slightly
+                  # rather than destroying text clarity with extremely low quality.
+                  for scale_try in (1.0, 0.94, 0.88, 0.82, 0.76, 0.70, 0.64, 0.58):
+                      candidate = image if scale_try == 1.0 else image.resize(
+                          (round(original_dims[0] * scale_try), round(original_dims[1] * scale_try)),
+                          Image.Resampling.LANCZOS,
+                      )
 
-                      lo, hi = 30, 88
+                      lo, hi = 24, 88
                       best = None
                       best_q = None
                       while lo <= hi:
@@ -79,22 +76,30 @@ jobs:
                               hi = q - 1
 
                       if best is not None:
-                          chosen, chosen_q, scale = best, best_q, scale_try
+                          chosen = best
+                          chosen_q = best_q
+                          chosen_scale = scale_try
                           break
 
                   if chosen is None:
-                      # Last-resort safety path; keeps the page under the hard cap.
-                      candidate = image.resize(
-                          (round(original_dims[0] * 0.70), round(original_dims[1] * 0.70)),
-                          Image.Resampling.LANCZOS,
-                      )
-                      chosen_q = 28
-                      chosen = encode(candidate, chosen_q)
-                      scale = 0.70
+                      # Absolute safety path: step down until the requested cap is met.
+                      scale_try = 0.54
+                      while scale_try >= 0.40 and chosen is None:
+                          candidate = image.resize(
+                              (round(original_dims[0] * scale_try), round(original_dims[1] * scale_try)),
+                              Image.Resampling.LANCZOS,
+                          )
+                          for q in (24, 22, 20, 18):
+                              data = encode(candidate, q)
+                              if len(data) <= TARGET:
+                                  chosen = data
+                                  chosen_q = q
+                                  chosen_scale = scale_try
+                                  break
+                          scale_try -= 0.04
 
-                  # Enforce the requested hard limit.
-                  if len(chosen) > LIMIT:
-                      raise RuntimeError(f'{source.name} is {len(chosen)} bytes, over 130 KB')
+                  if chosen is None or len(chosen) > LIMIT:
+                      raise RuntimeError(f'Could not compress {source.name} below 130 KB')
 
                   destination = OUT / source.with_suffix('.webp').name
                   destination.write_bytes(chosen)
@@ -103,7 +108,8 @@ jobs:
                       'bytes': len(chosen),
                       'kb': round(len(chosen) / 1024, 1),
                       'quality': chosen_q,
-                      'scale': scale,
+                      'scale': chosen_scale,
+                      'dimensions': [round(original_dims[0] * chosen_scale), round(original_dims[1] * chosen_scale)],
                       'original_kb': round(original_size / 1024, 1),
                   })
 
