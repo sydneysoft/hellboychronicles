@@ -33,6 +33,8 @@
     <section class="collection-reading-shell">
       <aside class="novel-tools collection-tools" aria-label="Reading controls">
         <span id="readingSizeLabel">READING SIZE</span><div><button id="smallerText" aria-label="Smaller text">A−</button> <button id="largerText" aria-label="Larger text">A+</button></div>
+        <button id="openVocabulary" class="vocab-open" type="button" aria-label="Open saved words"><span aria-hidden="true">★</span><span id="savedWordsLabel">SAVED WORDS</span><b id="vocabCount">0</b></button>
+        <p class="vocab-hint" id="vocabHint">Select a word to see its Ukrainian translation.</p>
         <a id="contentsLink" href="#contents">CONTENTS ↑</a><a id="sideGraphicLink" href="/folk-tales/collection/comic">GRAPHIC EDITION →</a>
       </aside>
       <article class="novel-copy collection-copy" id="storyReader" aria-live="polite"></article>
@@ -41,6 +43,7 @@
     <nav class="collection-story-nav" aria-label="Story navigation"><button id="previousStory">← <span>PREVIOUS TALE</span></button><strong id="storyCounter">1 / 13</strong><button id="nextStory"><span>NEXT TALE</span> →</button></nav>
     <section class="ending collection-text-ending"><span id="endingLabel">END OF VOLUME I</span><h2 id="endingTitle">EVERY TALE LIVES WHEN IT IS RETOLD.</h2><a id="endingLibraryLink" href="/library">BACK TO LIBRARY</a></section>
   </main>
-  <script src="/folk-collection-text.js?v=collection-text-1"></script>
+  <script src="/folk-collection-text.js?v=collection-text-2"></script>
+  <script src="/vocabulary.js?v=collection-text-2"></script>
 </body>
 </html>
