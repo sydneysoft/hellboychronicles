@@ -45,6 +45,10 @@ struct SelectableReaderText: UIViewRepresentable {
             view.attributedText = attributed
         }
         view.accessibilityLanguage = language.localeIdentifier
+
+        // Tell the shared audio player which tale is currently open. The same
+        // context can be reused by a future native graphic-novel reader.
+        ReadingContextStore.shared.detectStory(containing: text, language: language)
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
