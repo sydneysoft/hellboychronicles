@@ -27,7 +27,7 @@ struct SelectableReaderText: UIViewRepresentable {
     func updateUIView(_ view: UITextView, context: Context) {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        paragraph.paragraphSpacing = 18
+        paragraph.paragraphSpacing = 0
 
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.serif)
             ?? UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
@@ -45,6 +45,12 @@ struct SelectableReaderText: UIViewRepresentable {
             view.attributedText = attributed
         }
         view.accessibilityLanguage = language.localeIdentifier
+    }
+
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
+        guard let width = proposal.width else { return nil }
+        let size = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude))
+        return CGSize(width: width, height: ceil(size.height))
     }
 
     final class Coordinator: NSObject, UITextViewDelegate {
