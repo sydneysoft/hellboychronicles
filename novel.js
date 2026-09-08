@@ -60,3 +60,11 @@ const requestedChapter=location.hash==='#chapter-2'?novelChapterTwo:location.has
 if(requestedChapter)setTimeout(()=>jumpToNovelChapter(requestedChapter),120);
 else if(savedProgress>0)setTimeout(()=>scrollTo({top:savedProgress}),120);
 setProgress();
+
+// Vocabulary writing practice is loaded after vocabulary.js has created its popup/dialog UI.
+if(document.querySelector('.word-popup')&&!document.querySelector('script[data-vocabulary-practice-v2]')){
+  const practiceScript=document.createElement('script');
+  practiceScript.src='/vocabulary-practice-v2.js?v=selected-word-2';
+  practiceScript.dataset.vocabularyPracticeV2='true';
+  document.body.append(practiceScript);
+}
