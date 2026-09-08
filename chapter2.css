@@ -77,3 +77,28 @@
     scroll-margin-top: 132px;
   }
 }
+
+/* Vintage navigation details */
+.comic-chapter-break {
+  margin: 52px 0 16px;
+  padding: 58px 22px 30px;
+  border: 5px double var(--v-line, #6e5432);
+  background: var(--v-paper, #eadbb7);
+  color: var(--v-ink, #23180f);
+  box-shadow: 8px 10px 0 #0d070566;
+}
+.comic-chapter-break span { color: var(--v-blue, #174a68); font-family: Georgia, serif; }
+.comic-chapter-break strong { color: var(--v-red, #9f251d); font-family: "Cormorant Garamond", Georgia, serif; }
+.chapter-switcher {
+  border: 4px double var(--v-line, #6e5432);
+  border-radius: 0;
+  background: var(--v-paper, #eadbb7);
+  box-shadow: 6px 8px 0 #0d070566;
+}
+.chapter-switcher a {
+  border-radius: 0;
+  color: var(--v-ink, #23180f);
+  font-family: Georgia, serif;
+}
+.chapter-switcher a:hover,
+.chapter-switcher a.is-active { background: var(--v-red, #9f251d); color: #fff; }
