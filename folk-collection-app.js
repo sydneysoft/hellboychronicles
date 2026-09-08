@@ -8,10 +8,59 @@ const set=(id,value)=>document.getElementById(id).textContent=value;
 set('collectionLabel',ui.label);set('progressText',ui.status);set('heroEyebrow',ui.eyebrow);document.getElementById('heroTitle').innerHTML=ui.title;set('heroCopy',ui.copy);set('startSmall',ui.small);set('startText',ui.start);set('textEditionSmall',ui.textSmall);set('textEditionText',ui.textEdition);set('readerLabel',ui.volume);set('readerTitle',ui.reader);set('readerHint',ui.hint);set('endingLabel',ui.end);set('endingTitle',ui.ending);set('backToLibrary',ui.library);set('libraryLink',language==='uk'?'БІБЛІОТЕКА':'LIBRARY');
 document.getElementById('textEditionLink').href=language==='uk'?'/ua/folk-tales/collection':'/folk-tales/collection';
 for(const id of ['libraryLink','backToLibrary'])document.getElementById(id).href=language==='uk'?'/ua':'/library';
+
+// Mobile performance: keep off-screen comic pages out of the initial network and rendering work.
+const perfStyle=document.createElement('style');
+perfStyle.textContent='.comic-page{content-visibility:auto;contain-intrinsic-size:auto 1586px}.comic-page img[data-src]{background:linear-gradient(135deg,#171717,#24211e)}';
+document.head.appendChild(perfStyle);
+const transparentPixel='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+const pageSource=page=>`/folk-collection-pages/page-${String(page).padStart(2,'0')}.jpg`;
 const pages=document.getElementById('pages');let currentPage=1;
-for(let page=1;page<=totalPages;page++){const number=String(page).padStart(2,'0');const figure=document.createElement('figure');figure.className='comic-page';figure.dataset.page=page;figure.id=`page-${page}`;figure.innerHTML=`<img width="992" height="1586" loading="${page<3?'eager':'lazy'}" decoding="async" src="/folk-collection-pages/page-${number}.jpg" alt="${language==='uk'?'Українські народні казки, сторінка':'Ukrainian Folk Tales, page'} ${page}"><figcaption>${ui.page} ${number}</figcaption>`;pages.appendChild(figure)}
-const figures=[...document.querySelectorAll('.comic-page')];const goTo=(page,behavior='smooth')=>figures[Math.max(0,Math.min(totalPages-1,page-1))].scrollIntoView({behavior,block:'start'});const update=page=>{currentPage=page;set('progressText',`${ui.page} ${page} ${ui.of} ${totalPages}`);set('controlPage',`${page} / ${totalPages}`);document.getElementById('progressBar').style.width=`${page/totalPages*100}%`;history.replaceState(null,'',`#page-${page}`)};
-const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(visible)update(Number(visible.target.dataset.page))},{threshold:[.2,.45,.7]});figures.forEach(figure=>observer.observe(figure));
+for(let page=1;page<=totalPages;page++){
+  const number=String(page).padStart(2,'0');
+  const eager=page<=2;
+  const figure=document.createElement('figure');
+  figure.className='comic-page';figure.dataset.page=page;figure.id=`page-${page}`;
+  figure.innerHTML=`<img width="992" height="1586" ${eager?`src="${pageSource(page)}" fetchpriority="${page===1?'high':'auto'}"`:`src="${transparentPixel}" data-src="${pageSource(page)}" fetchpriority="low"`} loading="${eager?'eager':'lazy'}" decoding="async" alt="${language==='uk'?'Українські народні казки, сторінка':'Ukrainian Folk Tales, page'} ${page}"><figcaption>${ui.page} ${number}</figcaption>`;
+  pages.appendChild(figure);
+}
+const figures=[...document.querySelectorAll('.comic-page')];
+const loadFigure=figure=>{
+  if(!figure)return;
+  const image=figure.querySelector('img[data-src]');
+  if(!image)return;
+  image.src=image.dataset.src;
+  image.removeAttribute('data-src');
+};
+const warmPages=page=>{
+  for(let offset=-1;offset<=2;offset++)loadFigure(figures[page-1+offset]);
+};
+const imageObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    const page=Number(entry.target.dataset.page);
+    warmPages(page);
+    imageObserver.unobserve(entry.target);
+  });
+},{rootMargin:'900px 0px',threshold:0.01});
+figures.slice(2).forEach(figure=>imageObserver.observe(figure));
+
+const goTo=(page,behavior='smooth')=>{
+  const target=Math.max(1,Math.min(totalPages,page));
+  warmPages(target);
+  figures[target-1].scrollIntoView({behavior,block:'start'});
+};
+const update=page=>{
+  currentPage=page;warmPages(page);
+  set('progressText',`${ui.page} ${page} ${ui.of} ${totalPages}`);set('controlPage',`${page} / ${totalPages}`);
+  document.getElementById('progressBar').style.width=`${page/totalPages*100}%`;
+  history.replaceState(null,'',`#page-${page}`);
+};
+const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(visible)update(Number(visible.target.dataset.page))},{threshold:[.2,.45,.7]});
+figures.forEach(figure=>observer.observe(figure));
 document.getElementById('previousPage').onclick=()=>goTo(currentPage-1);document.getElementById('nextPage').onclick=()=>goTo(currentPage+1);document.getElementById('toTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});document.getElementById('startReading').onclick=()=>goTo(1);
-const dialog=document.getElementById('lightbox'),focusedImage=document.getElementById('lightboxImage');figures.forEach(figure=>figure.querySelector('img').onclick=event=>{focusedImage.src=event.currentTarget.src;dialog.showModal()});document.getElementById('closeLightbox').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
-const select=document.getElementById('languageSelect');select.value=language;select.onchange=()=>{localStorage.setItem('hellboy-language',select.value);location.href=select.value==='uk'?'/ua/folk-tales/collection/comic':'/folk-tales/collection/comic'};const initial=location.hash.match(/page-(\d+)/);if(initial)setTimeout(()=>goTo(Number(initial[1]),'auto'),180);
+const dialog=document.getElementById('lightbox'),focusedImage=document.getElementById('lightboxImage');
+figures.forEach(figure=>figure.querySelector('img').onclick=event=>{loadFigure(figure);focusedImage.src=event.currentTarget.dataset.src||event.currentTarget.src;dialog.showModal()});
+document.getElementById('closeLightbox').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
+const select=document.getElementById('languageSelect');select.value=language;select.onchange=()=>{localStorage.setItem('hellboy-language',select.value);location.href=select.value==='uk'?'/ua/folk-tales/collection/comic':'/folk-tales/collection/comic'};
+const initial=location.hash.match(/page-(\d+)/);if(initial)setTimeout(()=>goTo(Number(initial[1]),'auto'),180);
