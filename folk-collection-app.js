@@ -9,9 +9,9 @@ set('collectionLabel',ui.label);set('progressText',ui.status);set('heroEyebrow',
 document.getElementById('textEditionLink').href=language==='uk'?'/ua/folk-tales/collection':'/folk-tales/collection';
 for(const id of ['libraryLink','backToLibrary'])document.getElementById(id).href=language==='uk'?'/ua':'/library';
 
-// Mobile performance: keep off-screen comic pages out of the initial network and rendering work.
+// Mobile performance: keep off-screen comic pages out of the initial network work.
 const perfStyle=document.createElement('style');
-perfStyle.textContent='.comic-page{content-visibility:auto;contain-intrinsic-size:auto 1586px}.comic-page img[data-src]{background:linear-gradient(135deg,#171717,#24211e)}';
+perfStyle.textContent='.comic-page img[data-src]{background:linear-gradient(135deg,#171717,#24211e)}';
 document.head.appendChild(perfStyle);
 const transparentPixel='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 const pageSource=page=>`/folk-collection-pages/page-${String(page).padStart(2,'0')}.jpg`;
