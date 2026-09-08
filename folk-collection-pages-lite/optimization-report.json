@@ -1,0 +1,370 @@
+{
+  "page_count": 30,
+  "total_bytes": 3777136,
+  "total_mb": 3.6,
+  "max_page_bytes": 129020,
+  "max_page_kb": 126.0,
+  "limit_kb": 130,
+  "pages": [
+    {
+      "page": "page-01.webp",
+      "bytes": 128358,
+      "kb": 125.3,
+      "quality": 24,
+      "scale": 0.7,
+      "dimensions": [
+        694,
+        1110
+      ],
+      "original_kb": 477.6
+    },
+    {
+      "page": "page-02.webp",
+      "bytes": 127992,
+      "kb": 125.0,
+      "quality": 24,
+      "scale": 0.76,
+      "dimensions": [
+        754,
+        1205
+      ],
+      "original_kb": 433.0
+    },
+    {
+      "page": "page-03.webp",
+      "bytes": 128556,
+      "kb": 125.5,
+      "quality": 26,
+      "scale": 0.94,
+      "dimensions": [
+        932,
+        1491
+      ],
+      "original_kb": 372.7
+    },
+    {
+      "page": "page-04.webp",
+      "bytes": 116866,
+      "kb": 114.1,
+      "quality": 24,
+      "scale": 0.54,
+      "dimensions": [
+        536,
+        856
+      ],
+      "original_kb": 594.5
+    },
+    {
+      "page": "page-05.webp",
+      "bytes": 115218,
+      "kb": 112.5,
+      "quality": 24,
+      "scale": 0.54,
+      "dimensions": [
+        536,
+        856
+      ],
+      "original_kb": 591.1
+    },
+    {
+      "page": "page-06.webp",
+      "bytes": 127378,
+      "kb": 124.4,
+      "quality": 27,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 536.3
+    },
+    {
+      "page": "page-07.webp",
+      "bytes": 128972,
+      "kb": 125.9,
+      "quality": 28,
+      "scale": 0.64,
+      "dimensions": [
+        635,
+        1015
+      ],
+      "original_kb": 492.6
+    },
+    {
+      "page": "page-08.webp",
+      "bytes": 127100,
+      "kb": 124.1,
+      "quality": 25,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 579.2
+    },
+    {
+      "page": "page-09.webp",
+      "bytes": 128642,
+      "kb": 125.6,
+      "quality": 26,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 577.4
+    },
+    {
+      "page": "page-10.webp",
+      "bytes": 128644,
+      "kb": 125.6,
+      "quality": 26,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 575.5
+    },
+    {
+      "page": "page-11.webp",
+      "bytes": 126806,
+      "kb": 123.8,
+      "quality": 27,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 560.8
+    },
+    {
+      "page": "page-12.webp",
+      "bytes": 128946,
+      "kb": 125.9,
+      "quality": 25,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 567.4
+    },
+    {
+      "page": "page-13.webp",
+      "bytes": 127020,
+      "kb": 124.0,
+      "quality": 26,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 571.5
+    },
+    {
+      "page": "page-14.webp",
+      "bytes": 119022,
+      "kb": 116.2,
+      "quality": 24,
+      "scale": 0.54,
+      "dimensions": [
+        536,
+        856
+      ],
+      "original_kb": 613.3
+    },
+    {
+      "page": "page-15.webp",
+      "bytes": 124682,
+      "kb": 121.8,
+      "quality": 24,
+      "scale": 0.54,
+      "dimensions": [
+        536,
+        856
+      ],
+      "original_kb": 630.4
+    },
+    {
+      "page": "page-16.webp",
+      "bytes": 127314,
+      "kb": 124.3,
+      "quality": 25,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 542.9
+    },
+    {
+      "page": "page-17.webp",
+      "bytes": 129020,
+      "kb": 126.0,
+      "quality": 25,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 540.8
+    },
+    {
+      "page": "page-18.webp",
+      "bytes": 128038,
+      "kb": 125.0,
+      "quality": 24,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 549.9
+    },
+    {
+      "page": "page-19.webp",
+      "bytes": 126978,
+      "kb": 124.0,
+      "quality": 24,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 550.3
+    },
+    {
+      "page": "page-20.webp",
+      "bytes": 126502,
+      "kb": 123.5,
+      "quality": 26,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 539.4
+    },
+    {
+      "page": "page-21.webp",
+      "bytes": 128524,
+      "kb": 125.5,
+      "quality": 25,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 550.9
+    },
+    {
+      "page": "page-22.webp",
+      "bytes": 115158,
+      "kb": 112.5,
+      "quality": 24,
+      "scale": 0.54,
+      "dimensions": [
+        536,
+        856
+      ],
+      "original_kb": 563.0
+    },
+    {
+      "page": "page-23.webp",
+      "bytes": 127738,
+      "kb": 124.7,
+      "quality": 26,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 535.7
+    },
+    {
+      "page": "page-24.webp",
+      "bytes": 128660,
+      "kb": 125.6,
+      "quality": 24,
+      "scale": 0.64,
+      "dimensions": [
+        635,
+        1015
+      ],
+      "original_kb": 554.8
+    },
+    {
+      "page": "page-25.webp",
+      "bytes": 127260,
+      "kb": 124.3,
+      "quality": 24,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 551.8
+    },
+    {
+      "page": "page-26.webp",
+      "bytes": 126618,
+      "kb": 123.7,
+      "quality": 24,
+      "scale": 0.64,
+      "dimensions": [
+        635,
+        1015
+      ],
+      "original_kb": 512.9
+    },
+    {
+      "page": "page-27.webp",
+      "bytes": 116668,
+      "kb": 113.9,
+      "quality": 24,
+      "scale": 0.54,
+      "dimensions": [
+        536,
+        856
+      ],
+      "original_kb": 605.0
+    },
+    {
+      "page": "page-28.webp",
+      "bytes": 128862,
+      "kb": 125.8,
+      "quality": 25,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 587.7
+    },
+    {
+      "page": "page-29.webp",
+      "bytes": 127020,
+      "kb": 124.0,
+      "quality": 53,
+      "scale": 1.0,
+      "dimensions": [
+        992,
+        1586
+      ],
+      "original_kb": 254.2
+    },
+    {
+      "page": "page-30.webp",
+      "bytes": 128574,
+      "kb": 125.6,
+      "quality": 31,
+      "scale": 0.58,
+      "dimensions": [
+        575,
+        920
+      ],
+      "original_kb": 543.7
+    }
+  ]
+}

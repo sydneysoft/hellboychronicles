@@ -14,7 +14,7 @@ const perfStyle=document.createElement('style');
 perfStyle.textContent='.comic-page img[data-src]{background:linear-gradient(135deg,#171717,#24211e)}';
 document.head.appendChild(perfStyle);
 const transparentPixel='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-const pageSource=page=>`/folk-collection-pages/page-${String(page).padStart(2,'0')}.jpg`;
+const pageSource=page=>`/folk-collection-pages-lite/page-${String(page).padStart(2,'0')}.webp`;
 const pages=document.getElementById('pages');let currentPage=1;
 for(let page=1;page<=totalPages;page++){
   const number=String(page).padStart(2,'0');
