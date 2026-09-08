@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#102438">
+  <meta name="description" content="Read the complete bilingual Ukrainian Folk Tales illustrated collection.">
+  <title>Ukrainian Folk Tales — Illustrated Collection</title>
+  <link rel="canonical" href="https://hellboychronicles.vercel.app/folk-tales/collection/comic">
+  <link rel="alternate" hreflang="en" href="https://hellboychronicles.vercel.app/folk-tales/collection/comic">
+  <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua/folk-tales/collection/comic">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/reader-modes.css?v=collection-1">
+</head>
+<body data-edition="comic" class="folk-comic collection-comic">
+  <header class="topbar">
+    <a class="brand" href="/library"><span class="brand-mark">FT</span><span><strong>FOLK</strong><small>TALES</small></span></a>
+    <div class="chapter-status"><span id="collectionLabel">ILLUSTRATED COLLECTION</span><strong id="progressText">30 PAGES · 13 STORIES</strong></div>
+    <div class="top-actions"><label class="language-control"><span class="sr-only">Language</span><select id="languageSelect"><option value="en">🇬🇧</option><option value="uk">🇺🇦</option></select></label><a class="library-link" id="libraryLink" href="/library">LIBRARY</a></div>
+  </header>
+  <div class="progress"><span id="progressBar"></span></div>
+  <main id="top">
+    <section class="hero collection-hero">
+      <p class="eyebrow" id="heroEyebrow">BILINGUAL EDITION · VOLUME I</p><h1 id="heroTitle">UKRAINIAN<br>FOLK TALES</h1><p id="heroCopy">Thirteen illustrated stories in English and Ukrainian, adapted by J Mijail.</p>
+      <div class="format-picker"><button id="startReading"><small id="startSmall">COMPLETE COLLECTION</small><span id="startText">START READING</span> ↓</button></div>
+    </section>
+    <section class="reader" id="reader" aria-label="Ukrainian Folk Tales collection pages"><div class="reader-heading"><div><span id="readerLabel">VOLUME I</span><h2 id="readerTitle">THE COMPLETE ILLUSTRATED COLLECTION</h2></div><p id="readerHint">Scroll to read · Tap any page to focus</p></div><div class="pages" id="pages"></div></section>
+    <section class="ending"><span id="endingLabel">END OF VOLUME I</span><h2 id="endingTitle">GOOD BOOKS. BRIGHTER DAYS.</h2><a id="backToLibrary" href="/library">BACK TO LIBRARY</a></section>
+  </main>
+  <nav class="reader-controls" aria-label="Reader controls"><button id="previousPage" aria-label="Previous page">←</button><span id="controlPage">1 / 30</span><button id="nextPage" aria-label="Next page">→</button><button id="toTop" aria-label="Back to top">↑</button></nav>
+  <dialog id="lightbox"><button id="closeLightbox" aria-label="Close">×</button><img id="lightboxImage" alt="Focused collection page"></dialog>
+  <script src="/folk-collection-app.js?v=collection-1"></script>
+</body>
+</html>
