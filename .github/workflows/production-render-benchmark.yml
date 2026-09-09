@@ -51,7 +51,15 @@ jobs:
             }
             comicPages.sort((a,b)=>a.page-b.page);
             const controls={};
-            {const context=await browser.newContext(device);const page=await context.newPage();await page.goto(BASE+'/folk-tales/collection',{waitUntil:'commit',timeout:15000});await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('1 / 13'),null,{timeout:8000});const before=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));await page.locator('#largerText').click();const after=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));controls.fontPlus=after>before;await page.locator('#nextStory').click();await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('2 / 13'),null,{timeout:4000});controls.nextStory=(await page.locator('#storyReader .chapter-title').textContent())?.includes('Mitten');const t=Date.now();await page.locator('#openVocabulary').click();try{await page.waitForFunction(()=>{const d=document.querySelector('.vocab-dialog');return !!d&&(d.open||d.hasAttribute('open'));},null,{timeout:6000});controls.savedWords=true;controls.savedWordsOpenMs=Date.now()-t;}catch(e){controls.savedWords=false;controls.savedWordsError=String(e);}await context.close();}
+            try{
+              const context=await browser.newContext(device);const page=await context.newPage();
+              await page.goto(BASE+'/folk-tales/collection',{waitUntil:'commit',timeout:15000});
+              await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('1 / 13'),null,{timeout:8000});
+              try{const before=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));await page.locator('#largerText').click({timeout:5000});const after=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));controls.fontPlus=after>before;}catch(e){controls.fontPlus=false;controls.fontPlusError=String(e)}
+              try{await page.locator('#nextStory').click({timeout:5000});await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('2 / 13'),null,{timeout:4000});controls.nextStory=(await page.locator('#storyReader .chapter-title').textContent())?.includes('Mitten');}catch(e){controls.nextStory=false;controls.nextStoryError=String(e)}
+              try{const t=Date.now();await page.locator('#openVocabulary').click({timeout:5000});await page.waitForFunction(()=>{const d=document.querySelector('.vocab-dialog');return !!d&&(d.open||d.hasAttribute('open'));},null,{timeout:6000});controls.savedWords=true;controls.savedWordsOpenMs=Date.now()-t;}catch(e){controls.savedWords=false;controls.savedWordsError=String(e)}
+              await context.close();
+            }catch(e){controls.setupError=String(e)}
             console.log('BENCHMARK_JSON_START');console.log(JSON.stringify({routeResults,comicPages,controls},null,2));console.log('BENCHMARK_JSON_END');await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
