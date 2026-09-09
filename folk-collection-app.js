@@ -10,53 +10,83 @@ document.getElementById('textEditionLink').href=language==='uk'?'/ua/folk-tales/
 for(const id of ['libraryLink','backToLibrary'])document.getElementById(id).href=language==='uk'?'/ua':'/library';
 
 const perfStyle=document.createElement('style');
-perfStyle.textContent='.comic-page img[data-src]{background:linear-gradient(135deg,#171717,#24211e)}';
+perfStyle.textContent='.comic-page img:not(.is-loaded){background:linear-gradient(135deg,#e9dec4,#d8c49a);opacity:.96}.comic-page img.is-loaded{opacity:1;transition:opacity .14s ease}';
 document.head.appendChild(perfStyle);
 const transparentPixel='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-const pageSource=page=>`/folk-collection-pages-lite/page-${String(page).padStart(2,'0')}.webp`;
+const pageSource=page=>`/folk-collection-pages-lite/page-${String(page).padStart(2,'0')}.webp?v=lite-20260909-2`;
+const fallbackSource=page=>`/folk-collection-pages/page-${String(page).padStart(2,'0')}.jpg?v=fallback-20260909-2`;
 const pages=document.getElementById('pages');let currentPage=1;
 for(let page=1;page<=totalPages;page++){
   const number=String(page).padStart(2,'0');
   const figure=document.createElement('figure');
   figure.className='comic-page';figure.dataset.page=page;figure.id=`page-${page}`;
-  figure.innerHTML=`<img width="992" height="1586" src="${transparentPixel}" data-src="${pageSource(page)}" fetchpriority="low" loading="lazy" decoding="async" alt="${language==='uk'?'Українські народні казки, сторінка':'Ukrainian Folk Tales, page'} ${page}"><figcaption>${ui.page} ${number}</figcaption>`;
+  figure.innerHTML=`<img width="992" height="1586" src="${transparentPixel}" data-src="${pageSource(page)}" data-page="${page}" fetchpriority="low" loading="lazy" decoding="async" alt="${language==='uk'?'Українські народні казки, сторінка':'Ukrainian Folk Tales, page'} ${page}"><figcaption>${ui.page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
 const loadFigure=figure=>{
   if(!figure)return;
-  const image=figure.querySelector('img[data-src]');
-  if(!image)return;
-  image.src=image.dataset.src;
-  image.removeAttribute('data-src');
+  const image=figure.querySelector('img');
+  if(!image||image.classList.contains('is-loaded')||image.dataset.loading==='1')return;
+  const src=image.dataset.src;
+  if(!src)return;
+  const page=Number(image.dataset.page||figure.dataset.page||1);
+  image.dataset.loading='1';
+  image.loading='eager';
+  image.fetchPriority='high';
+  image.onload=()=>{
+    image.classList.add('is-loaded');
+    image.removeAttribute('data-src');
+    delete image.dataset.loading;
+    image.onerror=null;
+  };
+  image.onerror=()=>{
+    if(image.dataset.fallback==='1'){
+      delete image.dataset.loading;
+      return;
+    }
+    image.dataset.fallback='1';
+    image.src=fallbackSource(page);
+  };
+  image.src=src;
 };
 const warmPage=page=>loadFigure(figures[page-1]);
+const warmAround=page=>{
+  for(let offset=-1;offset<=2;offset++){
+    const target=page+offset;
+    if(target>=1&&target<=totalPages)warmPage(target);
+  }
+};
 let readerActive=false,imageObserver=null;
 const activateReader=(page=1)=>{
-  warmPage(page);
+  warmAround(page);
   if(readerActive)return;
   readerActive=true;
   if('IntersectionObserver' in window){
     imageObserver=new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
         if(!entry.isIntersecting)return;
-        warmPage(Number(entry.target.dataset.page));
-        imageObserver.unobserve(entry.target);
+        const page=Number(entry.target.dataset.page);
+        warmAround(page);
       });
-    },{rootMargin:'600px 0px',threshold:0.01});
+    },{rootMargin:'1400px 0px',threshold:0.01});
     figures.forEach(figure=>imageObserver.observe(figure));
   }
 };
-const activateOnScroll=()=>{if(scrollY>24){activateReader(1);removeEventListener('scroll',activateOnScroll)}};
+const activateOnScroll=()=>{
+  const readerTop=document.getElementById('reader').getBoundingClientRect().top;
+  if(readerTop<innerHeight+900){activateReader(1);removeEventListener('scroll',activateOnScroll)}
+};
 addEventListener('scroll',activateOnScroll,{passive:true});
 
 const goTo=(page,behavior='smooth')=>{
   const target=Math.max(1,Math.min(totalPages,page));
   activateReader(target);
+  warmAround(target);
   figures[target-1].scrollIntoView({behavior,block:'start'});
 };
 const update=page=>{
-  currentPage=page;if(readerActive)warmPage(page);
+  currentPage=page;if(readerActive)warmAround(page);
   set('progressText',`${ui.page} ${page} ${ui.of} ${totalPages}`);set('controlPage',`${page} / ${totalPages}`);
   document.getElementById('progressBar').style.width=`${page/totalPages*100}%`;
   history.replaceState(null,'',`#page-${page}`);
@@ -65,7 +95,7 @@ const observer=new IntersectionObserver(entries=>{const visible=entries.filter(e
 figures.forEach(figure=>observer.observe(figure));
 document.getElementById('previousPage').onclick=()=>goTo(currentPage-1);document.getElementById('nextPage').onclick=()=>goTo(currentPage+1);document.getElementById('toTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});document.getElementById('startReading').onclick=()=>goTo(1);
 const dialog=document.getElementById('lightbox'),focusedImage=document.getElementById('lightboxImage');
-figures.forEach(figure=>figure.querySelector('img').onclick=event=>{activateReader(Number(figure.dataset.page));loadFigure(figure);focusedImage.src=event.currentTarget.dataset.src||event.currentTarget.src;dialog.showModal()});
+figures.forEach(figure=>figure.querySelector('img').onclick=event=>{const page=Number(figure.dataset.page);activateReader(page);warmAround(page);const image=event.currentTarget;focusedImage.src=image.classList.contains('is-loaded')?image.src:(image.dataset.src||image.src);dialog.showModal()});
 document.getElementById('closeLightbox').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
 const select=document.getElementById('languageSelect');select.value=language;select.onchange=()=>{localStorage.setItem('hellboy-language',select.value);location.href=select.value==='uk'?'/ua/folk-tales/collection/comic':'/folk-tales/collection/comic'};
 const initial=location.hash.match(/page-(\d+)/);if(initial){const page=Number(initial[1]);activateReader(page);setTimeout(()=>goTo(page,'auto'),120)}
