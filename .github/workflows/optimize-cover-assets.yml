@@ -177,5 +177,6 @@ jobs:
             echo 'No changes to commit.'
           else
             git commit -m 'Optimize Ukrainian library cover asset'
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
