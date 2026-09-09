@@ -24,15 +24,19 @@ jobs:
         run: npm install --global lighthouse@12.8.2
 
       - name: Audit homepage
+        continue-on-error: true
         run: lighthouse 'https://hellboychronicles.vercel.app/' --only-categories=performance --output=json --output-path=./lighthouse-home.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
 
       - name: Audit illustrated collection
+        continue-on-error: true
         run: lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection/comic' --only-categories=performance --output=json --output-path=./lighthouse-comic.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
 
       - name: Audit text collection
+        continue-on-error: true
         run: lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection' --only-categories=performance --output=json --output-path=./lighthouse-text.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
 
       - name: Build compact summary
+        if: always()
         run: |
           node - <<'NODE'
           const fs = require('fs');
@@ -43,6 +47,7 @@ jobs:
           };
           const out = {};
           for (const [name,file] of Object.entries(files)) {
+            if (!fs.existsSync(file)) { out[name] = {error:'audit did not produce a report'}; continue; }
             const r = JSON.parse(fs.readFileSync(file,'utf8'));
             const a = r.audits;
             out[name] = {
@@ -63,11 +68,10 @@ jobs:
               unusedCssSavingsBytes: Math.round(a['unused-css-rules']?.details?.overallSavingsBytes || 0),
               unusedJsSavingsBytes: Math.round(a['unused-javascript']?.details?.overallSavingsBytes || 0),
               imageSavingsBytes: Math.round(a['uses-optimized-images']?.details?.overallSavingsBytes || 0),
-              modernImageSavingsBytes: Math.round(a['uses-webp-images']?.details?.overallSavingsBytes || 0),
               diagnostics: (a['diagnostics']?.details?.items || []).slice(0,1),
               largestRequests: (a['network-requests']?.details?.items || [])
                 .map(x => ({url:x.url, transferSize:x.transferSize, resourceSize:x.resourceSize, resourceType:x.resourceType, startTime:x.startTime, endTime:x.endTime}))
-                .sort((x,y)=>(y.transferSize||0)-(x.transferSize||0)).slice(0,12)
+                .sort((x,y)=>(y.transferSize||0)-(x.transferSize||0)).slice(0,15)
             };
           }
           fs.writeFileSync('lighthouse-summary.json', JSON.stringify(out,null,2));
@@ -75,6 +79,7 @@ jobs:
           NODE
 
       - name: Upload audit reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: live-performance-audit
@@ -83,3 +88,4 @@ jobs:
             lighthouse-home.json
             lighthouse-comic.json
             lighthouse-text.json
+          if-no-files-found: warn
