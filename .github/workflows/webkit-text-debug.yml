@@ -1,0 +1,46 @@
+name: WebKit Text Debug
+on:
+  push:
+    branches: [perf-audit-temp]
+    paths: ['.github/workflows/webkit-text-debug.yml']
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm init -y && npm install playwright@1.55.0
+      - run: npx playwright install --with-deps webkit
+      - name: Inspect live text reader
+        run: |
+          node - <<'NODE'
+          const { webkit } = require('playwright');
+          (async()=>{
+            const browser=await webkit.launch();
+            const page=await browser.newPage({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+            const errors=[]; const logs=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            page.on('console',m=>logs.push(m.type()+': '+m.text()));
+            const t=Date.now();
+            const response=await page.goto('https://hellboychronicles.vercel.app/folk-tales/collection',{waitUntil:'domcontentloaded',timeout:30000});
+            const dcl=Date.now()-t;
+            await page.waitForTimeout(6000);
+            const data=await page.evaluate(()=>({
+              readyState:document.readyState,
+              menuItems:document.querySelectorAll('#storyMenu li').length,
+              jumpItems:document.querySelectorAll('#storyJumpMenu li').length,
+              storyTextLength:document.getElementById('storyReader')?.innerText.length||0,
+              storyHTMLLength:document.getElementById('storyReader')?.innerHTML.length||0,
+              storyRect:document.getElementById('storyReader')?.getBoundingClientRect().toJSON?.()||null,
+              contentsRect:document.getElementById('contents')?.getBoundingClientRect().toJSON?.()||null,
+              scrollHeight:document.documentElement.scrollHeight,
+              bodyClasses:document.body.className,
+              scripts:[...document.scripts].map(s=>s.src||'inline')
+            }));
+            console.log(JSON.stringify({status:response?.status(),domContentLoadedMs:dcl,data,errors,logs},null,2));
+            await page.screenshot({path:'webkit-text.png',fullPage:true});
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
