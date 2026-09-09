@@ -1,0 +1,26 @@
+name: Expo check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'expo/**'
+      - '.github/workflows/expo-check.yml'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: expo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.4'
+          cache: npm
+          cache-dependency-path: expo/package.json
+      - run: npm install
+      - run: npx expo-doctor@latest
+      - run: npx tsc --noEmit
