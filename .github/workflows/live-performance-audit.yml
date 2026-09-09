@@ -1,0 +1,85 @@
+name: Live Performance Audit
+
+on:
+  push:
+    branches:
+      - perf-audit-temp
+    paths:
+      - '.github/workflows/live-performance-audit.yml'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Lighthouse
+        run: npm install --global lighthouse@12.8.2
+
+      - name: Audit homepage
+        run: lighthouse 'https://hellboychronicles.vercel.app/' --only-categories=performance --output=json --output-path=./lighthouse-home.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+
+      - name: Audit illustrated collection
+        run: lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection/comic' --only-categories=performance --output=json --output-path=./lighthouse-comic.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+
+      - name: Audit text collection
+        run: lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection' --only-categories=performance --output=json --output-path=./lighthouse-text.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+
+      - name: Build compact summary
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const files = {
+            home: 'lighthouse-home.json',
+            comic: 'lighthouse-comic.json',
+            text: 'lighthouse-text.json'
+          };
+          const out = {};
+          for (const [name,file] of Object.entries(files)) {
+            const r = JSON.parse(fs.readFileSync(file,'utf8'));
+            const a = r.audits;
+            out[name] = {
+              finalUrl: r.finalUrl,
+              score: Math.round((r.categories.performance.score || 0) * 100),
+              fcpMs: Math.round(a['first-contentful-paint'].numericValue || 0),
+              lcpMs: Math.round(a['largest-contentful-paint'].numericValue || 0),
+              speedIndexMs: Math.round(a['speed-index'].numericValue || 0),
+              tbtMs: Math.round(a['total-blocking-time'].numericValue || 0),
+              cls: a['cumulative-layout-shift'].numericValue || 0,
+              interactiveMs: Math.round(a['interactive']?.numericValue || 0),
+              totalByteWeight: a['total-byte-weight']?.numericValue || 0,
+              requestCount: a['network-requests']?.details?.items?.length || 0,
+              mainThreadMs: Math.round(a['mainthread-work-breakdown']?.numericValue || 0),
+              bootupMs: Math.round(a['bootup-time']?.numericValue || 0),
+              serverResponseMs: Math.round(a['server-response-time']?.numericValue || 0),
+              renderBlockingSavingsMs: Math.round(a['render-blocking-resources']?.details?.overallSavingsMs || 0),
+              unusedCssSavingsBytes: Math.round(a['unused-css-rules']?.details?.overallSavingsBytes || 0),
+              unusedJsSavingsBytes: Math.round(a['unused-javascript']?.details?.overallSavingsBytes || 0),
+              imageSavingsBytes: Math.round(a['uses-optimized-images']?.details?.overallSavingsBytes || 0),
+              modernImageSavingsBytes: Math.round(a['uses-webp-images']?.details?.overallSavingsBytes || 0),
+              diagnostics: (a['diagnostics']?.details?.items || []).slice(0,1),
+              largestRequests: (a['network-requests']?.details?.items || [])
+                .map(x => ({url:x.url, transferSize:x.transferSize, resourceSize:x.resourceSize, resourceType:x.resourceType, startTime:x.startTime, endTime:x.endTime}))
+                .sort((x,y)=>(y.transferSize||0)-(x.transferSize||0)).slice(0,12)
+            };
+          }
+          fs.writeFileSync('lighthouse-summary.json', JSON.stringify(out,null,2));
+          console.log(JSON.stringify(out,null,2));
+          NODE
+
+      - name: Upload audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-performance-audit
+          path: |
+            lighthouse-summary.json
+            lighthouse-home.json
+            lighthouse-comic.json
+            lighthouse-text.json
