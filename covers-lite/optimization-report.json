@@ -1,0 +1,62 @@
+[
+  {
+    "file": "hellboy.webp",
+    "bytes": 89874,
+    "kb": 87.8,
+    "quality": 27,
+    "dimensions": [
+      820,
+      1728
+    ],
+    "original_dimensions": [
+      864,
+      1821
+    ],
+    "original_kb": 227.0
+  },
+  {
+    "file": "turnip-en.webp",
+    "bytes": 89842,
+    "kb": 87.7,
+    "quality": 26,
+    "dimensions": [
+      500,
+      1054
+    ],
+    "original_dimensions": [
+      864,
+      1821
+    ],
+    "original_kb": 398.5
+  },
+  {
+    "file": "turnip-uk.webp",
+    "bytes": 89218,
+    "kb": 87.1,
+    "quality": 24,
+    "dimensions": [
+      500,
+      1054
+    ],
+    "original_dimensions": [
+      864,
+      1821
+    ],
+    "original_kb": 445.9
+  },
+  {
+    "file": "folk-collection.webp",
+    "bytes": 88596,
+    "kb": 86.5,
+    "quality": 29,
+    "dimensions": [
+      500,
+      799
+    ],
+    "original_dimensions": [
+      992,
+      1586
+    ],
+    "original_kb": 477.6
+  }
+]
