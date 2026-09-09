@@ -9,18 +9,28 @@
   <link rel="canonical" href="https://hellboychronicles.vercel.app/folk-tales/collection">
   <link rel="alternate" hreflang="en" href="https://hellboychronicles.vercel.app/folk-tales/collection">
   <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua/folk-tales/collection">
-  <link rel="preload" href="/folk-collection-text.js?v=collection-text-3" as="script">
   <link rel="stylesheet" href="/styles.css?v=perf-2">
   <link rel="stylesheet" href="/reader-modes.css?v=perf-2">
-  <link rel="stylesheet" href="/story-shooting-game.css?v=vintage-1">
-  <script>document.documentElement.dataset.routeLang=/^\/ua(?:\/|$)/.test(location.pathname)?'uk':'en';</script>
+  <script>
+    const __folkRouteLang=/^\/ua(?:\/|$)/.test(location.pathname)?'uk':'en';
+    document.documentElement.dataset.routeLang=__folkRouteLang;
+    document.documentElement.lang=__folkRouteLang;
+  </script>
   <style>
-    html[data-route-lang="en"] .story-fallback-uk,html[data-route-lang="uk"] .story-fallback-en{display:none}
+    html[data-route-lang="en"] .story-fallback-uk,html[data-route-lang="uk"] .story-fallback-en,
+    html[data-route-lang="en"] .fallback-menu-uk,html[data-route-lang="uk"] .fallback-menu-en{display:none}
     .story-fallback{font:inherit;color:inherit}
-    @media(max-width:700px){.collection-copy{min-height:0!important}}
+    #storyMenu:empty{display:none}
+    #storyMenu:not(:empty)+.fallback-menus{display:none}
+    @media(max-width:700px){
+      .collection-copy{min-height:0!important}
+      .collection-tools{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+      .collection-contents{box-shadow:none!important}
+    }
   </style>
 </head>
 <body class="novel-body collection-text-body">
+  <script>if(__folkRouteLang==='uk')document.body.classList.add('lang-uk');document.body.dataset.novelLanguage=__folkRouteLang;</script>
   <header class="topbar">
     <a class="brand" id="brandLink" href="/library"><span class="brand-mark">FT</span><span><strong id="brandName">FOLK</strong><small id="brandSub">TALES</small></span></a>
     <div class="chapter-status"><span id="editionLabel">TEXT EDITION</span><strong id="storyStatus">13 STORIES · VOLUME I</strong></div>
@@ -37,6 +47,38 @@
     <section class="collection-contents" id="contents" aria-labelledby="contentsTitle">
       <span id="contentsEyebrow">VOLUME I</span><h2 id="contentsTitle">CONTENTS</h2><p id="contentsHint">Choose a tale. Your place is remembered on this device.</p>
       <ol id="storyMenu"></ol>
+      <div class="fallback-menus">
+        <ol class="fallback-menu fallback-menu-en">
+          <li><a href="#story-1"><span>01</span><strong>The Turnip</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-2"><span>02</span><strong>The Mitten</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-3"><span>03</span><strong>The Straw Bull</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-4"><span>04</span><strong>Goat-Dereza</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-5"><span>05</span><strong>The Fox and Misha</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-6"><span>06</span><strong>Pan Kotskyi</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-7"><span>07</span><strong>Ivasyk-Telesyk</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-8"><span>08</span><strong>Kotyhoroshko</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-9"><span>09</span><strong>The Lame Duck</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-10"><span>10</span><strong>Sirko</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-11"><span>11</span><strong>The Cat and the Rooster</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-12"><span>12</span><strong>Oh</strong><small>Ukrainian folk tale</small></a></li>
+          <li><a href="#story-13"><span>13</span><strong>The Flying Ship</strong><small>Ukrainian folk tale</small></a></li>
+        </ol>
+        <ol class="fallback-menu fallback-menu-uk">
+          <li><a href="#story-1"><span>01</span><strong>Ріпка</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-2"><span>02</span><strong>Рукавичка</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-3"><span>03</span><strong>Солом’яний бичок</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-4"><span>04</span><strong>Коза-Дереза</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-5"><span>05</span><strong>Лисичка та Міша</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-6"><span>06</span><strong>Пан Коцький</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-7"><span>07</span><strong>Івасик-Телесик</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-8"><span>08</span><strong>Котигорошко</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-9"><span>09</span><strong>Кривенька качечка</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-10"><span>10</span><strong>Сірко</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-11"><span>11</span><strong>Котик і Півник</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-12"><span>12</span><strong>Ох</strong><small>Українська народна казка</small></a></li>
+          <li><a href="#story-13"><span>13</span><strong>Летючий корабель</strong><small>Українська народна казка</small></a></li>
+        </ol>
+      </div>
     </section>
     <section class="collection-reading-shell">
       <aside class="novel-tools collection-tools" aria-label="Reading controls">
@@ -66,7 +108,31 @@
     <nav class="collection-story-nav" aria-label="Story navigation"><button id="previousStory">← <span>PREVIOUS TALE</span></button><strong id="storyCounter">1 / 13</strong><button id="nextStory"><span>NEXT TALE</span> →</button></nav>
     <section class="ending collection-text-ending"><span id="endingLabel">END OF VOLUME I</span><h2 id="endingTitle">EVERY TALE LIVES WHEN IT IS RETOLD.</h2><a id="endingLibraryLink" href="/library">BACK TO LIBRARY</a></section>
   </main>
-  <script async src="/folk-collection-text.js?v=collection-text-3"></script>
-  <script async src="/folk-reader-features.js?v=perf-4"></script>
+  <script>
+    (()=>{
+      let booted=false;
+      const boot=()=>{
+        if(booted)return;
+        booted=true;
+        const core=document.createElement('script');
+        core.src='/folk-collection-text.js?v=collection-text-4';
+        core.onload=()=>{
+          const features=document.createElement('script');
+          features.src='/folk-reader-features.js?v=perf-5';
+          document.body.appendChild(features);
+        };
+        document.body.appendChild(core);
+      };
+      window.__bootFolkReader=boot;
+      addEventListener('pointerdown',boot,{once:true,passive:true});
+      addEventListener('keydown',boot,{once:true});
+      document.addEventListener('click',event=>{if(event.target.closest('.fallback-menu a'))boot()},{passive:true});
+      if(location.hash&&location.hash!=='#contents'&&location.hash!=='#story-1')setTimeout(boot,0);
+      addEventListener('load',()=>{
+        if('requestIdleCallback' in window)requestIdleCallback(boot,{timeout:1800});
+        else setTimeout(boot,850);
+      },{once:true});
+    })();
+  </script>
 </body>
 </html>
