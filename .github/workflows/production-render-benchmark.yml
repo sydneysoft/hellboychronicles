@@ -1,0 +1,128 @@
+name: Production Render Benchmark
+on:
+  push:
+    branches: [perf-audit-20260909]
+    paths: ['.github/workflows/production-render-benchmark.yml']
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm init -y && npm install playwright@1.55.0
+      - run: npx playwright install --with-deps webkit
+      - name: Run cold-cache WebKit benchmark
+        run: |
+          node - <<'NODE'
+          const { webkit } = require('playwright');
+          const BASE='https://hellboychronicles.vercel.app';
+          const routes=[
+            '/',
+            '/library',
+            '/folk-tales/collection',
+            '/ua/folk-tales/collection',
+            '/folk-tales/collection/comic',
+            '/ua/folk-tales/collection/comic',
+            '/folk-tales/turnip',
+            '/ua/folk-tales/turnip',
+            '/folk-tales/turnip/comic',
+            '/ua/folk-tales/turnip/comic',
+            '/folk-tales/mitten',
+            '/ua/folk-tales/mitten',
+            '/hellboy/comic',
+            '/ua/hellboy/comic',
+            '/ua/novel'
+          ];
+          const ms=n=>Number.isFinite(n)?Math.round(n):null;
+          (async()=>{
+            const browser=await webkit.launch();
+            const routeResults=[];
+            for(const path of routes){
+              const context=await browser.newContext({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+              const page=await context.newPage();
+              const errors=[];
+              page.on('pageerror',e=>errors.push(String(e)));
+              const start=Date.now();
+              try{
+                await page.goto(BASE+path,{waitUntil:'commit',timeout:20000});
+                await page.waitForSelector('body',{state:'visible',timeout:10000});
+                await page.waitForFunction(()=>document.body.innerText.trim().length>80,null,{timeout:10000});
+                const usable=Date.now()-start;
+                await page.waitForTimeout(1400);
+                const perf=await page.evaluate(()=>{
+                  const nav=performance.getEntriesByType('navigation')[0]||{};
+                  const paints=performance.getEntriesByType('paint');
+                  const fcp=paints.find(x=>x.name==='first-contentful-paint')?.startTime||0;
+                  const resources=performance.getEntriesByType('resource');
+                  return {
+                    fcp,
+                    domContentLoaded:nav.domContentLoadedEventEnd||0,
+                    loadEvent:nav.loadEventEnd||0,
+                    transferBytes:resources.reduce((s,r)=>s+(r.transferSize||0),nav.transferSize||0),
+                    requests:resources.length+1,
+                    readyState:document.readyState,
+                    bodyText:document.body.innerText.length,
+                    storyText:document.querySelector('#storyReader')?.innerText.length||0
+                  };
+                });
+                routeResults.push({path,usableMs:usable,fcpMs:ms(perf.fcp),domReadyMs:ms(perf.domContentLoaded),loadMs:ms(perf.loadEvent),bytes:perf.transferBytes,requests:perf.requests,storyText:perf.storyText,errors});
+              }catch(e){routeResults.push({path,error:String(e),elapsedMs:Date.now()-start,errors});}
+              await context.close();
+            }
+
+            const comicPages=[];
+            for(let n=1;n<=30;n++){
+              const context=await browser.newContext({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+              const page=await context.newPage();
+              const start=Date.now();
+              try{
+                await page.goto(`${BASE}/folk-tales/collection/comic#page-${n}`,{waitUntil:'commit',timeout:20000});
+                await page.waitForFunction(pageNo=>{
+                  const img=document.querySelector(`#page-${pageNo} img`);
+                  return !!img && img.complete && img.naturalWidth>100 && img.naturalHeight>100;
+                },n,{timeout:15000});
+                const imageReadyMs=Date.now()-start;
+                const info=await page.evaluate(pageNo=>{
+                  const img=document.querySelector(`#page-${pageNo} img`);
+                  const entry=performance.getEntriesByType('resource').find(r=>r.name===img.currentSrc||r.name===img.src);
+                  return {src:img.currentSrc||img.src,width:img.naturalWidth,height:img.naturalHeight,transferBytes:entry?.transferSize||0,fallback:img.dataset.fallback==='1'};
+                },n);
+                comicPages.push({page:n,imageReadyMs,...info});
+              }catch(e){comicPages.push({page:n,error:String(e),elapsedMs:Date.now()-start});}
+              await context.close();
+            }
+
+            const controls={};
+            {
+              const context=await browser.newContext({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+              const page=await context.newPage();
+              await page.goto(BASE+'/folk-tales/collection',{waitUntil:'commit',timeout:20000});
+              await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('1 / 13'),null,{timeout:10000});
+              const before=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));
+              await page.locator('#largerText').click();
+              const after=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));
+              controls.fontPlus=after>before;
+              await page.locator('#nextStory').click();
+              await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('2 / 13'),null,{timeout:5000});
+              controls.nextStory=(await page.locator('#storyReader .chapter-title').textContent())?.includes('Mitten');
+              const vocabStart=Date.now();
+              await page.locator('#openVocabulary').click();
+              try{
+                await page.waitForFunction(()=>{
+                  const d=document.querySelector('.vocab-dialog');
+                  return !!d && (d.open||d.hasAttribute('open'));
+                },null,{timeout:8000});
+                controls.savedWords=true;
+                controls.savedWordsOpenMs=Date.now()-vocabStart;
+              }catch(e){controls.savedWords=false;controls.savedWordsError=String(e);}
+              await context.close();
+            }
+
+            console.log('BENCHMARK_JSON_START');
+            console.log(JSON.stringify({routeResults,comicPages,controls},null,2));
+            console.log('BENCHMARK_JSON_END');
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
