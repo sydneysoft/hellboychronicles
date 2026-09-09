@@ -1,0 +1,63 @@
+name: Post-fix Performance Audit
+
+on:
+  push:
+    branches:
+      - perf-audit-temp
+    paths:
+      - '.github/workflows/postfix-performance-audit.yml'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --global lighthouse@12.8.2
+      - name: Audit live routes
+        shell: bash
+        run: |
+          set +e
+          timeout 35s lighthouse 'https://hellboychronicles.vercel.app/' --only-categories=performance --output=json --output-path=home.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+          timeout 35s lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection/comic' --only-categories=performance --output=json --output-path=comic.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+          timeout 35s lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection' --only-categories=performance --output=json --output-path=text.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+          exit 0
+      - name: Summarize
+        if: always()
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const routes={home:'home.json',comic:'comic.json',text:'text.json'};
+          const out={};
+          for(const [name,file] of Object.entries(routes)){
+            if(!fs.existsSync(file)){out[name]={error:'no report within 35s'};continue}
+            const r=JSON.parse(fs.readFileSync(file,'utf8')),a=r.audits;
+            out[name]={
+              score:Math.round((r.categories.performance.score||0)*100),
+              fcpMs:Math.round(a['first-contentful-paint'].numericValue||0),
+              lcpMs:Math.round(a['largest-contentful-paint'].numericValue||0),
+              speedIndexMs:Math.round(a['speed-index'].numericValue||0),
+              tbtMs:Math.round(a['total-blocking-time'].numericValue||0),
+              interactiveMs:Math.round(a['interactive']?.numericValue||0),
+              bytes:Math.round(a['total-byte-weight']?.numericValue||0),
+              requests:a['network-requests']?.details?.items?.length||0,
+              serverResponseMs:Math.round(a['server-response-time']?.numericValue||0),
+              largest:(a['network-requests']?.details?.items||[]).map(x=>({url:x.url,bytes:x.transferSize||0,type:x.resourceType})).sort((x,y)=>y.bytes-x.bytes).slice(0,10)
+            };
+          }
+          fs.writeFileSync('summary.json',JSON.stringify(out,null,2));
+          console.log(JSON.stringify(out,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-fix-performance
+          path: |
+            summary.json
+            home.json
+            comic.json
+            text.json
+          if-no-files-found: warn
