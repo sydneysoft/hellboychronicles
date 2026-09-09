@@ -9,7 +9,6 @@ set('collectionLabel',ui.label);set('progressText',ui.status);set('heroEyebrow',
 document.getElementById('textEditionLink').href=language==='uk'?'/ua/folk-tales/collection':'/folk-tales/collection';
 for(const id of ['libraryLink','backToLibrary'])document.getElementById(id).href=language==='uk'?'/ua':'/library';
 
-// Mobile performance: keep off-screen comic pages out of the initial network work.
 const perfStyle=document.createElement('style');
 perfStyle.textContent='.comic-page img[data-src]{background:linear-gradient(135deg,#171717,#24211e)}';
 document.head.appendChild(perfStyle);
@@ -18,10 +17,9 @@ const pageSource=page=>`/folk-collection-pages-lite/page-${String(page).padStart
 const pages=document.getElementById('pages');let currentPage=1;
 for(let page=1;page<=totalPages;page++){
   const number=String(page).padStart(2,'0');
-  const eager=page<=2;
   const figure=document.createElement('figure');
   figure.className='comic-page';figure.dataset.page=page;figure.id=`page-${page}`;
-  figure.innerHTML=`<img width="992" height="1586" ${eager?`src="${pageSource(page)}" fetchpriority="${page===1?'high':'auto'}"`:`src="${transparentPixel}" data-src="${pageSource(page)}" fetchpriority="low"`} loading="${eager?'eager':'lazy'}" decoding="async" alt="${language==='uk'?'Українські народні казки, сторінка':'Ukrainian Folk Tales, page'} ${page}"><figcaption>${ui.page} ${number}</figcaption>`;
+  figure.innerHTML=`<img width="992" height="1586" src="${transparentPixel}" data-src="${pageSource(page)}" fetchpriority="low" loading="lazy" decoding="async" alt="${language==='uk'?'Українські народні казки, сторінка':'Ukrainian Folk Tales, page'} ${page}"><figcaption>${ui.page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
@@ -33,17 +31,20 @@ const loadFigure=figure=>{
   image.removeAttribute('data-src');
 };
 const warmPages=page=>{
-  for(let offset=-1;offset<=2;offset++)loadFigure(figures[page-1+offset]);
+  for(let offset=0;offset<=1;offset++)loadFigure(figures[page-1+offset]);
 };
-const imageObserver=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(!entry.isIntersecting)return;
-    const page=Number(entry.target.dataset.page);
-    warmPages(page);
-    imageObserver.unobserve(entry.target);
-  });
-},{rootMargin:'900px 0px',threshold:0.01});
-figures.slice(2).forEach(figure=>imageObserver.observe(figure));
+if('IntersectionObserver' in window){
+  const imageObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      warmPages(Number(entry.target.dataset.page));
+      imageObserver.unobserve(entry.target);
+    });
+  },{rootMargin:'450px 0px',threshold:0.01});
+  figures.forEach(figure=>imageObserver.observe(figure));
+}else{
+  loadFigure(figures[0]);
+}
 
 const goTo=(page,behavior='smooth')=>{
   const target=Math.max(1,Math.min(totalPages,page));
@@ -63,4 +64,4 @@ const dialog=document.getElementById('lightbox'),focusedImage=document.getElemen
 figures.forEach(figure=>figure.querySelector('img').onclick=event=>{loadFigure(figure);focusedImage.src=event.currentTarget.dataset.src||event.currentTarget.src;dialog.showModal()});
 document.getElementById('closeLightbox').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
 const select=document.getElementById('languageSelect');select.value=language;select.onchange=()=>{localStorage.setItem('hellboy-language',select.value);location.href=select.value==='uk'?'/ua/folk-tales/collection/comic':'/folk-tales/collection/comic'};
-const initial=location.hash.match(/page-(\d+)/);if(initial)setTimeout(()=>goTo(Number(initial[1]),'auto'),180);
+const initial=location.hash.match(/page-(\d+)/);if(initial){const page=Number(initial[1]);warmPages(page);setTimeout(()=>goTo(page,'auto'),120)}
