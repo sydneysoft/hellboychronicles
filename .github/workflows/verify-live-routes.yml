@@ -1,0 +1,36 @@
+name: Verify Live Routes
+
+on:
+  push:
+    branches: [perf-audit-temp]
+    paths: ['.github/workflows/verify-live-routes.yml']
+
+jobs:
+  comic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --global lighthouse@12.8.2
+      - name: Measure comic startup
+        run: |
+          lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection/comic' --only-categories=performance --output=json --output-path=report.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+          node - <<'NODE'
+          const r=require('./report.json'),a=r.audits,req=a['network-requests'].details.items;
+          console.log(JSON.stringify({score:Math.round(r.categories.performance.score*100),fcpMs:Math.round(a['first-contentful-paint'].numericValue),lcpMs:Math.round(a['largest-contentful-paint'].numericValue),tbtMs:Math.round(a['total-blocking-time'].numericValue),bytes:Math.round(a['total-byte-weight'].numericValue),requests:req.length,images:req.filter(x=>x.resourceType==='Image').map(x=>({url:x.url,bytes:x.transferSize}))},null,2));
+          NODE
+  text:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --global lighthouse@12.8.2
+      - name: Measure text startup
+        run: |
+          lighthouse 'https://hellboychronicles.vercel.app/folk-tales/collection' --only-categories=performance --output=json --output-path=report.json --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --quiet
+          node - <<'NODE'
+          const r=require('./report.json'),a=r.audits,req=a['network-requests'].details.items;
+          console.log(JSON.stringify({score:Math.round(r.categories.performance.score*100),fcpMs:Math.round(a['first-contentful-paint'].numericValue),lcpMs:Math.round(a['largest-contentful-paint'].numericValue),tbtMs:Math.round(a['total-blocking-time'].numericValue),bytes:Math.round(a['total-byte-weight'].numericValue),requests:req.length,largest:req.map(x=>({url:x.url,bytes:x.transferSize,type:x.resourceType})).sort((x,y)=>y.bytes-x.bytes).slice(0,8)},null,2));
+          NODE
