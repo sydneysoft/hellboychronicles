@@ -9,8 +9,7 @@ for(let page=1;page<=totalPages;page++){
   const number=String(page).padStart(2,'0');
   const figure=document.createElement('figure');
   figure.className='comic-page';figure.dataset.page=page;
-  const eager=page===1;
-  figure.innerHTML=`<img width="864" height="1821" loading="${eager?'eager':'lazy'}" decoding="async" fetchpriority="${eager?'high':'low'}" src="${eager?pageSource(page):transparentPixel}"${eager?'':` data-src="${pageSource(page)}"`} alt="${language==='uk'?'Ріпка':'The Turnip'}, ${language==='uk'?'сторінка':'page'} ${page}"><figcaption>${language==='uk'?'СТОРІНКА':'PAGE'} ${number}</figcaption>`;
+  figure.innerHTML=`<img width="864" height="1821" loading="lazy" decoding="async" fetchpriority="low" src="${transparentPixel}" data-src="${pageSource(page)}" alt="${language==='uk'?'Ріпка':'The Turnip'}, ${language==='uk'?'сторінка':'page'} ${page}"><figcaption>${language==='uk'?'СТОРІНКА':'PAGE'} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
@@ -22,7 +21,7 @@ const loadFigure=figure=>{
   image.removeAttribute('data-src');
 };
 const warmPages=page=>{
-  for(let offset=-1;offset<=2;offset++)loadFigure(figures[page-1+offset]);
+  for(let offset=0;offset<=1;offset++)loadFigure(figures[page-1+offset]);
 };
 if('IntersectionObserver' in window){
   const imageObserver=new IntersectionObserver(entries=>{
@@ -31,10 +30,10 @@ if('IntersectionObserver' in window){
       warmPages(Number(entry.target.dataset.page));
       imageObserver.unobserve(entry.target);
     }
-  },{rootMargin:'900px 0px',threshold:.01});
-  figures.slice(1).forEach(figure=>imageObserver.observe(figure));
+  },{rootMargin:'450px 0px',threshold:.01});
+  figures.forEach(figure=>imageObserver.observe(figure));
 }else{
-  figures.forEach(loadFigure);
+  loadFigure(figures[0]);
 }
 const goTo=page=>{
   const target=Math.max(1,Math.min(totalPages,page));
