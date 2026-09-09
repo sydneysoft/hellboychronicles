@@ -37,6 +37,7 @@ jobs:
 
           sources = {
               'hellboy.webp': Path('pages/page-01.webp'),
+              'hellboy-uk.webp': Path('pages-uk/page-01.webp'),
               'turnip-en.webp': Path('turnip-pages/page-01.webp'),
               'turnip-uk.webp': Path('turnip-pages-uk/page-01.webp'),
               'folk-collection.webp': Path('folk-collection-pages/page-01.jpg'),
@@ -112,7 +113,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json
+          import json, re
 
           styles = Path('styles.css')
           text = styles.read_text(encoding='utf-8')
@@ -132,6 +133,11 @@ jobs:
               text = text.replace(old, new)
           modes.write_text(text, encoding='utf-8')
 
+          library = Path('library.js')
+          text = library.read_text(encoding='utf-8')
+          text = text.replace("url('/pages-uk/page-01.webp')", "url('/covers-lite/hellboy-uk.webp')")
+          library.write_text(text, encoding='utf-8')
+
           config_path = Path('vercel.json')
           config = json.loads(config_path.read_text(encoding='utf-8'))
           headers = config.setdefault('headers', [])
@@ -143,11 +149,9 @@ jobs:
               })
           config_path.write_text(json.dumps(config, indent=2) + '\n', encoding='utf-8')
 
-          # Force browsers to request the updated styles instead of reusing an old URL.
           for html in Path('.').glob('*.html'):
               content = html.read_text(encoding='utf-8')
               content = content.replace('/styles.css"', '/styles.css?v=perf-2"')
-              import re
               content = re.sub(r'/reader-modes\.css\?v=[^"\']+', '/reader-modes.css?v=perf-2', content)
               html.write_text(content, encoding='utf-8')
           PY
@@ -157,7 +161,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           files = sorted(Path('covers-lite').glob('*.webp'))
-          assert len(files) == 4, len(files)
+          assert len(files) == 5, len(files)
           oversized = [(p.name, p.stat().st_size) for p in files if p.stat().st_size > 100 * 1024]
           assert not oversized, oversized
           print('All decorative covers are <= 100 KB')
@@ -168,10 +172,10 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add covers-lite styles.css reader-modes.css vercel.json *.html
+          git add covers-lite styles.css reader-modes.css library.js vercel.json *.html
           if git diff --cached --quiet; then
             echo 'No changes to commit.'
           else
-            git commit -m 'Serve lightweight decorative cover assets'
+            git commit -m 'Optimize Ukrainian library cover asset'
             git push origin HEAD:main
           fi
