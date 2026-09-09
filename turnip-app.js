@@ -10,7 +10,7 @@ for(let page=1;page<=totalPages;page++){
   const figure=document.createElement('figure');
   figure.className='comic-page';figure.dataset.page=page;
   const eager=page===1;
-  figure.innerHTML=`<img width="992" height="1586" loading="${eager?'eager':'lazy'}" decoding="async" fetchpriority="${eager?'high':'low'}" src="${eager?pageSource(page):transparentPixel}"${eager?'':` data-src="${pageSource(page)}"`} alt="${language==='uk'?'Ріпка':'The Turnip'}, ${language==='uk'?'сторінка':'page'} ${page}"><figcaption>${language==='uk'?'СТОРІНКА':'PAGE'} ${number}</figcaption>`;
+  figure.innerHTML=`<img width="864" height="1821" loading="${eager?'eager':'lazy'}" decoding="async" fetchpriority="${eager?'high':'low'}" src="${eager?pageSource(page):transparentPixel}"${eager?'':` data-src="${pageSource(page)}"`} alt="${language==='uk'?'Ріпка':'The Turnip'}, ${language==='uk'?'сторінка':'page'} ${page}"><figcaption>${language==='uk'?'СТОРІНКА':'PAGE'} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
