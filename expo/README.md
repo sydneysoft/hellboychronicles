@@ -2,9 +2,11 @@
 
 Parallel React Native / Expo version of Hellboy Chronicles. The existing website and `ios/` SwiftUI app are untouched.
 
-## Why Expo SDK 54?
+## Expo version
 
-The physical iPhone App Store build of Expo Go currently supports SDK 54, so this project intentionally targets Expo SDK 54 for easy testing from your phone.
+This project now targets Expo SDK 57 so it matches the current Expo Go build on iPhone.
+
+SDK 57 uses React Native 0.86 and requires Node 22.13.x or newer.
 
 ## First run
 
