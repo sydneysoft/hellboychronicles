@@ -24,23 +24,22 @@ jobs:
             page.on('pageerror',e=>errors.push(String(e)));
             page.on('console',m=>logs.push(m.type()+': '+m.text()));
             const t=Date.now();
-            const response=await page.goto('https://hellboychronicles.vercel.app/folk-tales/collection',{waitUntil:'domcontentloaded',timeout:30000});
-            const dcl=Date.now()-t;
-            await page.waitForTimeout(6000);
+            const response=await page.goto('https://hellboychronicles.vercel.app/folk-tales/collection',{waitUntil:'commit',timeout:20000});
+            const committed=Date.now()-t;
+            await page.waitForTimeout(5000);
             const data=await page.evaluate(()=>({
               readyState:document.readyState,
               menuItems:document.querySelectorAll('#storyMenu li').length,
               jumpItems:document.querySelectorAll('#storyJumpMenu li').length,
               storyTextLength:document.getElementById('storyReader')?.innerText.length||0,
               storyHTMLLength:document.getElementById('storyReader')?.innerHTML.length||0,
-              storyRect:document.getElementById('storyReader')?.getBoundingClientRect().toJSON?.()||null,
-              contentsRect:document.getElementById('contents')?.getBoundingClientRect().toJSON?.()||null,
+              storyTop:document.getElementById('storyReader')?.getBoundingClientRect().top||0,
+              storyHeight:document.getElementById('storyReader')?.getBoundingClientRect().height||0,
+              contentsHeight:document.getElementById('contents')?.getBoundingClientRect().height||0,
               scrollHeight:document.documentElement.scrollHeight,
-              bodyClasses:document.body.className,
-              scripts:[...document.scripts].map(s=>s.src||'inline')
+              resources:performance.getEntriesByType('resource').map(r=>({name:r.name,duration:Math.round(r.duration),size:r.transferSize||0})).sort((a,b)=>b.duration-a.duration).slice(0,12)
             }));
-            console.log(JSON.stringify({status:response?.status(),domContentLoadedMs:dcl,data,errors,logs},null,2));
-            await page.screenshot({path:'webkit-text.png',fullPage:true});
+            console.log(JSON.stringify({status:response?.status(),commitMs:committed,data,errors,logs},null,2));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
