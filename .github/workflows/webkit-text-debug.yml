@@ -6,40 +6,48 @@ on:
 jobs:
   debug:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: npm init -y && npm install playwright@1.55.0
       - run: npx playwright install --with-deps webkit
-      - name: Inspect live text reader
+      - name: Benchmark live production
         run: |
           node - <<'NODE'
           const { webkit } = require('playwright');
+          const BASE='https://hellboychronicles.vercel.app';
+          const routes=['/','/library','/folk-tales/collection','/ua/folk-tales/collection','/folk-tales/collection/comic','/ua/folk-tales/collection/comic','/folk-tales/turnip','/ua/folk-tales/turnip','/folk-tales/turnip/comic','/ua/folk-tales/turnip/comic','/folk-tales/mitten','/ua/folk-tales/mitten','/hellboy/comic','/ua/hellboy/comic','/ua/novel'];
+          const ms=n=>Number.isFinite(n)?Math.round(n):null;
           (async()=>{
             const browser=await webkit.launch();
-            const page=await browser.newPage({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});
-            const errors=[]; const logs=[];
-            page.on('pageerror',e=>errors.push(String(e)));
-            page.on('console',m=>logs.push(m.type()+': '+m.text()));
-            const t=Date.now();
-            const response=await page.goto('https://hellboychronicles.vercel.app/folk-tales/collection',{waitUntil:'commit',timeout:20000});
-            const committed=Date.now()-t;
-            await page.waitForTimeout(5000);
-            const data=await page.evaluate(()=>({
-              readyState:document.readyState,
-              menuItems:document.querySelectorAll('#storyMenu li').length,
-              jumpItems:document.querySelectorAll('#storyJumpMenu li').length,
-              storyTextLength:document.getElementById('storyReader')?.innerText.length||0,
-              storyHTMLLength:document.getElementById('storyReader')?.innerHTML.length||0,
-              storyTop:document.getElementById('storyReader')?.getBoundingClientRect().top||0,
-              storyHeight:document.getElementById('storyReader')?.getBoundingClientRect().height||0,
-              contentsHeight:document.getElementById('contents')?.getBoundingClientRect().height||0,
-              scrollHeight:document.documentElement.scrollHeight,
-              resources:performance.getEntriesByType('resource').map(r=>({name:r.name,duration:Math.round(r.duration),size:r.transferSize||0})).sort((a,b)=>b.duration-a.duration).slice(0,12)
-            }));
-            console.log(JSON.stringify({status:response?.status(),commitMs:committed,data,errors,logs},null,2));
-            await browser.close();
+            const routeResults=[];
+            for(const path of routes){
+              const context=await browser.newContext({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+              const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));const start=Date.now();
+              try{
+                await page.goto(BASE+path,{waitUntil:'commit',timeout:20000});
+                await page.waitForSelector('body',{state:'visible',timeout:10000});
+                await page.waitForFunction(()=>document.body.innerText.trim().length>80,null,{timeout:10000});
+                const usable=Date.now()-start;await page.waitForTimeout(900);
+                const p=await page.evaluate(()=>{const nav=performance.getEntriesByType('navigation')[0]||{};const paints=performance.getEntriesByType('paint');const fcp=paints.find(x=>x.name==='first-contentful-paint')?.startTime||0;const r=performance.getEntriesByType('resource');return{fcp,dom:nav.domContentLoadedEventEnd||0,load:nav.loadEventEnd||0,bytes:r.reduce((s,x)=>s+(x.transferSize||0),nav.transferSize||0),requests:r.length+1,storyText:document.querySelector('#storyReader')?.innerText.length||0};});
+                routeResults.push({path,usableMs:usable,fcpMs:ms(p.fcp),domReadyMs:ms(p.dom),loadMs:ms(p.load),bytes:p.bytes,requests:p.requests,storyText:p.storyText,errors});
+              }catch(e){routeResults.push({path,error:String(e),elapsedMs:Date.now()-start,errors});}
+              await context.close();
+            }
+            const comicPages=[];
+            for(let n=1;n<=30;n++){
+              const context=await browser.newContext({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});const page=await context.newPage();const start=Date.now();
+              try{
+                await page.goto(`${BASE}/folk-tales/collection/comic#page-${n}`,{waitUntil:'commit',timeout:20000});
+                await page.waitForFunction(pageNo=>{const img=document.querySelector(`#page-${pageNo} img`);return !!img&&img.complete&&img.naturalWidth>100&&img.naturalHeight>100;},n,{timeout:12000});
+                const imageReadyMs=Date.now()-start;const info=await page.evaluate(pageNo=>{const img=document.querySelector(`#page-${pageNo} img`);return{src:img.currentSrc||img.src,width:img.naturalWidth,height:img.naturalHeight,fallback:img.dataset.fallback==='1'};},n);comicPages.push({page:n,imageReadyMs,...info});
+              }catch(e){comicPages.push({page:n,error:String(e),elapsedMs:Date.now()-start});}
+              await context.close();
+            }
+            const controls={};
+            {const context=await browser.newContext({viewport:{width:393,height:852},deviceScaleFactor:3,isMobile:true,hasTouch:true});const page=await context.newPage();await page.goto(BASE+'/folk-tales/collection',{waitUntil:'commit',timeout:20000});await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('1 / 13'),null,{timeout:10000});const before=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));await page.locator('#largerText').click();const after=parseFloat(await page.locator('#storyReader').evaluate(el=>getComputedStyle(el).fontSize));controls.fontPlus=after>before;await page.locator('#nextStory').click();await page.waitForFunction(()=>document.querySelector('#storyCounter')?.textContent.includes('2 / 13'),null,{timeout:5000});controls.nextStory=(await page.locator('#storyReader .chapter-title').textContent())?.includes('Mitten');const t=Date.now();await page.locator('#openVocabulary').click();try{await page.waitForFunction(()=>{const d=document.querySelector('.vocab-dialog');return !!d&&(d.open||d.hasAttribute('open'));},null,{timeout:8000});controls.savedWords=true;controls.savedWordsOpenMs=Date.now()-t;}catch(e){controls.savedWords=false;controls.savedWordsError=String(e);}await context.close();}
+            console.log('BENCHMARK_JSON_START');console.log(JSON.stringify({routeResults,comicPages,controls},null,2));console.log('BENCHMARK_JSON_END');await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
