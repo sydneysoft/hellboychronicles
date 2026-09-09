@@ -11,6 +11,7 @@
   <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua/folk-tales/collection">
   <link rel="stylesheet" href="/styles.css?v=perf-2">
   <link rel="stylesheet" href="/reader-modes.css?v=perf-2">
+  <link rel="preload" href="/folk-collection-text.js?v=collection-text-5" as="script">
   <script>
     const __folkRouteLang=/^\/ua(?:\/|$)/.test(location.pathname)?'uk':'en';
     document.documentElement.dataset.routeLang=__folkRouteLang;
@@ -108,31 +109,7 @@
     <nav class="collection-story-nav" aria-label="Story navigation"><button id="previousStory">← <span>PREVIOUS TALE</span></button><strong id="storyCounter">1 / 13</strong><button id="nextStory"><span>NEXT TALE</span> →</button></nav>
     <section class="ending collection-text-ending"><span id="endingLabel">END OF VOLUME I</span><h2 id="endingTitle">EVERY TALE LIVES WHEN IT IS RETOLD.</h2><a id="endingLibraryLink" href="/library">BACK TO LIBRARY</a></section>
   </main>
-  <script>
-    (()=>{
-      let booted=false;
-      const boot=()=>{
-        if(booted)return;
-        booted=true;
-        const core=document.createElement('script');
-        core.src='/folk-collection-text.js?v=collection-text-4';
-        core.onload=()=>{
-          const features=document.createElement('script');
-          features.src='/folk-reader-features.js?v=perf-5';
-          document.body.appendChild(features);
-        };
-        document.body.appendChild(core);
-      };
-      window.__bootFolkReader=boot;
-      addEventListener('pointerdown',boot,{once:true,passive:true});
-      addEventListener('keydown',boot,{once:true});
-      document.addEventListener('click',event=>{if(event.target.closest('.fallback-menu a'))boot()},{passive:true});
-      if(location.hash&&location.hash!=='#contents'&&location.hash!=='#story-1')setTimeout(boot,0);
-      addEventListener('load',()=>{
-        if('requestIdleCallback' in window)requestIdleCallback(boot,{timeout:1800});
-        else setTimeout(boot,850);
-      },{once:true});
-    })();
-  </script>
+  <script src="/folk-collection-text.js?v=collection-text-5"></script>
+  <script src="/folk-reader-features.js?v=perf-6"></script>
 </body>
 </html>
