@@ -1,0 +1,177 @@
+name: Optimize Cover Assets
+
+on:
+  push:
+    paths:
+      - '.github/workflows/optimize-cover-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+
+      - name: Generate lightweight cover images
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import io, json
+
+          sources = {
+              'hellboy.webp': Path('pages/page-01.webp'),
+              'turnip-en.webp': Path('turnip-pages/page-01.webp'),
+              'turnip-uk.webp': Path('turnip-pages-uk/page-01.webp'),
+              'folk-collection.webp': Path('folk-collection-pages/page-01.jpg'),
+          }
+          out = Path('covers-lite')
+          out.mkdir(exist_ok=True)
+          target = 88 * 1024
+          hard_limit = 100 * 1024
+
+          def encode(image, quality):
+              buf = io.BytesIO()
+              image.save(buf, 'WEBP', quality=quality, method=6)
+              return buf.getvalue()
+
+          report = []
+          for name, source in sources.items():
+              with Image.open(source) as raw:
+                  image = raw.convert('RGB')
+                  original = image.size
+                  chosen = None
+                  chosen_q = None
+                  chosen_size = None
+                  for max_width in (900, 820, 740, 660, 580, 500):
+                      scale = min(1, max_width / image.width)
+                      candidate = image if scale == 1 else image.resize(
+                          (round(image.width * scale), round(image.height * scale)),
+                          Image.Resampling.LANCZOS,
+                      )
+                      lo, hi = 24, 82
+                      best = None
+                      best_q = None
+                      while lo <= hi:
+                          q = (lo + hi) // 2
+                          data = encode(candidate, q)
+                          if len(data) <= target:
+                              best, best_q = data, q
+                              lo = q + 1
+                          else:
+                              hi = q - 1
+                      if best is not None:
+                          chosen, chosen_q, chosen_size = best, best_q, candidate.size
+                          break
+
+                  if chosen is None:
+                      candidate = image.resize((500, round(image.height * 500 / image.width)), Image.Resampling.LANCZOS)
+                      for q in range(23, 11, -1):
+                          data = encode(candidate, q)
+                          if len(data) <= hard_limit:
+                              chosen, chosen_q, chosen_size = data, q, candidate.size
+                              break
+
+                  if chosen is None or len(chosen) > hard_limit:
+                      raise RuntimeError(f'Could not compress {source} below 100 KB')
+
+                  destination = out / name
+                  destination.write_bytes(chosen)
+                  report.append({
+                      'file': name,
+                      'bytes': len(chosen),
+                      'kb': round(len(chosen)/1024, 1),
+                      'quality': chosen_q,
+                      'dimensions': list(chosen_size),
+                      'original_dimensions': list(original),
+                      'original_kb': round(source.stat().st_size/1024, 1),
+                  })
+
+          (out / 'optimization-report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(report, indent=2))
+          PY
+
+      - name: Switch decorative backgrounds to cover assets
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          styles = Path('styles.css')
+          text = styles.read_text(encoding='utf-8')
+          text = text.replace("url('pages/page-01.webp')", "url('/covers-lite/hellboy.webp')")
+          styles.write_text(text, encoding='utf-8')
+
+          modes = Path('reader-modes.css')
+          text = modes.read_text(encoding='utf-8')
+          replacements = {
+              "url('/folk-collection-pages/page-01.jpg')": "url('/covers-lite/folk-collection.webp')",
+              "url('pages/page-01.webp')": "url('/covers-lite/hellboy.webp')",
+              "url('/pages/page-01.webp')": "url('/covers-lite/hellboy.webp')",
+              "url('/turnip-pages/page-01.webp')": "url('/covers-lite/turnip-en.webp')",
+              "url('/turnip-pages-uk/page-01.webp')": "url('/covers-lite/turnip-uk.webp')",
+          }
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+          modes.write_text(text, encoding='utf-8')
+
+          config_path = Path('vercel.json')
+          config = json.loads(config_path.read_text(encoding='utf-8'))
+          headers = config.setdefault('headers', [])
+          source = '/covers-lite/(.*)'
+          if not any(item.get('source') == source for item in headers):
+              headers.append({
+                  'source': source,
+                  'headers': [{'key':'Cache-Control','value':'public, max-age=31536000, immutable'}],
+              })
+          config_path.write_text(json.dumps(config, indent=2) + '\n', encoding='utf-8')
+
+          # Force browsers to request the updated styles instead of reusing an old URL.
+          for html in Path('.').glob('*.html'):
+              content = html.read_text(encoding='utf-8')
+              content = content.replace('/styles.css"', '/styles.css?v=perf-2"')
+              import re
+              content = re.sub(r'/reader-modes\.css\?v=[^"\']+', '/reader-modes.css?v=perf-2', content)
+              html.write_text(content, encoding='utf-8')
+          PY
+
+      - name: Verify cover size cap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files = sorted(Path('covers-lite').glob('*.webp'))
+          assert len(files) == 4, len(files)
+          oversized = [(p.name, p.stat().st_size) for p in files if p.stat().st_size > 100 * 1024]
+          assert not oversized, oversized
+          print('All decorative covers are <= 100 KB')
+          PY
+
+      - name: Commit optimized covers
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add covers-lite styles.css reader-modes.css vercel.json *.html
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+          else
+            git commit -m 'Serve lightweight decorative cover assets'
+            git push origin HEAD:main
+          fi
