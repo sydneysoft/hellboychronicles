@@ -29,8 +29,7 @@ for(let page=1;page<=totalPages;page++){
   figure.id=`page-${page}`;
   figure.dataset.page=page;
   const chapterNumber=page===21?2:1;
-  const eager=page===1;
-  figure.innerHTML=`<img width="${imageWidth}" height="${imageHeight}" loading="${eager?'eager':'lazy'}" decoding="async" fetchpriority="${eager?'high':'low'}" src="${eager?pageSource(page):transparentPixel}"${eager?'':` data-src="${pageSource(page)}"`} alt="${comicLanguage==='uk'?`Хроніки Геллбоя, розділ ${chapterNumber}, сторінка`:`Hellboy Chronicles chapter ${chapterNumber}, page`} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
+  figure.innerHTML=`<img width="${imageWidth}" height="${imageHeight}" loading="lazy" decoding="async" fetchpriority="low" src="${transparentPixel}" data-src="${pageSource(page)}" alt="${comicLanguage==='uk'?`Хроніки Геллбоя, розділ ${chapterNumber}, сторінка`:`Hellboy Chronicles chapter ${chapterNumber}, page`} ${page}"><figcaption>${translations[siteLanguage].page} ${number}</figcaption>`;
   pages.appendChild(figure);
 }
 const figures=[...document.querySelectorAll('.comic-page')];
@@ -42,20 +41,19 @@ const loadFigure=figure=>{
   image.removeAttribute('data-src');
 };
 const warmPages=page=>{
-  for(let offset=-1;offset<=2;offset++)loadFigure(figures[page-1+offset]);
+  for(let offset=0;offset<=1;offset++)loadFigure(figures[page-1+offset]);
 };
 if('IntersectionObserver' in window){
   const imageObserver=new IntersectionObserver(entries=>{
     for(const entry of entries){
       if(!entry.isIntersecting)continue;
-      const page=Number(entry.target.dataset.page);
-      warmPages(page);
+      warmPages(Number(entry.target.dataset.page));
       imageObserver.unobserve(entry.target);
     }
-  },{rootMargin:'900px 0px',threshold:.01});
-  figures.slice(1).forEach(figure=>imageObserver.observe(figure));
+  },{rootMargin:'450px 0px',threshold:.01});
+  figures.forEach(figure=>imageObserver.observe(figure));
 }else{
-  figures.forEach(loadFigure);
+  loadFigure(figures[0]);
 }
 document.getElementById('controlPage').textContent=`1 / ${totalPages}`;
 let currentPage=1;
