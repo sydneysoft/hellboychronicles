@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Hellboy Chronicles",
+    "slug": "hellboychronicles",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "scheme": "hellboychronicles",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.sydneysoft.hellboychronicles"
+    },
+    "android": {
+      "package": "com.sydneysoft.hellboychronicles",
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "extra": {
+      "projectName": "Hellboy Chronicles Expo"
+    }
+  }
+}
