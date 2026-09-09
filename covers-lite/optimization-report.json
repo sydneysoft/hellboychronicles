@@ -15,6 +15,21 @@
     "original_kb": 227.0
   },
   {
+    "file": "hellboy-uk.webp",
+    "bytes": 88434,
+    "kb": 86.4,
+    "quality": 28,
+    "dimensions": [
+      864,
+      1821
+    ],
+    "original_dimensions": [
+      864,
+      1821
+    ],
+    "original_kb": 196.2
+  },
+  {
     "file": "turnip-en.webp",
     "bytes": 89842,
     "kb": 87.7,
