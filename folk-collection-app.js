@@ -30,29 +30,33 @@ const loadFigure=figure=>{
   image.src=image.dataset.src;
   image.removeAttribute('data-src');
 };
-const warmPages=page=>{
-  for(let offset=0;offset<=1;offset++)loadFigure(figures[page-1+offset]);
+const warmPage=page=>loadFigure(figures[page-1]);
+let readerActive=false,imageObserver=null;
+const activateReader=(page=1)=>{
+  warmPage(page);
+  if(readerActive)return;
+  readerActive=true;
+  if('IntersectionObserver' in window){
+    imageObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        warmPage(Number(entry.target.dataset.page));
+        imageObserver.unobserve(entry.target);
+      });
+    },{rootMargin:'600px 0px',threshold:0.01});
+    figures.forEach(figure=>imageObserver.observe(figure));
+  }
 };
-if('IntersectionObserver' in window){
-  const imageObserver=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting)return;
-      warmPages(Number(entry.target.dataset.page));
-      imageObserver.unobserve(entry.target);
-    });
-  },{rootMargin:'450px 0px',threshold:0.01});
-  figures.forEach(figure=>imageObserver.observe(figure));
-}else{
-  loadFigure(figures[0]);
-}
+const activateOnScroll=()=>{if(scrollY>24){activateReader(1);removeEventListener('scroll',activateOnScroll)}};
+addEventListener('scroll',activateOnScroll,{passive:true});
 
 const goTo=(page,behavior='smooth')=>{
   const target=Math.max(1,Math.min(totalPages,page));
-  warmPages(target);
+  activateReader(target);
   figures[target-1].scrollIntoView({behavior,block:'start'});
 };
 const update=page=>{
-  currentPage=page;warmPages(page);
+  currentPage=page;if(readerActive)warmPage(page);
   set('progressText',`${ui.page} ${page} ${ui.of} ${totalPages}`);set('controlPage',`${page} / ${totalPages}`);
   document.getElementById('progressBar').style.width=`${page/totalPages*100}%`;
   history.replaceState(null,'',`#page-${page}`);
@@ -61,7 +65,7 @@ const observer=new IntersectionObserver(entries=>{const visible=entries.filter(e
 figures.forEach(figure=>observer.observe(figure));
 document.getElementById('previousPage').onclick=()=>goTo(currentPage-1);document.getElementById('nextPage').onclick=()=>goTo(currentPage+1);document.getElementById('toTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});document.getElementById('startReading').onclick=()=>goTo(1);
 const dialog=document.getElementById('lightbox'),focusedImage=document.getElementById('lightboxImage');
-figures.forEach(figure=>figure.querySelector('img').onclick=event=>{loadFigure(figure);focusedImage.src=event.currentTarget.dataset.src||event.currentTarget.src;dialog.showModal()});
+figures.forEach(figure=>figure.querySelector('img').onclick=event=>{activateReader(Number(figure.dataset.page));loadFigure(figure);focusedImage.src=event.currentTarget.dataset.src||event.currentTarget.src;dialog.showModal()});
 document.getElementById('closeLightbox').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
 const select=document.getElementById('languageSelect');select.value=language;select.onchange=()=>{localStorage.setItem('hellboy-language',select.value);location.href=select.value==='uk'?'/ua/folk-tales/collection/comic':'/folk-tales/collection/comic'};
-const initial=location.hash.match(/page-(\d+)/);if(initial){const page=Number(initial[1]);warmPages(page);setTimeout(()=>goTo(page,'auto'),120)}
+const initial=location.hash.match(/page-(\d+)/);if(initial){const page=Number(initial[1]);activateReader(page);setTimeout(()=>goTo(page,'auto'),120)}
