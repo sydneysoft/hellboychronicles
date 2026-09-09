@@ -9,9 +9,16 @@
   <link rel="canonical" href="https://hellboychronicles.vercel.app/folk-tales/collection">
   <link rel="alternate" hreflang="en" href="https://hellboychronicles.vercel.app/folk-tales/collection">
   <link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua/folk-tales/collection">
+  <link rel="preload" href="/folk-collection-text.js?v=collection-text-3" as="script">
   <link rel="stylesheet" href="/styles.css?v=perf-2">
   <link rel="stylesheet" href="/reader-modes.css?v=perf-2">
   <link rel="stylesheet" href="/story-shooting-game.css?v=vintage-1">
+  <script>document.documentElement.dataset.routeLang=/^\/ua(?:\/|$)/.test(location.pathname)?'uk':'en';</script>
+  <style>
+    html[data-route-lang="en"] .story-fallback-uk,html[data-route-lang="uk"] .story-fallback-en{display:none}
+    .story-fallback{font:inherit;color:inherit}
+    @media(max-width:700px){.collection-copy{min-height:0!important}}
+  </style>
 </head>
 <body class="novel-body collection-text-body">
   <header class="topbar">
@@ -38,13 +45,28 @@
         <p class="vocab-hint" id="vocabHint">Select a word to see its Ukrainian translation.</p>
         <a id="contentsLink" href="#contents">CONTENTS ↑</a><a id="sideGraphicLink" href="/folk-tales/collection/comic">GRAPHIC EDITION →</a>
       </aside>
-      <article class="novel-copy collection-copy" id="storyReader" aria-live="polite"></article>
+      <article class="novel-copy collection-copy" id="storyReader" aria-live="polite">
+        <div class="story-fallback story-fallback-en">
+          <p class="chapter-label">TALE 01 · VOLUME I</p>
+          <h2 class="chapter-title">The Turnip</h2>
+          <p class="story-subtitle">The strength of every hand</p>
+          <p>In a small whitewashed house beside a wide field lived a grandfather and grandmother who cared for their garden from the first thaw until the autumn frost. One spring morning Grandfather pressed a turnip seed into the dark earth. “Grow sweet, grow strong, and grow big enough for everyone,” he said, patting the soil flat with his palm.</p>
+          <p>Rain crossed the field in silver curtains, sunlight warmed the rows, and the turnip grew. Its leaves became broad as umbrellas. Its golden shoulder rose from the ground like a moon. By harvest time Grandfather declared that one turnip would feed the household for days. He seized the leaves and pulled, but the turnip did not move.</p>
+        </div>
+        <div class="story-fallback story-fallback-uk">
+          <p class="chapter-label">КАЗКА 01 · ТОМ I</p>
+          <h2 class="chapter-title">Ріпка</h2>
+          <p class="story-subtitle">Сила кожної руки</p>
+          <p>У невеликій біленій хатині біля широкого поля жили дід і баба. Від першої відлиги до осіннього морозу вони доглядали город. Одного весняного ранку дід поклав у темну землю насінину ріпки. «Рости солодка, рости міцна, рости велика — щоб усім вистачило», — сказав він і долонею пригладив ґрунт.</p>
+          <p>Дощі срібними завісами переходили поле, сонце гріло грядки, а ріпка все росла. Її листя стало широким, мов парасолі, а золоте плече піднялося над землею, наче місяць. Восени дід ухопився за гичку й потягнув, та ріпка навіть не ворухнулася.</p>
+        </div>
+      </article>
       <aside class="story-jump" aria-label="Story navigation"><span id="storyJumpLabel">IN THIS VOLUME</span><ol id="storyJumpMenu"></ol></aside>
     </section>
     <nav class="collection-story-nav" aria-label="Story navigation"><button id="previousStory">← <span>PREVIOUS TALE</span></button><strong id="storyCounter">1 / 13</strong><button id="nextStory"><span>NEXT TALE</span> →</button></nav>
     <section class="ending collection-text-ending"><span id="endingLabel">END OF VOLUME I</span><h2 id="endingTitle">EVERY TALE LIVES WHEN IT IS RETOLD.</h2><a id="endingLibraryLink" href="/library">BACK TO LIBRARY</a></section>
   </main>
-  <script src="/folk-collection-text.js?v=collection-text-2"></script>
-  <script src="/folk-reader-features.js?v=perf-3"></script>
+  <script async src="/folk-collection-text.js?v=collection-text-3"></script>
+  <script async src="/folk-reader-features.js?v=perf-4"></script>
 </body>
 </html>
