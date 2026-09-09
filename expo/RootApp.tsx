@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import {
   Dimensions,
   Image,
-  Modal,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -12,7 +11,8 @@ import {
 } from 'react-native';
 import App from './App';
 
-type Mode = 'menu' | 'text' | 'graphic';
+type Mode = 'menu' | 'text' | 'graphicIndex' | 'graphicReader';
+type Lang = 'en' | 'uk';
 
 type StoryRange = {
   id: number;
@@ -39,11 +39,11 @@ const stories: StoryRange[] = [
 ];
 
 const PAGE_BASE = 'https://hellboychronicles.vercel.app/folk-collection-pages-lite';
-const width = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width;
 
 export default function RootApp() {
   const [mode, setMode] = useState<Mode>('menu');
-  const [lang, setLang] = useState<'en' | 'uk'>('en');
+  const [lang, setLang] = useState<Lang>('en');
   const [story, setStory] = useState<StoryRange | null>(null);
   const [page, setPage] = useState(1);
 
@@ -57,9 +57,12 @@ export default function RootApp() {
             graphic: 'GRAPHIC / COMIC',
             choose: 'Choose how you want to read',
             back: 'BACK',
+            index: 'CHAPTER INDEX',
             all: 'FULL COLLECTION',
-            story: 'STORIES',
+            stories: 'STORIES',
             page: 'PAGE',
+            previous: 'PREVIOUS',
+            next: 'NEXT',
           }
         : {
             title: 'Українські народні казки',
@@ -68,12 +71,38 @@ export default function RootApp() {
             graphic: 'ГРАФІЧНА / КОМІКС',
             choose: 'Оберіть формат читання',
             back: 'НАЗАД',
+            index: 'ЗМІСТ',
             all: 'ПОВНА ЗБІРКА',
-            story: 'КАЗКИ',
+            stories: 'КАЗКИ',
             page: 'СТОРІНКА',
+            previous: 'НАЗАД',
+            next: 'ДАЛІ',
           },
     [lang]
   );
+
+  const openCollection = () => {
+    setStory(null);
+    setPage(1);
+    setMode('graphicReader');
+  };
+
+  const openStory = (item: StoryRange) => {
+    setStory(item);
+    setPage(item.startPage);
+    setMode('graphicReader');
+  };
+
+  const minPage = story?.startPage ?? 1;
+  const maxPage = story?.endPage ?? 30;
+
+  const previousPage = () => {
+    setPage((current) => Math.max(minPage, current - 1));
+  };
+
+  const nextPage = () => {
+    setPage((current) => Math.min(maxPage, current + 1));
+  };
 
   if (mode === 'text') {
     return (
@@ -86,73 +115,91 @@ export default function RootApp() {
     );
   }
 
-  if (mode === 'graphic') {
+  if (mode === 'graphicIndex') {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.topbar}>
           <Pressable onPress={() => setMode('menu')} style={styles.backButton}>
             <Text style={styles.backButtonText}>‹ {labels.back}</Text>
           </Pressable>
-          <View style={styles.langSwitch}>
-            <Pressable onPress={() => setLang('en')} style={[styles.langChip, lang === 'en' && styles.langChipActive]}>
-              <Text style={styles.langText}>EN</Text>
-            </Pressable>
-            <Pressable onPress={() => setLang('uk')} style={[styles.langChip, lang === 'uk' && styles.langChipActive]}>
-              <Text style={styles.langText}>UA</Text>
-            </Pressable>
-          </View>
+          <LanguageSwitch lang={lang} setLang={setLang} />
         </View>
 
         <ScrollView contentContainerStyle={styles.graphicContent}>
           <Text style={styles.kicker}>{labels.kicker}</Text>
           <Text style={styles.graphicTitle}>{labels.title}</Text>
-          <Text style={styles.sectionLabel}>{labels.story}</Text>
+          <Text style={styles.sectionLabel}>{labels.stories}</Text>
 
-          <Pressable
-            style={styles.collectionCard}
-            onPress={() => {
-              setStory(null);
-              setPage(1);
-            }}
-          >
+          <Pressable style={styles.collectionCard} onPress={openCollection}>
             <Text style={styles.collectionTitle}>{labels.all}</Text>
             <Text style={styles.collectionMeta}>30 {labels.page.toLowerCase()}s</Text>
           </Pressable>
 
           <View style={styles.storyGrid}>
             {stories.map((item) => (
-              <Pressable
-                key={item.id}
-                style={styles.storyCard}
-                onPress={() => {
-                  setStory(item);
-                  setPage(item.startPage);
-                }}
-              >
+              <Pressable key={item.id} style={styles.storyCard} onPress={() => openStory(item)}>
                 <Text style={styles.storyNo}>{String(item.id).padStart(2, '0')}</Text>
                 <Text style={styles.storyTitle}>{lang === 'en' ? item.en : item.uk}</Text>
                 <Text style={styles.storyPages}>{item.startPage}–{item.endPage}</Text>
               </Pressable>
             ))}
           </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 
-          <View style={styles.readerFrame}>
+  if (mode === 'graphicReader') {
+    const atFirst = page <= minPage;
+    const atLast = page >= maxPage;
+    const readerTitle = story ? (lang === 'en' ? story.en : story.uk) : labels.all;
+
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.topbar}>
+          <Pressable onPress={() => setMode('graphicIndex')} style={styles.backButton}>
+            <Text style={styles.backButtonText}>‹ {labels.index}</Text>
+          </Pressable>
+          <LanguageSwitch lang={lang} setLang={setLang} />
+        </View>
+
+        <View style={styles.readerScreen}>
+          <Text style={styles.readerKicker}>{story ? `${String(story.id).padStart(2, '0')} · ${labels.page} ${story.startPage}–${story.endPage}` : labels.kicker}</Text>
+          <Text style={styles.readerTitle} numberOfLines={2}>{readerTitle}</Text>
+
+          <View style={styles.imageFrame}>
             <Image
-              source={{ uri: `${PAGE_BASE}/page-${String(page).padStart(2, '0')}.webp?v=expo-graphic-1` }}
+              key={page}
+              source={{ uri: `${PAGE_BASE}/page-${String(page).padStart(2, '0')}.webp?v=expo-graphic-2` }}
               style={styles.pageImage}
               resizeMode="contain"
             />
-            <Text style={styles.pageCounter}>{labels.page} {page} / 30</Text>
-            <View style={styles.controls}>
-              <Pressable style={styles.controlButton} onPress={() => setPage((p) => Math.max(story?.startPage ?? 1, p - 1))}>
-                <Text style={styles.controlText}>‹</Text>
-              </Pressable>
-              <Pressable style={styles.controlButton} onPress={() => setPage((p) => Math.min(story?.endPage ?? 30, p + 1))}>
-                <Text style={styles.controlText}>›</Text>
-              </Pressable>
-            </View>
           </View>
-        </ScrollView>
+
+          <Text style={styles.pageCounter}>{labels.page} {page} / 30</Text>
+
+          <View style={styles.controls}>
+            <Pressable
+              disabled={atFirst}
+              style={[styles.navButton, atFirst && styles.navButtonDisabled]}
+              onPress={previousPage}
+            >
+              <Text style={[styles.navText, atFirst && styles.navTextDisabled]}>‹ {labels.previous}</Text>
+            </Pressable>
+
+            <Pressable style={styles.indexButton} onPress={() => setMode('graphicIndex')}>
+              <Text style={styles.indexText}>☰</Text>
+            </Pressable>
+
+            <Pressable
+              disabled={atLast}
+              style={[styles.navButton, atLast && styles.navButtonDisabled]}
+              onPress={nextPage}
+            >
+              <Text style={[styles.navText, atLast && styles.navTextDisabled]}>{labels.next} ›</Text>
+            </Pressable>
+          </View>
+        </View>
       </SafeAreaView>
     );
   }
@@ -161,12 +208,7 @@ export default function RootApp() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.menuWrap}>
         <View style={styles.langSwitchTop}>
-          <Pressable onPress={() => setLang('en')} style={[styles.langChip, lang === 'en' && styles.langChipActive]}>
-            <Text style={styles.langText}>EN</Text>
-          </Pressable>
-          <Pressable onPress={() => setLang('uk')} style={[styles.langChip, lang === 'uk' && styles.langChipActive]}>
-            <Text style={styles.langText}>UA</Text>
-          </Pressable>
+          <LanguageSwitch lang={lang} setLang={setLang} />
         </View>
 
         <Text style={styles.kicker}>{labels.kicker}</Text>
@@ -183,11 +225,11 @@ export default function RootApp() {
           <Text style={styles.arrow}>›</Text>
         </Pressable>
 
-        <Pressable style={styles.modeCard} onPress={() => setMode('graphic')}>
+        <Pressable style={styles.modeCard} onPress={() => setMode('graphicIndex')}>
           <Text style={styles.modeIcon}>🖼️</Text>
           <View style={{ flex: 1 }}>
             <Text style={styles.modeTitle}>{labels.graphic}</Text>
-            <Text style={styles.modeCopy}>{lang === 'en' ? 'Read the illustrated 30-page collection story by story.' : 'Читайте ілюстровану 30-сторінкову збірку казка за казкою.'}</Text>
+            <Text style={styles.modeCopy}>{lang === 'en' ? 'Open the illustrated collection and jump directly to any story.' : 'Відкрийте ілюстровану збірку та переходьте прямо до будь-якої казки.'}</Text>
           </View>
           <Text style={styles.arrow}>›</Text>
         </Pressable>
@@ -195,6 +237,19 @@ export default function RootApp() {
         <Text style={styles.footer}>GOOD BOOKS · BRIGHTER DAYS</Text>
       </View>
     </SafeAreaView>
+  );
+}
+
+function LanguageSwitch({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) => void }) {
+  return (
+    <View style={styles.langSwitch}>
+      <Pressable onPress={() => setLang('en')} style={[styles.langChip, lang === 'en' && styles.langChipActive]}>
+        <Text style={styles.langText}>EN</Text>
+      </Pressable>
+      <Pressable onPress={() => setLang('uk')} style={[styles.langChip, lang === 'uk' && styles.langChipActive]}>
+        <Text style={styles.langText}>UA</Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -212,7 +267,7 @@ const styles = StyleSheet.create({
   modeCopy: { color: '#a9a191', marginTop: 5, fontSize: 13, lineHeight: 18 },
   arrow: { color: '#d9b85f', fontSize: 36 },
   footer: { color: '#6f685e', textAlign: 'center', marginTop: 26, letterSpacing: 1.8, fontSize: 11 },
-  langSwitchTop: { position: 'absolute', top: 18, right: 22, flexDirection: 'row', backgroundColor: '#1f2227', padding: 3, borderRadius: 14 },
+  langSwitchTop: { position: 'absolute', top: 18, right: 22 },
   langSwitch: { flexDirection: 'row', backgroundColor: '#1f2227', padding: 3, borderRadius: 14 },
   langChip: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 11 },
   langChipActive: { backgroundColor: '#785d25' },
@@ -230,12 +285,19 @@ const styles = StyleSheet.create({
   storyNo: { color: '#d9b85f', fontSize: 11, fontWeight: '800' },
   storyTitle: { color: '#f1e5cf', fontFamily: 'Georgia', fontSize: 15, marginTop: 7, lineHeight: 19 },
   storyPages: { color: '#756d61', marginTop: 8, fontSize: 11 },
-  readerFrame: { marginTop: 20, borderWidth: 1, borderColor: '#6e5c35', borderRadius: 16, padding: 10, backgroundColor: '#0c0d0f' },
-  pageImage: { width: width - 58, height: (width - 58) * 1.598, alignSelf: 'center', borderRadius: 8, backgroundColor: '#e9dec4' },
-  pageCounter: { color: '#b5aa98', textAlign: 'center', marginTop: 10, fontSize: 12, letterSpacing: 1.2 },
-  controls: { flexDirection: 'row', justifyContent: 'center', gap: 14, marginTop: 10, marginBottom: 4 },
-  controlButton: { width: 58, height: 42, borderRadius: 12, borderWidth: 1, borderColor: '#6e5c35', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1f1b16' },
-  controlText: { color: '#f3dfad', fontSize: 28, lineHeight: 30 },
+  readerScreen: { flex: 1, paddingHorizontal: 14, paddingBottom: 12, justifyContent: 'center' },
+  readerKicker: { color: '#a68d50', fontSize: 10, letterSpacing: 1.5, textAlign: 'center', marginBottom: 5 },
+  readerTitle: { color: '#f4ead4', fontFamily: 'Georgia', fontSize: 24, lineHeight: 29, textAlign: 'center', marginBottom: 10 },
+  imageFrame: { alignSelf: 'center', borderWidth: 1, borderColor: '#6e5c35', borderRadius: 12, padding: 6, backgroundColor: '#0c0d0f' },
+  pageImage: { width: Math.min(screenWidth - 42, 430), height: Math.min(screenWidth - 42, 430) * 1.598, borderRadius: 7, backgroundColor: '#e9dec4' },
+  pageCounter: { color: '#b5aa98', textAlign: 'center', marginTop: 8, fontSize: 12, letterSpacing: 1.2 },
+  controls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 10 },
+  navButton: { flex: 1, minHeight: 46, borderRadius: 12, borderWidth: 1, borderColor: '#6e5c35', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1f1b16', paddingHorizontal: 8 },
+  navButtonDisabled: { opacity: .35 },
+  navText: { color: '#f3dfad', fontWeight: '800', fontSize: 12 },
+  navTextDisabled: { color: '#8b816d' },
+  indexButton: { width: 50, height: 46, borderRadius: 12, borderWidth: 1, borderColor: '#4c463b', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17191c' },
+  indexText: { color: '#d9b85f', fontSize: 20 },
   floatingBack: { position: 'absolute', zIndex: 100, top: 52, left: 12, backgroundColor: 'rgba(15,15,15,.86)', borderWidth: 1, borderColor: '#6e5c35', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8 },
   floatingBackText: { color: '#e0bf68', fontWeight: '800', fontSize: 12 },
 });
