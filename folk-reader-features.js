@@ -82,8 +82,17 @@
     });
   }
 
-  const loadAudio=()=>load('/folk-audio-web.js?v=web-audio-1').catch(error=>console.warn('Audiobook feature failed to load',error));
-  idle(2600).then(loadAudio);
+  const loadAudio=async()=>{
+    try{
+      await load('/folk-audio-web.js?v=web-audio-2');
+      const audio=document.querySelector('.folk-audio-player');
+      if(audio&&document.body.classList.contains('collection-text-body')){
+        audio.style.bottom='calc(96px + env(safe-area-inset-bottom))';
+        audio.style.zIndex='23';
+      }
+    }catch(error){console.warn('Audiobook feature failed to load',error)}
+  };
+  idle(5200).then(loadAudio);
 
   const loadGame=async()=>{
     try{
