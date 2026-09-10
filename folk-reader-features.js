@@ -5,10 +5,20 @@
   const idle=(timeout=2200)=>new Promise(resolve=>{'requestIdleCallback'in window?requestIdleCallback(()=>resolve(),{timeout}):setTimeout(resolve,900)});
 
   if(document.getElementById('story')&&/polish-folk-tales/.test(location.pathname)){
+    const top=document.querySelector('.top');
+    if(top&&!document.getElementById('polishVerbGuideLink')){
+      const link=document.createElement('a');
+      link.id='polishVerbGuideLink';
+      link.href=/^\/pl(?:\/|$)/.test(location.pathname)?'/pl/polish-verbs':'/polish-verbs';
+      link.textContent='📘 VERB GUIDE';
+      link.style.cssText='color:#e4bf68;text-decoration:none;font:bold 13px system-ui;padding:8px 10px;border:1px solid #b9954b66;border-radius:10px;background:#29201b;white-space:nowrap';
+      const lang=top.querySelector('.lang');
+      if(lang)top.insertBefore(link,lang);else top.appendChild(link);
+    }
     load('/polish-vocabulary.js?v=pl-practice-3')
       .then(()=>load('/polish-practice-ux.js?v=macbook-1'))
       .then(()=>load('/polish-practice-hotfix.js?v=sentence-check-1'))
-      .then(()=>load('/polish-word-tolerance.js?v=diacritics-1'))
+      .then(()=>load('/polish-word-diacritics.js?v=optional-1'))
       .catch(error=>console.warn('Polish vocabulary failed to load',error));
   }
 
