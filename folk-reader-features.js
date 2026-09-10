@@ -8,6 +8,7 @@
     load('/polish-vocabulary.js?v=pl-practice-3')
       .then(()=>load('/polish-practice-ux.js?v=macbook-1'))
       .then(()=>load('/polish-practice-hotfix.js?v=sentence-check-1'))
+      .then(()=>load('/polish-word-tolerance.js?v=diacritics-1'))
       .catch(error=>console.warn('Polish vocabulary failed to load',error));
   }
 
