@@ -18,7 +18,10 @@
       const noun=document.createElement('a');
       noun.href=isPL?'/pl/polish-nouns':'/polish-nouns';
       noun.textContent='📗 NOUNS';
-      [verb,noun].forEach(link=>{link.style.cssText='color:#e4bf68;text-decoration:none;font:bold 13px system-ui;padding:8px 10px;border:1px solid #b9954b66;border-radius:10px;background:#29201b;white-space:nowrap';guides.appendChild(link)});
+      const grammar=document.createElement('a');
+      grammar.href=isPL?'/pl/polish-grammar':'/polish-grammar';
+      grammar.textContent='📙 GRAMMAR';
+      [verb,noun,grammar].forEach(link=>{link.style.cssText='color:#e4bf68;text-decoration:none;font:bold 13px system-ui;padding:8px 10px;border:1px solid #b9954b66;border-radius:10px;background:#29201b;white-space:nowrap';guides.appendChild(link)});
       if(lang)top.insertBefore(guides,lang);else top.appendChild(guides);
     }
     load('/polish-vocabulary.js?v=pl-practice-3')
