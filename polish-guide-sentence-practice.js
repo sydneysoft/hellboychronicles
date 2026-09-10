@@ -31,30 +31,65 @@
     'obiecac':['obiecuję','obiecujesz','obiecuje','obiecuje','obiecuje','obiecujemy','obiecujecie','obiecują','obiecują'],
     'pamietac':['pamiętam','pamiętasz','pamięta','pamięta','pamięta','pamiętamy','pamiętacie','pamiętają','pamiętają']
   };
+  const adjectiveForms={
+    'stary':['stary','stara','stare','starzy','stare'],
+    'mlody':['młody','młoda','młode','młodzi','młode'],
+    'wielki':['wielki','wielka','wielkie','wielcy','wielkie'],
+    'maly':['mały','mała','małe','mali','małe'],
+    'dobry':['dobry','dobra','dobre','dobrzy','dobre'],
+    'zly':['zły','zła','złe','źli','złe'],
+    'odwazny':['odważny','odważna','odważne','odważni','odważne'],
+    'straszny':['straszny','straszna','straszne','straszni','straszne'],
+    'piekny':['piękny','piękna','piękne','piękni','piękne'],
+    'bogaty':['bogaty','bogata','bogate','bogaci','bogate'],
+    'biedny':['biedny','biedna','biedne','biedni','biedne'],
+    'zloty':['złoty','złota','złote','złoci','złote'],
+    'ciemny':['ciemny','ciemna','ciemne','ciemni','ciemne'],
+    'wysoki':['wysoki','wysoka','wysokie','wysocy','wysokie'],
+    'silny':['silny','silna','silne','silni','silne'],
+    'sprytny':['sprytny','sprytna','sprytne','sprytni','sprytne']
+  };
+  const adjectiveSubjectIndex={on:0,ona:1,ono:2,ja:null,ty:null,my:null,wy:null,oni:3,one:4};
+  const adjectiveIndex={};
+  Object.entries(adjectiveForms).forEach(([base,forms])=>forms.forEach(form=>{const n=strip(form);(adjectiveIndex[n]||(adjectiveIndex[n]=new Set())).add(base)}));
   const formIndex={};
   Object.entries(conjugations).forEach(([verb,forms])=>forms.forEach(form=>{const n=strip(form);(formIndex[n]||(formIndex[n]=new Set())).add(verb)}));
 
   function keyFor(card){return card.querySelector('.verb,.noun,.word')?.textContent?.trim().split('/')[0].trim()||''}
   function acceptableForms(card){const main=keyFor(card),out=[main];card.querySelectorAll('.form span').forEach(x=>out.push(...x.textContent.split('/')));return out.map(strip).filter(x=>x&&x!=='—')}
   function containsPracticeWord(text,forms){const t=` ${strip(text)} `;return forms.some(f=>t.includes(` ${f} `))}
+  function tokenize(text){const raw=text.match(/[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+/g)||[];return {raw,words:raw.map(strip)}}
 
   function localConjugationCheck(text){
-    const rawWords=text.match(/[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+/g)||[];
-    const words=rawWords.map(strip);
+    const {raw:rawWords,words}=tokenize(text);
     for(let i=0;i<words.length-1;i++){
-      const pIndex=pronouns.indexOf(words[i]);
-      if(pIndex<0)continue;
-      const typed=words[i+1];
-      const possibleVerbs=formIndex[typed];
-      if(!possibleVerbs)continue;
-      for(const verb of possibleVerbs){
-        const expected=conjugations[verb][pIndex];
-        if(strip(expected)!==typed){
-          const corrected=[...rawWords];corrected[i+1]=expected;
-          const pattern=new RegExp(`\\b${rawWords[i]}\\s+${rawWords[i+1]}\\b`,'i');
-          const fixed=text.replace(pattern,`${rawWords[i]} ${expected}`);
-          return {pronoun:rawWords[i],typed:rawWords[i+1],expected,fixed};
+      const pIndex=pronouns.indexOf(words[i]);if(pIndex<0)continue;
+      const typed=words[i+1],possibleVerbs=formIndex[typed];if(!possibleVerbs)continue;
+      for(const verb of possibleVerbs){const expected=conjugations[verb][pIndex];if(strip(expected)!==typed){const pattern=new RegExp(`\\b${rawWords[i]}\\s+${rawWords[i+1]}\\b`,'i');const fixed=text.replace(pattern,`${rawWords[i]} ${expected}`);return {pronoun:rawWords[i],typed:rawWords[i+1],expected,fixed}}}
+    }
+    return null;
+  }
+
+  function localAdjectiveCheck(text){
+    const {raw,words}=tokenize(text);
+    for(let i=0;i<words.length;i++){
+      const pronoun=words[i];
+      if(!(pronoun in adjectiveSubjectIndex))continue;
+      let expectedIndex=adjectiveSubjectIndex[pronoun];
+      if(expectedIndex===null)continue;
+      for(let j=i+1;j<Math.min(words.length,i+5);j++){
+        if(j===i+1&&formIndex[words[j]]&&!formIndex[words[j]].has('byc'))break;
+        const candidates=adjectiveIndex[words[j]];if(!candidates)continue;
+        for(const base of candidates){
+          const expected=adjectiveForms[base][expectedIndex];
+          if(strip(expected)!==words[j]){
+            const escaped=raw[j].replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+            const pattern=new RegExp(`\\b${escaped}\\b`,'i');
+            const fixed=text.replace(pattern,expected);
+            return {pronoun:raw[i],typed:raw[j],expected,fixed};
+          }
         }
+        return null;
       }
     }
     return null;
@@ -64,34 +99,19 @@
   function correctedText(text,matches){let result=text;[...matches].sort((a,b)=>b.offset-a.offset).forEach(m=>{const replacement=m.replacements?.[0]?.value;if(replacement)result=result.slice(0,m.offset)+replacement+result.slice(m.offset+m.length)});return result}
 
   function install(card){
-    if(card.dataset.sentencePractice==='1')return;
-    const quiz=card.querySelector('.quiz'),check=quiz?.querySelector('.check');if(!quiz||!check)return;
-    card.dataset.sentencePractice='1';
-    const block=document.createElement('div');block.className='sentence-practice';
-    block.innerHTML=`<label>STEP 2 · WRITE A POLISH PHRASE OR SENTENCE</label><div class="hint">Use the word you just practiced. Write your own Polish phrase or sentence.</div><textarea spellcheck="false" placeholder="Write a Polish phrase or sentence…"></textarea><button type="button">✓ CHECK PHRASE / SENTENCE</button><div class="sentence-feedback"></div>`;
-    quiz.appendChild(block);
-    const original=check.onclick;
-    check.onclick=e=>{if(original)original.call(check,e);setTimeout(()=>{const f=quiz.querySelector('.feedback');if(f?.classList.contains('ok')){block.classList.add('open');block.querySelector('textarea').focus()}},0)};
+    if(card.dataset.sentencePractice==='1')return;const quiz=card.querySelector('.quiz'),check=quiz?.querySelector('.check');if(!quiz||!check)return;card.dataset.sentencePractice='1';
+    const block=document.createElement('div');block.className='sentence-practice';block.innerHTML=`<label>STEP 2 · WRITE A POLISH PHRASE OR SENTENCE</label><div class="hint">Use the word you just practiced. Write your own Polish phrase or sentence.</div><textarea spellcheck="false" placeholder="Write a Polish phrase or sentence…"></textarea><button type="button">✓ CHECK PHRASE / SENTENCE</button><div class="sentence-feedback"></div>`;quiz.appendChild(block);
+    const original=check.onclick;check.onclick=e=>{if(original)original.call(check,e);setTimeout(()=>{const f=quiz.querySelector('.feedback');if(f?.classList.contains('ok')){block.classList.add('open');block.querySelector('textarea').focus()}},0)};
     const input=quiz.querySelector('input');input?.addEventListener('keydown',()=>setTimeout(()=>{const f=quiz.querySelector('.feedback');if(f?.classList.contains('ok'))block.classList.add('open')},0));
     const btn=block.querySelector('button'),area=block.querySelector('textarea'),fb=block.querySelector('.sentence-feedback');
     btn.onclick=async()=>{
-      const text=area.value.trim();
-      if(text.length<3){fb.className='sentence-feedback bad';fb.textContent='Write a phrase or sentence first.';return}
-      const forms=acceptableForms(card);
-      if(forms.length&&!containsPracticeWord(text,forms)){fb.className='sentence-feedback bad';fb.textContent=`Use “${keyFor(card)}” (or one of its shown forms) in your phrase.`;return}
-
-      const conjugationIssue=localConjugationCheck(text);
-      if(conjugationIssue){
-        fb.className='sentence-feedback bad';
-        fb.innerHTML=`Not quite. With <b>“${conjugationIssue.pronoun}”</b>, use <b>“${conjugationIssue.expected}”</b>, not “${conjugationIssue.typed}”.<span class="corrected"><b>Suggested:</b> ${conjugationIssue.fixed}</span>`;
-        return;
-      }
-
-      btn.disabled=true;btn.textContent='CHECKING…';fb.className='sentence-feedback';fb.textContent='Checking your Polish…';
-      const issues=await languageCheck(text);btn.disabled=false;btn.textContent='✓ CHECK PHRASE / SENTENCE';
+      const text=area.value.trim();if(text.length<3){fb.className='sentence-feedback bad';fb.textContent='Write a phrase or sentence first.';return}
+      const forms=acceptableForms(card);if(forms.length&&!containsPracticeWord(text,forms)){fb.className='sentence-feedback bad';fb.textContent=`Use “${keyFor(card)}” (or one of its shown forms) in your phrase.`;return}
+      const conjugationIssue=localConjugationCheck(text);if(conjugationIssue){fb.className='sentence-feedback bad';fb.innerHTML=`Not quite. With <b>“${conjugationIssue.pronoun}”</b>, use <b>“${conjugationIssue.expected}”</b>, not “${conjugationIssue.typed}”.<span class="corrected"><b>Suggested:</b> ${conjugationIssue.fixed}</span>`;return}
+      const adjectiveIssue=localAdjectiveCheck(text);if(adjectiveIssue){fb.className='sentence-feedback bad';fb.innerHTML=`Not quite. The adjective must agree with <b>“${adjectiveIssue.pronoun}”</b>. Use <b>“${adjectiveIssue.expected}”</b>, not “${adjectiveIssue.typed}”.<span class="corrected"><b>Suggested:</b> ${adjectiveIssue.fixed}</span>`;return}
+      btn.disabled=true;btn.textContent='CHECKING…';fb.className='sentence-feedback';fb.textContent='Checking your Polish…';const issues=await languageCheck(text);btn.disabled=false;btn.textContent='✓ CHECK PHRASE / SENTENCE';
       if(issues===null){fb.className='sentence-feedback ok';fb.textContent='✓ WELL WRITTEN — phrase accepted.';localStorage.setItem('hellboy-polish-guide-sentence-'+keyFor(card),'1');return}
-      const meaningful=issues.filter(m=>!['WHITESPACE_RULE'].includes(m.rule?.id));
-      if(!meaningful.length){fb.className='sentence-feedback ok';fb.textContent='✓ WELL WRITTEN';localStorage.setItem('hellboy-polish-guide-sentence-'+keyFor(card),'1');return}
+      const meaningful=issues.filter(m=>!['WHITESPACE_RULE'].includes(m.rule?.id));if(!meaningful.length){fb.className='sentence-feedback ok';fb.textContent='✓ WELL WRITTEN';localStorage.setItem('hellboy-polish-guide-sentence-'+keyFor(card),'1');return}
       const first=meaningful[0],fixed=correctedText(text,meaningful);fb.className='sentence-feedback bad';fb.innerHTML=`${first.message||'Check this phrase again.'}${fixed!==text?`<span class="corrected"><b>Suggested:</b> ${fixed}</span>`:''}`;
     };
   }
