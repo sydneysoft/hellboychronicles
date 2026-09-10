@@ -6,14 +6,20 @@
 
   if(document.getElementById('story')&&/polish-folk-tales/.test(location.pathname)){
     const top=document.querySelector('.top');
-    if(top&&!document.getElementById('polishVerbGuideLink')){
-      const link=document.createElement('a');
-      link.id='polishVerbGuideLink';
-      link.href=/^\/pl(?:\/|$)/.test(location.pathname)?'/pl/polish-verbs':'/polish-verbs';
-      link.textContent='📘 VERB GUIDE';
-      link.style.cssText='color:#e4bf68;text-decoration:none;font:bold 13px system-ui;padding:8px 10px;border:1px solid #b9954b66;border-radius:10px;background:#29201b;white-space:nowrap';
-      const lang=top.querySelector('.lang');
-      if(lang)top.insertBefore(link,lang);else top.appendChild(link);
+    const lang=top?.querySelector('.lang');
+    if(top&&!document.getElementById('polishGuideLinks')){
+      const guides=document.createElement('div');
+      guides.id='polishGuideLinks';
+      guides.style.cssText='display:flex;gap:6px;flex-wrap:wrap;justify-content:center';
+      const isPL=/^\/pl(?:\/|$)/.test(location.pathname);
+      const verb=document.createElement('a');
+      verb.href=isPL?'/pl/polish-verbs':'/polish-verbs';
+      verb.textContent='📘 VERBS';
+      const noun=document.createElement('a');
+      noun.href=isPL?'/pl/polish-nouns':'/polish-nouns';
+      noun.textContent='📗 NOUNS';
+      [verb,noun].forEach(link=>{link.style.cssText='color:#e4bf68;text-decoration:none;font:bold 13px system-ui;padding:8px 10px;border:1px solid #b9954b66;border-radius:10px;background:#29201b;white-space:nowrap';guides.appendChild(link)});
+      if(lang)top.insertBefore(guides,lang);else top.appendChild(guides);
     }
     load('/polish-vocabulary.js?v=pl-practice-3')
       .then(()=>load('/polish-practice-ux.js?v=macbook-1'))
