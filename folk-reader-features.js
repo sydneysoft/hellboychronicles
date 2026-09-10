@@ -24,9 +24,9 @@
   };
   const idle=(timeout=2200)=>new Promise(resolve=>{'requestIdleCallback'in window?requestIdleCallback(()=>resolve(),{timeout}):setTimeout(resolve,900)});
 
-  // Polish collection uses its own EN↔PL selection translator.
+  // Polish collection uses its own EN↔PL selection translator + practice UI.
   if(document.getElementById('story')&&/polish-folk-tales/.test(location.pathname)){
-    load('/polish-vocabulary.js?v=pl-selection-1').catch(error=>console.warn('Polish vocabulary failed to load',error));
+    load('/polish-vocabulary.js?v=pl-selection-1').then(()=>load('/polish-practice-fix.js?v=macbook-1')).catch(error=>console.warn('Polish vocabulary failed to load',error));
   }
 
   let vocabularyReady=false,vocabularyTask=null;
