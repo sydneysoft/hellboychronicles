@@ -40,6 +40,8 @@ const stories: StoryRange[] = [
 
 const PAGE_BASE = 'https://hellboychronicles.vercel.app/folk-collection-pages-lite';
 const screenWidth = Dimensions.get('window').width;
+const FIRST_PAGE = 1;
+const LAST_PAGE = 30;
 
 export default function RootApp() {
   const [mode, setMode] = useState<Mode>('menu');
@@ -83,25 +85,22 @@ export default function RootApp() {
 
   const openCollection = () => {
     setStory(null);
-    setPage(1);
+    setPage(FIRST_PAGE);
     setMode('graphicReader');
   };
 
   const openStory = (item: StoryRange) => {
-    setStory(item);
     setPage(item.startPage);
+    setStory(item);
     setMode('graphicReader');
   };
 
-  const minPage = story?.startPage ?? 1;
-  const maxPage = story?.endPage ?? 30;
-
   const previousPage = () => {
-    setPage((current) => Math.max(minPage, current - 1));
+    setPage((current) => Math.max(FIRST_PAGE, current - 1));
   };
 
   const nextPage = () => {
-    setPage((current) => Math.min(maxPage, current + 1));
+    setPage((current) => Math.min(LAST_PAGE, current + 1));
   };
 
   if (mode === 'text') {
@@ -137,7 +136,13 @@ export default function RootApp() {
 
           <View style={styles.storyGrid}>
             {stories.map((item) => (
-              <Pressable key={item.id} style={styles.storyCard} onPress={() => openStory(item)}>
+              <Pressable
+                key={item.id}
+                style={styles.storyCard}
+                onPress={() => openStory(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`${lang === 'en' ? item.en : item.uk}, ${labels.page} ${item.startPage}`}
+              >
                 <Text style={styles.storyNo}>{String(item.id).padStart(2, '0')}</Text>
                 <Text style={styles.storyTitle}>{lang === 'en' ? item.en : item.uk}</Text>
                 <Text style={styles.storyPages}>{item.startPage}–{item.endPage}</Text>
@@ -150,9 +155,10 @@ export default function RootApp() {
   }
 
   if (mode === 'graphicReader') {
-    const atFirst = page <= minPage;
-    const atLast = page >= maxPage;
-    const readerTitle = story ? (lang === 'en' ? story.en : story.uk) : labels.all;
+    const pageStory = stories.find((item) => page >= item.startPage && page <= item.endPage) ?? story;
+    const atFirst = page <= FIRST_PAGE;
+    const atLast = page >= LAST_PAGE;
+    const readerTitle = pageStory ? (lang === 'en' ? pageStory.en : pageStory.uk) : labels.all;
 
     return (
       <SafeAreaView style={styles.safe}>
@@ -164,19 +170,23 @@ export default function RootApp() {
         </View>
 
         <View style={styles.readerScreen}>
-          <Text style={styles.readerKicker}>{story ? `${String(story.id).padStart(2, '0')} · ${labels.page} ${story.startPage}–${story.endPage}` : labels.kicker}</Text>
+          <Text style={styles.readerKicker}>
+            {pageStory
+              ? `${String(pageStory.id).padStart(2, '0')} · ${labels.page} ${pageStory.startPage}–${pageStory.endPage}`
+              : labels.kicker}
+          </Text>
           <Text style={styles.readerTitle} numberOfLines={2}>{readerTitle}</Text>
 
           <View style={styles.imageFrame}>
             <Image
               key={page}
-              source={{ uri: `${PAGE_BASE}/page-${String(page).padStart(2, '0')}.webp?v=expo-graphic-2` }}
+              source={{ uri: `${PAGE_BASE}/page-${String(page).padStart(2, '0')}.webp?v=expo-graphic-3` }}
               style={styles.pageImage}
               resizeMode="contain"
             />
           </View>
 
-          <Text style={styles.pageCounter}>{labels.page} {page} / 30</Text>
+          <Text style={styles.pageCounter}>{labels.page} {page} / {LAST_PAGE}</Text>
 
           <View style={styles.controls}>
             <Pressable
