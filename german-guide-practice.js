@@ -1,32 +1,10 @@
 (()=>{
 const norm=s=>(s||'').toLocaleLowerCase('de-DE').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ß/g,'ss').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 const pronouns=['ich','du','er','sie','es','wir','ihr','sie'];
-const verbs={
-'sein':['bin','bist','ist','ist','ist','sind','seid','sind'],
-'haben':['habe','hast','hat','hat','hat','haben','habt','haben'],
-'gehen':['gehe','gehst','geht','geht','geht','gehen','geht','gehen'],
-'kommen':['komme','kommst','kommt','kommt','kommt','kommen','kommt','kommen'],
-'sehen':['sehe','siehst','sieht','sieht','sieht','sehen','seht','sehen'],
-'sprechen':['spreche','sprichst','spricht','spricht','spricht','sprechen','sprecht','sprechen'],
-'sagen':['sage','sagst','sagt','sagt','sagt','sagen','sagt','sagen'],
-'fragen':['frage','fragst','fragt','fragt','fragt','fragen','fragt','fragen'],
-'wissen':['weiß','weißt','weiß','weiß','weiß','wissen','wisst','wissen'],
-'denken':['denke','denkst','denkt','denkt','denkt','denken','denkt','denken'],
-'wollen':['will','willst','will','will','will','wollen','wollt','wollen'],
-'können':['kann','kannst','kann','kann','kann','können','könnt','können'],
-'müssen':['muss','musst','muss','muss','muss','müssen','müsst','müssen'],
-'geben':['gebe','gibst','gibt','gibt','gibt','geben','gebt','geben'],
-'nehmen':['nehme','nimmst','nimmt','nimmt','nimmt','nehmen','nehmt','nehmen'],
-'finden':['finde','findest','findet','findet','findet','finden','findet','finden'],
-'verlieren':['verliere','verlierst','verliert','verliert','verliert','verlieren','verliert','verlieren'],
-'öffnen':['öffne','öffnest','öffnet','öffnet','öffnet','öffnen','öffnet','öffnen'],
-'schließen':['schließe','schließt','schließt','schließt','schließt','schließen','schließt','schließen'],
-'laufen':['laufe','läufst','läuft','läuft','läuft','laufen','lauft','laufen'],
-'warten':['warte','wartest','wartet','wartet','wartet','warten','wartet','warten'],
-'helfen':['helfe','hilfst','hilft','hilft','hilft','helfen','helft','helfen']};
+const verbs={'sein':['bin','bist','ist','ist','ist','sind','seid','sind'],'haben':['habe','hast','hat','hat','hat','haben','habt','haben'],'gehen':['gehe','gehst','geht','geht','geht','gehen','geht','gehen'],'kommen':['komme','kommst','kommt','kommt','kommt','kommen','kommt','kommen'],'sehen':['sehe','siehst','sieht','sieht','sieht','sehen','seht','sehen'],'sprechen':['spreche','sprichst','spricht','spricht','spricht','sprechen','sprecht','sprechen'],'sagen':['sage','sagst','sagt','sagt','sagt','sagen','sagt','sagen'],'fragen':['frage','fragst','fragt','fragt','fragt','fragen','fragt','fragen'],'wissen':['weiß','weißt','weiß','weiß','weiß','wissen','wisst','wissen'],'denken':['denke','denkst','denkt','denkt','denkt','denken','denkt','denken'],'wollen':['will','willst','will','will','will','wollen','wollt','wollen'],'können':['kann','kannst','kann','kann','kann','können','könnt','können'],'müssen':['muss','musst','muss','muss','muss','müssen','müsst','müssen'],'geben':['gebe','gibst','gibt','gibt','gibt','geben','gebt','geben'],'nehmen':['nehme','nimmst','nimmt','nimmt','nimmt','nehmen','nehmt','nehmen'],'finden':['finde','findest','findet','findet','findet','finden','findet','finden'],'verlieren':['verliere','verlierst','verliert','verliert','verliert','verlieren','verliert','verlieren'],'öffnen':['öffne','öffnest','öffnet','öffnet','öffnet','öffnen','öffnet','öffnen'],'schließen':['schließe','schließt','schließt','schließt','schließt','schließen','schließt','schließen'],'laufen':['laufe','läufst','läuft','läuft','läuft','laufen','lauft','laufen'],'warten':['warte','wartest','wartet','wartet','wartet','warten','wartet','warten'],'helfen':['helfe','hilfst','hilft','hilft','hilft','helfen','helft','helfen']};
 const formIndex={};Object.entries(verbs).forEach(([v,fs])=>fs.forEach(f=>(formIndex[norm(f)]||(formIndex[norm(f)]=new Set())).add(v)));
 function tokenise(t){const raw=t.match(/[A-Za-zÄÖÜäöüß]+/g)||[];return{raw,words:raw.map(norm)}}
-function conjugation(text){const{raw,words}=tokenise(text);for(let i=0;i<words.length-1;i++){const p=words[i],pi=pronouns.indexOf(p);if(pi<0)continue;const candidates=formIndex[words[i+1]];if(!candidates)continue;for(const v of candidates){const exp=verbs[v][pi];if(norm(exp)!==words[i+1])return{p:raw[i],typed:raw[i+1],expected:exp,fixed:text.replace(raw[i+1],exp)}}}return null}
+function conjugation(text){const{raw,words}=tokenise(text);for(let i=0;i<words.length-1;i++){const p=words[i],typed=words[i+1],candidates=formIndex[typed];if(!candidates)continue;let indices=[];if(p==='sie')indices=[3,7];else{const pi=pronouns.indexOf(p);if(pi<0)continue;indices=[pi]}for(const v of candidates){if(indices.some(pi=>norm(verbs[v][pi])===typed))continue;const exp=verbs[v][indices[0]];return{p:raw[i],typed:raw[i+1],expected:exp,fixed:text.replace(raw[i+1],exp)}}}return null}
 function cardWord(c){return c.dataset.word||c.querySelector('[data-headword]')?.textContent?.trim().replace(/^(der|die|das)\s+/i,'')||''}
 function acceptableForms(word){const w=norm(word),out=new Set([w]);if(verbs[w])verbs[w].forEach(x=>out.add(norm(x)));return out}
 function containsPracticeWord(text,word){const n=` ${norm(text)} `;return [...acceptableForms(word)].some(f=>n.includes(` ${f} `))}
