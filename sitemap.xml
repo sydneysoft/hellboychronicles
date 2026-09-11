@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://hellboychronicles.vercel.app/</loc>
-    <lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hellboychronicles.vercel.app/" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://hellboychronicles.vercel.app/ua" />
-    <xhtml:link rel="alternate" hreflang="pl" href="https://hellboychronicles.vercel.app/pl" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hellboychronicles.vercel.app/" />
+    <loc>https://storylingo.uk/</loc>
+    <lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://storylingo.uk/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://storylingo.uk/ua" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://storylingo.uk/pl" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://storylingo.uk/fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://storylingo.uk/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://storylingo.uk/es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://storylingo.uk/" />
   </url>
-  <url><loc>https://hellboychronicles.vercel.app/pl</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/novel</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/novel</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/hellboy/comic</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/hellboy/comic</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/folk-tales/collection</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/folk-tales/collection</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/folk-tales/collection/comic</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/folk-tales/collection/comic</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/polish-folk-tales/collection/comic</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/pl/polish-folk-tales/collection/comic</loc><lastmod>2026-09-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/folk-tales/turnip</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/folk-tales/turnip</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/folk-tales/turnip/comic</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/folk-tales/turnip/comic</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/folk-tales/mitten</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://hellboychronicles.vercel.app/ua/folk-tales/mitten</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://storylingo.uk/pl</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://storylingo.uk/fr</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://storylingo.uk/de</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://storylingo.uk/es</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://storylingo.uk/universal-stories/lost-key</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.98</priority></url>
+  <url><loc>https://storylingo.uk/novel</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/ua/novel</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/hellboy/comic</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/ua/hellboy/comic</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/folk-tales/collection</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://storylingo.uk/ua/folk-tales/collection</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://storylingo.uk/folk-tales/collection/comic</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/ua/folk-tales/collection/comic</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/polish-folk-tales/collection/comic</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/pl/polish-folk-tales/collection/comic</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://storylingo.uk/folk-tales/turnip</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://storylingo.uk/ua/folk-tales/turnip</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://storylingo.uk/folk-tales/turnip/comic</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://storylingo.uk/ua/folk-tales/turnip/comic</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://storylingo.uk/folk-tales/mitten</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://storylingo.uk/ua/folk-tales/mitten</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
 </urlset>
