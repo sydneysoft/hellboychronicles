@@ -10,4 +10,4 @@ Allow: /
 User-agent: OAI-AdsBot
 Allow: /
 
-Sitemap: https://hellboychronicles.vercel.app/sitemap.xml
+Sitemap: https://storylingo.uk/sitemap.xml
