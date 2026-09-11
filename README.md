@@ -1,6 +1,12 @@
-# Hellboy Chronicles
+# StoryLingo
 
-A mobile-first web comic reader for **The First Awakening**, Chapter 1 of Hellboy Chronicles.
+StoryLingo is a multilingual reading and language-learning platform built around stories, vocabulary practice, pronunciation, grammar, audiobooks and interactive exercises.
+
+The **Hellboy Chronicles** remain part of the platform as a story collection alongside Universal Core Stories and folk-tale collections.
+
+## Website
+
+Production domain: https://storylingo.uk
 
 ## Local preview
 
@@ -8,4 +14,4 @@ Open `index.html` through any static web server.
 
 ## Deployment
 
-The repository is ready for Vercel as a static site with no build command required.
+The web project is deployed on Vercel as a static site. The custom domain is managed separately and points to the Vercel deployment.
