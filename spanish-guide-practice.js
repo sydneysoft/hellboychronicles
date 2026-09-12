@@ -1,3 +1,4 @@
+(()=>{document.documentElement.classList.add('storylingo-block-rest');if(!document.querySelector('link[data-storylingo-block-rest]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/storylingo-block-rest.css?v=20260912-2';l.dataset.storylingoBlockRest='1';document.head.appendChild(l)}if(!document.querySelector('script[data-storylingo-cookie]')){const s=document.createElement('script');s.src='/storylingo-cookie.js?v=20260912-2';s.dataset.storylingoCookie='1';document.body.appendChild(s)}})();
 (()=>{
 const norm=s=>(s||'').toLocaleLowerCase('es-ES').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñü ]/g,' ').replace(/\s+/g,' ').trim();
 const pronouns=['yo','tu','él','ella','usted','nosotros','nosotras','vosotros','vosotras','ellos','ellas','ustedes'];
