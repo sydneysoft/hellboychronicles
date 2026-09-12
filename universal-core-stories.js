@@ -1,3 +1,4 @@
+(()=>{document.documentElement.classList.add('storylingo-block-rest');if(!document.querySelector('link[data-storylingo-block-rest]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/storylingo-block-rest.css?v=20260912-2';l.dataset.storylingoBlockRest='1';document.head.appendChild(l)}if(!document.querySelector('script[data-storylingo-cookie]')){const s=document.createElement('script');s.src='/storylingo-cookie.js?v=20260912-2';s.dataset.storylingoCookie='1';document.body.appendChild(s)}})();
 (()=>{
 const P=[
 `The morning was cold when Misha left his small apartment. He lived alone in a quiet part of the city, and the street outside his house was only beginning to wake.`,
