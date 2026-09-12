@@ -1,0 +1,22 @@
+/* StoryLingo block/pixel interface for non-graphic reading and study pages. Graphic novel pages intentionally do not load this file. */
+:root{--sl-black:#070707;--sl-panel:#121212;--sl-white:#f7f7f2;--sl-orange:#ff7a00;--sl-gray:#b9b9b2;--sl-line:#3a3a35;--sl-shadow:#000}
+body.storylingo-block-content{background:var(--sl-black)!important;color:var(--sl-white)!important;font-family:"Courier New",ui-monospace,monospace!important;background-image:linear-gradient(90deg,#ffffff08 1px,transparent 1px),linear-gradient(#ffffff08 1px,transparent 1px)!important;background-size:24px 24px!important}
+body.storylingo-block-content .top,body.storylingo-block-content .topbar{background:#050505!important;border-bottom:4px solid var(--sl-orange)!important;backdrop-filter:none!important;box-shadow:0 6px 0 #000!important}
+body.storylingo-block-content .top a,body.storylingo-block-content .topbar a{color:var(--sl-white)!important}
+body.storylingo-block-content .wrap,body.storylingo-block-content .panel,body.storylingo-block-content .card,body.storylingo-block-content .study-card,body.storylingo-block-content .note,body.storylingo-block-content .status{border-radius:0!important}
+body.storylingo-block-content .wrap{max-width:1040px!important}
+body.storylingo-block-content .panel,body.storylingo-block-content .card,body.storylingo-block-content .study-card,body.storylingo-block-content .note,body.storylingo-block-content .status{background:#111!important;border:3px solid var(--sl-white)!important;box-shadow:7px 7px 0 var(--sl-orange)!important;color:var(--sl-white)!important}
+body.storylingo-block-content .title,body.storylingo-block-content h1,body.storylingo-block-content h2,body.storylingo-block-content .word{font-family:"Courier New",ui-monospace,monospace!important;font-weight:900!important;letter-spacing:-.04em!important;text-transform:uppercase}
+body.storylingo-block-content .title,body.storylingo-block-content h1{color:var(--sl-orange)!important;text-shadow:4px 4px 0 #000!important}
+body.storylingo-block-content .eyebrow,body.storylingo-block-content small,body.storylingo-block-content .meaning,body.storylingo-block-content .meta{font-family:"Courier New",ui-monospace,monospace!important}
+body.storylingo-block-content .eyebrow,body.storylingo-block-content .meaning{color:var(--sl-orange)!important}
+body.storylingo-block-content .sub,body.storylingo-block-content .meta,body.storylingo-block-content .note,body.storylingo-block-content .p,body.storylingo-block-content p{color:#d7d7d1!important}
+body.storylingo-block-content button,body.storylingo-block-content .actions button,body.storylingo-block-content .quiz button,body.storylingo-block-content .study-links a{border-radius:0!important;border:3px solid var(--sl-white)!important;background:#161616!important;color:var(--sl-white)!important;font-family:"Courier New",ui-monospace,monospace!important;font-weight:900!important;box-shadow:4px 4px 0 #000!important;text-transform:uppercase}
+body.storylingo-block-content button:hover,body.storylingo-block-content .study-links a:hover{background:var(--sl-orange)!important;color:#000!important;transform:translate(-1px,-1px)}
+body.storylingo-block-content button.on,body.storylingo-block-content button.active,body.storylingo-block-content .actions .practice{background:var(--sl-orange)!important;color:#000!important;border-color:#000!important;box-shadow:4px 4px 0 var(--sl-white)!important}
+body.storylingo-block-content input,body.storylingo-block-content select{border-radius:0!important;border:3px solid var(--sl-white)!important;background:#090909!important;color:var(--sl-white)!important;font-family:"Courier New",ui-monospace,monospace!important;box-shadow:4px 4px 0 #000!important}
+body.storylingo-block-content .p{border-bottom:2px solid #333!important}
+body.storylingo-block-content .pid{color:var(--sl-orange)!important}
+body.storylingo-block-content .grid{gap:20px!important}
+body.storylingo-block-content .example{border-top-color:#444!important}
+@media(max-width:700px){body.storylingo-block-content .panel,body.storylingo-block-content .card,body.storylingo-block-content .study-card{box-shadow:4px 4px 0 var(--sl-orange)!important}}
