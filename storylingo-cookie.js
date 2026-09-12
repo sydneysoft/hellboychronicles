@@ -1,4 +1,12 @@
 (() => {
+  if (!document.querySelector('script[data-storylingo-recaptcha-loader="1"]')) {
+    const recaptcha = document.createElement("script");
+    recaptcha.src = "/storylingo-recaptcha.js?v=20260912-1";
+    recaptcha.defer = true;
+    recaptcha.dataset.storylingoRecaptchaLoader = "1";
+    document.head.appendChild(recaptcha);
+  }
+
   const key = "storylingo_cookie_notice_accepted";
   try {
     if (localStorage.getItem(key) === "yes") return;
@@ -12,7 +20,7 @@
     <div class="sl-cookie-inner">
       <div>
         <strong>COOKIE NOTICE</strong>
-        <p>StoryLingo uses essential browser storage for language and reading preferences.</p>
+        <p>StoryLingo uses essential browser storage for language and reading preferences and Google reCAPTCHA for security and abuse prevention when enabled.</p>
       </div>
       <button type="button" data-cookie-accept>ACCEPT</button>
     </div>
