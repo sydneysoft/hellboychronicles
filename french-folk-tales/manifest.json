@@ -1,0 +1,36 @@
+{
+  "collection": "French Folk Tales",
+  "collection_fr": "Contes populaires français",
+  "languages": ["en", "fr"],
+  "asset_format": "webp",
+  "stories": [
+    {
+      "slug": "cinderella",
+      "title": "Cinderella",
+      "title_fr": "Cendrillon",
+      "page_count": 6,
+      "pages": ["images/cinderella/page-01.webp","images/cinderella/page-02.webp","images/cinderella/page-03.webp","images/cinderella/page-04.webp","images/cinderella/page-05.webp","images/cinderella/page-06.webp"]
+    },
+    {
+      "slug": "little-red-riding-hood",
+      "title": "Little Red Riding Hood",
+      "title_fr": "Le Petit Chaperon rouge",
+      "page_count": 6,
+      "pages": ["images/little-red-riding-hood/page-01.webp","images/little-red-riding-hood/page-02.webp","images/little-red-riding-hood/page-03.webp","images/little-red-riding-hood/page-04.webp","images/little-red-riding-hood/page-05.webp","images/little-red-riding-hood/page-06.webp"]
+    },
+    {
+      "slug": "puss-in-boots",
+      "title": "Puss in Boots",
+      "title_fr": "Le Chat botté",
+      "page_count": 6,
+      "pages": ["images/puss-in-boots/page-01.webp","images/puss-in-boots/page-02.webp","images/puss-in-boots/page-03.webp","images/puss-in-boots/page-04.webp","images/puss-in-boots/page-05.webp","images/puss-in-boots/page-06.webp"]
+    },
+    {
+      "slug": "sleeping-beauty",
+      "title": "Sleeping Beauty",
+      "title_fr": "La Belle au bois dormant",
+      "page_count": 6,
+      "pages": ["images/sleeping-beauty/page-01.webp","images/sleeping-beauty/page-02.webp","images/sleeping-beauty/page-03.webp","images/sleeping-beauty/page-04.webp","images/sleeping-beauty/page-05.webp","images/sleeping-beauty/page-06.webp"]
+    }
+  ]
+}
