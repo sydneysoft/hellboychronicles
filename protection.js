@@ -1,4 +1,12 @@
 (() => {
+  if (!document.querySelector('script[data-storylingo-recaptcha-loader="1"]')) {
+    const recaptcha = document.createElement('script');
+    recaptcha.src = '/storylingo-recaptcha.js?v=20260912-1';
+    recaptcha.defer = true;
+    recaptcha.dataset.storylingoRecaptchaLoader = '1';
+    document.head.appendChild(recaptcha);
+  }
+
   const targetElement = target => target instanceof Element ? target : target?.parentElement;
   const protectedArea = target => Boolean(targetElement(target)?.closest('.reader, dialog'));
   const watermarkText = '@HELLBOYCHRONICLES · J MIJAIL';
