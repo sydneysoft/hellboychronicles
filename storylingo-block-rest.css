@@ -1,0 +1,79 @@
+html.storylingo-block-rest{--sl-black:#000;--sl-white:#fff;--sl-orange:#ff7a00;--sl-orange2:#ff9a33;--sl-gray:#b9b9b9;background:#000}
+html.storylingo-block-rest body{margin:0!important;background:#000!important;color:#fff!important;font-family:ui-monospace,"SFMono-Regular",Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace!important}
+html.storylingo-block-rest *{box-sizing:border-box}
+html.storylingo-block-rest a,html.storylingo-block-rest button,html.storylingo-block-rest input,html.storylingo-block-rest textarea,html.storylingo-block-rest select{font-family:inherit!important}
+html.storylingo-block-rest button,html.storylingo-block-rest a,html.storylingo-block-rest input,html.storylingo-block-rest textarea,html.storylingo-block-rest select{border-radius:0!important}
+
+html.storylingo-block-rest .sl-cookie{position:relative;z-index:80;background:#000;color:#ff7a00;border-bottom:4px solid #ff7a00;box-shadow:0 5px 0 #fff}
+html.storylingo-block-rest .sl-cookie-inner{width:min(1180px,calc(100% - 32px));min-height:76px;margin:auto;padding:13px 0;display:flex;align-items:center;justify-content:space-between;gap:20px}
+html.storylingo-block-rest .sl-cookie strong{display:block;font-size:12px;letter-spacing:.14em}
+html.storylingo-block-rest .sl-cookie p{max-width:760px;margin:6px 0 0;color:#fff;font-size:12px;line-height:1.5}
+html.storylingo-block-rest .sl-cookie button{min-height:42px;padding:9px 16px;border:3px solid #fff!important;background:#ff7a00!important;color:#000!important;font-weight:900;box-shadow:4px 4px 0 #fff;cursor:pointer}
+
+html.storylingo-block-rest .topbar,html.storylingo-block-rest .top{height:auto!important;min-height:68px;position:sticky!important;top:0!important;z-index:40!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:11px max(14px,3vw)!important;background:#000!important;color:#fff!important;border:0!important;border-bottom:4px solid #ff7a00!important;box-shadow:0 5px 0 #fff!important;backdrop-filter:none!important}
+html.storylingo-block-rest .topbar a,html.storylingo-block-rest .top a,html.storylingo-block-rest .library-link,html.storylingo-block-rest .instagram{color:#fff!important;text-decoration:none!important;font-weight:900!important}
+html.storylingo-block-rest .topbar a:hover,html.storylingo-block-rest .top a:hover,html.storylingo-block-rest .library-link:hover{color:#ff7a00!important}
+html.storylingo-block-rest .brand-mark{border:3px solid #fff!important;border-radius:0!important;background:#ff7a00!important;color:#000!important;box-shadow:4px 4px 0 #fff!important}
+html.storylingo-block-rest .brand strong,html.storylingo-block-rest .brand small,html.storylingo-block-rest .chapter-status{font-family:inherit!important}
+html.storylingo-block-rest .brand strong,html.storylingo-block-rest .chapter-status span{color:#ff7a00!important}
+html.storylingo-block-rest .brand small,html.storylingo-block-rest .chapter-status strong{color:#fff!important}
+html.storylingo-block-rest .language-control select,html.storylingo-block-rest .lang a{appearance:none!important;border:3px solid #ff7a00!important;background:#000!important;color:#fff!important;padding:8px 10px!important;box-shadow:3px 3px 0 #ff7a00!important;font-weight:900!important}
+html.storylingo-block-rest .lang .active{background:#ff7a00!important;color:#000!important;border-color:#fff!important;box-shadow:3px 3px 0 #fff!important}
+
+html.storylingo-block-rest .novel-hero,html.storylingo-block-rest .hero{position:relative!important;max-width:none!important;margin:0!important;padding:64px clamp(18px,5vw,64px)!important;text-align:left!important;background:#000!important;color:#fff!important;border-bottom:4px solid #ff7a00!important}
+html.storylingo-block-rest .novel-hero:before,html.storylingo-block-rest .hero:before,html.storylingo-block-rest .novel-hero:after,html.storylingo-block-rest .hero:after{display:none!important}
+html.storylingo-block-rest .novel-hero .edition,html.storylingo-block-rest .hero small,html.storylingo-block-rest .eyebrow{display:inline-block!important;margin:0!important;padding:6px 8px!important;border:2px solid #ff7a00!important;color:#ff7a00!important;font-family:inherit!important;font-size:10px!important;font-weight:900!important;letter-spacing:.12em!important;text-transform:uppercase}
+html.storylingo-block-rest .novel-hero h1,html.storylingo-block-rest .hero h1,html.storylingo-block-rest .title{margin:18px 0 16px!important;color:#ff7a00!important;font-family:inherit!important;font-size:clamp(36px,7vw,72px)!important;line-height:.95!important;letter-spacing:0!important;text-shadow:5px 5px 0 #3a1a00!important;text-transform:uppercase}
+html.storylingo-block-rest .novel-hero p,html.storylingo-block-rest .hero p,html.storylingo-block-rest .sub{max-width:760px!important;margin:0!important;color:#fff!important;line-height:1.7!important}
+
+html.storylingo-block-rest .novel-shell{display:grid!important;grid-template-columns:190px minmax(0,760px) 190px!important;justify-content:center!important;gap:28px!important;padding:38px 20px 120px!important}
+html.storylingo-block-rest .novel-tools,html.storylingo-block-rest .collection-tools{border:4px solid #ff7a00!important;background:#000!important;color:#fff!important;box-shadow:6px 6px 0 #fff!important;padding:16px!important}
+html.storylingo-block-rest .novel-tools span,html.storylingo-block-rest .collection-tools span{color:#ff7a00!important;font-weight:900!important}
+html.storylingo-block-rest .novel-tools button,html.storylingo-block-rest .collection-tools button,html.storylingo-block-rest .reader-controls button{border:3px solid #fff!important;background:#ff7a00!important;color:#000!important;box-shadow:3px 3px 0 #fff!important;font-weight:900!important;cursor:pointer!important}
+html.storylingo-block-rest .novel-tools a,html.storylingo-block-rest .collection-tools a{color:#ff7a00!important;font-weight:900!important}
+html.storylingo-block-rest .novel-copy,html.storylingo-block-rest .paper,html.storylingo-block-rest .collection-copy{background:#fff!important;color:#000!important;border:4px solid #000!important;box-shadow:8px 8px 0 #ff7a00!important;padding:clamp(28px,5vw,58px)!important;line-height:1.85!important;font-family:Georgia,"Times New Roman",serif!important}
+html.storylingo-block-rest .novel-copy .chapter-title,html.storylingo-block-rest .paper h2,html.storylingo-block-rest .collection-copy h1,html.storylingo-block-rest .collection-copy h2{color:#000!important;font-family:inherit!important;text-shadow:none!important}
+html.storylingo-block-rest .novel-copy .chapter-label,html.storylingo-block-rest .novel-copy .chapter-end,html.storylingo-block-rest .paper .alt{color:#ff7a00!important;font-family:ui-monospace,"SFMono-Regular",Menlo,monospace!important;font-weight:900!important}
+html.storylingo-block-rest .novel-copy blockquote,html.storylingo-block-rest .paper blockquote{margin:30px 0!important;padding:14px 18px!important;border:0!important;border-left:6px solid #ff7a00!important;background:#f3f3f3!important;color:#000!important}
+html.storylingo-block-rest .scene-break{color:#ff7a00!important}
+html.storylingo-block-rest .progress{height:4px!important;background:#fff!important}
+html.storylingo-block-rest .progress span{background:#ff7a00!important}
+html.storylingo-block-rest .chapter-switcher,html.storylingo-block-rest .format-picker{display:flex!important;gap:10px!important;flex-wrap:wrap!important}
+html.storylingo-block-rest .chapter-switcher a,html.storylingo-block-rest .format-picker a,html.storylingo-block-rest .format-picker button{border:3px solid #fff!important;background:#000!important;color:#ff7a00!important;padding:10px 14px!important;box-shadow:4px 4px 0 #ff7a00!important;text-decoration:none!important;font-weight:900!important}
+html.storylingo-block-rest .chapter-switcher a.is-active,html.storylingo-block-rest .format-picker .is-current{background:#ff7a00!important;color:#000!important;border-color:#000!important;box-shadow:4px 4px 0 #000!important}
+
+html.storylingo-block-rest .collection-contents,html.storylingo-block-rest .index{width:min(980px,calc(100% - 28px))!important;max-width:980px!important;margin:34px auto!important;padding:24px!important;border:4px solid #ff7a00!important;background:#000!important;box-shadow:7px 7px 0 #fff!important}
+html.storylingo-block-rest .index{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
+html.storylingo-block-rest .card,html.storylingo-block-rest .study-card,html.storylingo-block-rest .note{border:4px solid #fff!important;border-radius:0!important;background:#000!important;color:#fff!important;box-shadow:5px 5px 0 #ff7a00!important;padding:18px!important}
+html.storylingo-block-rest .card:hover,html.storylingo-block-rest .study-card:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #ff7a00!important}
+html.storylingo-block-rest .card b,html.storylingo-block-rest .word,html.storylingo-block-rest .noun,html.storylingo-block-rest .verb{color:#ff7a00!important;font-family:inherit!important;font-weight:900!important}
+html.storylingo-block-rest .meaning,html.storylingo-block-rest .meta,html.storylingo-block-rest .legend,html.storylingo-block-rest .tools,html.storylingo-block-rest .hint,html.storylingo-block-rest .step2-hint{color:#bdbdbd!important}
+html.storylingo-block-rest .tabs{position:sticky!important;top:72px!important;z-index:30!important;display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;padding:10px!important;background:#000!important;border-bottom:3px solid #ff7a00!important}
+html.storylingo-block-rest .tabs button,html.storylingo-block-rest .actions button,html.storylingo-block-rest .quiz button,html.storylingo-block-rest .nav button,html.storylingo-block-rest .word-save,html.storylingo-block-rest .sentence-practice button,html.storylingo-block-rest .fr-step2 button,html.storylingo-block-rest .de-step2 button,html.storylingo-block-rest .es-step2 button{border:3px solid #fff!important;background:#ff7a00!important;color:#000!important;box-shadow:3px 3px 0 #fff!important;padding:9px 12px!important;font-weight:900!important;cursor:pointer!important}
+html.storylingo-block-rest .tabs button.active,html.storylingo-block-rest .nav button:nth-child(2){background:#fff!important;color:#000!important;border-color:#ff7a00!important;box-shadow:3px 3px 0 #ff7a00!important}
+html.storylingo-block-rest input,html.storylingo-block-rest textarea,html.storylingo-block-rest .search{border:3px solid #ff7a00!important;background:#000!important;color:#fff!important;padding:11px!important;box-shadow:3px 3px 0 #fff!important;outline:none!important}
+html.storylingo-block-rest .search{width:min(920px,calc(100% - 32px))!important;margin:22px auto!important}
+html.storylingo-block-rest .search input{width:100%!important;box-shadow:none!important}
+html.storylingo-block-rest .grid,html.storylingo-block-rest .wrap{max-width:1000px!important;margin:auto!important}
+html.storylingo-block-rest .grid{gap:18px!important;padding:20px 16px 80px!important}
+html.storylingo-block-rest .wrap{padding:30px 16px 80px!important}
+html.storylingo-block-rest .nav{border:4px solid #ff7a00!important;border-radius:0!important;background:#000!important;box-shadow:5px 5px 0 #fff!important;padding:8px!important}
+
+html.storylingo-block-rest .word-popup,html.storylingo-block-rest .vocab-dialog{border:4px solid #000!important;border-top:7px solid #ff7a00!important;border-radius:0!important;background:#fff!important;color:#000!important;box-shadow:8px 8px 0 #ff7a00!important}
+html.storylingo-block-rest .vocab-dialog-head{background:#000!important;color:#fff!important;border-bottom:5px solid #ff7a00!important}
+html.storylingo-block-rest .vocab-dialog-head span,html.storylingo-block-rest .word-popup-label,html.storylingo-block-rest .word-example-label{color:#ff7a00!important}
+
+@media(max-width:900px){
+ html.storylingo-block-rest .novel-shell{grid-template-columns:minmax(0,760px)!important;padding-inline:12px!important}
+ html.storylingo-block-rest .novel-tools{position:fixed!important;left:10px!important;right:10px!important;bottom:10px!important;top:auto!important;z-index:45!important;display:flex!important;align-items:center!important;gap:7px!important;padding:8px!important}
+}
+@media(max-width:700px){
+ html.storylingo-block-rest .topbar,html.storylingo-block-rest .top{min-height:62px!important;padding:9px 10px!important}
+ html.storylingo-block-rest .chapter-status{display:none!important}
+ html.storylingo-block-rest .novel-hero,html.storylingo-block-rest .hero{padding:44px 18px!important}
+ html.storylingo-block-rest .novel-copy,html.storylingo-block-rest .paper,html.storylingo-block-rest .collection-copy{padding:28px 20px!important;box-shadow:5px 5px 0 #ff7a00!important}
+ html.storylingo-block-rest .index{grid-template-columns:1fr!important;padding:16px!important}
+ html.storylingo-block-rest .grid{grid-template-columns:1fr!important}
+ html.storylingo-block-rest .sl-cookie-inner{width:calc(100% - 24px);flex-direction:column;align-items:flex-start;gap:10px}
+ html.storylingo-block-rest .sl-cookie button{width:100%}
+}
