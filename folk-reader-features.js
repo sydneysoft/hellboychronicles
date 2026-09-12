@@ -1,3 +1,4 @@
+(()=>{document.documentElement.classList.add('storylingo-block-rest');if(!document.querySelector('link[data-storylingo-block-rest]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/storylingo-block-rest.css?v=20260912-2';l.dataset.storylingoBlockRest='1';document.head.appendChild(l)}if(!document.querySelector('script[data-storylingo-cookie]')){const s=document.createElement('script');s.src='/storylingo-cookie.js?v=20260912-2';s.dataset.storylingoCookie='1';document.body.appendChild(s)}})();
 (()=>{
   const pending=new Map();
   const load=src=>{if(pending.has(src))return pending.get(src);const task=new Promise((resolve,reject)=>{if(document.querySelector(`script[src="${src}"]`)){resolve();return}const s=document.createElement('script');s.src=src;s.async=false;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});pending.set(src,task);return task};
