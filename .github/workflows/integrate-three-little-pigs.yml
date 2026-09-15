@@ -1,0 +1,81 @@
+name: Integrate Three Little Pigs
+
+on:
+  push:
+    paths:
+      - '.github/workflows/integrate-three-little-pigs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Integrate story and routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          story = Path('french-three-little-pigs.html')
+          s = story.read_text(encoding='utf-8')
+          s = s.replace(
+              'A short illustrated edition. The story ends where the story ends: no moral card, no motivational slogan.',
+              'A bilingual English–French illustrated folk tale.'
+          )
+          story.write_text(s, encoding='utf-8')
+
+          reader = Path('french-folk-comic.html')
+          h = reader.read_text(encoding='utf-8')
+          h = h.replace('Read four illustrated French folk tales in a bilingual English and French collection.', 'Read five illustrated French folk tales in a bilingual English and French collection.')
+          h = h.replace('Four classics from the French fairy-tale tradition', 'Five illustrated folk tales in English and French')
+          h = h.replace('Four illustrated tales in one bilingual volume. Choose a story, then turn the pages in English or French.', 'Five illustrated tales in one bilingual collection. Choose a story, then turn the pages in English or French.')
+          h = h.replace("Quatre classiques de la tradition des contes français", "Cinq contes illustrés en français et en anglais")
+          h = h.replace("Quatre contes illustrés réunis dans un volume bilingue. Choisissez une histoire, puis tournez les pages en français ou en anglais.", "Cinq contes illustrés réunis dans une collection bilingue. Choisissez une histoire, puis tournez les pages en français ou en anglais.")
+
+          marker = "chapters.innerHTML=stories.map((s,i)=>`<a class=\"chapter\" href=\"?page=${i*6+1}#reader\" data-page=\"${i*6}\"><span class=\"no\">${String(i+1).padStart(2,'0')}</span><h2>${fr?s[1]:s[0]}</h2><div class=\"alt\">${fr?s[0]:s[1]}</div><span class=\"place\">${s[2]}</span></a>`).join('');"
+          addition = marker + "\n    chapters.insertAdjacentHTML('beforeend',`<a class=\"chapter\" href=\"${fr?'/fr/french-folk-tales/three-little-pigs':'/french-folk-tales/three-little-pigs'}\" data-standalone=\"1\"><span class=\"no\">05</span><h2>${fr?'LES TROIS PETITS COCHONS':'THE THREE LITTLE PIGS'}</h2><div class=\"alt\">${fr?'THE THREE LITTLE PIGS':'LES TROIS PETITS COCHONS'}</div><span class=\"place\">France</span></a>`);"
+          if 'data-standalone="1"' not in h:
+              if marker not in h:
+                  raise RuntimeError('French collection chapter marker not found')
+              h = h.replace(marker, addition)
+
+          old_click = "chapters.onclick=e=>{const a=e.target.closest('.chapter');if(!a)return;e.preventDefault();page=+a.dataset.page;render()};"
+          new_click = "chapters.onclick=e=>{const a=e.target.closest('.chapter');if(!a)return;if(a.dataset.standalone==='1')return;e.preventDefault();page=+a.dataset.page;render()};"
+          if old_click in h:
+              h = h.replace(old_click, new_click)
+          reader.write_text(h, encoding='utf-8')
+
+          cfg_path = Path('vercel.json')
+          cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
+          rewrites = cfg.setdefault('rewrites', [])
+          desired = [
+              {'source':'/french-folk-tales/three-little-pigs','destination':'/french-three-little-pigs'},
+              {'source':'/fr/french-folk-tales/three-little-pigs','destination':'/french-three-little-pigs'},
+          ]
+          existing = {x.get('source') for x in rewrites}
+          for item in desired:
+              if item['source'] not in existing:
+                  rewrites.append(item)
+          cfg_path.write_text(json.dumps(cfg, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit integration
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add french-three-little-pigs.html french-folk-comic.html vercel.json
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+          else
+            git commit -m 'Publish Three Little Pigs in French collection'
+            git push origin HEAD:main
+          fi
