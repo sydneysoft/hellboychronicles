@@ -16,7 +16,9 @@
     .language-control select{font-size:1.05rem}.shelf[hidden]{display:none!important}
     .core-cover{background:radial-gradient(circle at 65% 35%,#d3a74c22,transparent 25%),linear-gradient(145deg,#14273a,#090d12)!important;border:1px solid #d1ad5c55}.core-cover h3{font-size:2.2rem}.core-cover span{color:#e4c46e}
     .french-collection-card .book-cover{background:radial-gradient(circle at 68% 30%,#d8bc6650,transparent 24%),linear-gradient(145deg,#173669,#111318)!important;border:1px solid #d7bd6c66}.french-collection-card .book-cover span{color:#ead077}
-    .brand-mark img{width:100%;height:100%;display:block;object-fit:contain}.company-link{font-size:.72rem;letter-spacing:.08em;color:#d6b56a;text-decoration:none;white-space:nowrap}.company-link:hover{color:#fff}@media(max-width:760px){.company-link{display:none}}
+    .brand-mark img{width:100%;height:100%;display:block;object-fit:contain}.company-link{font-size:.72rem;letter-spacing:.08em;color:#d6b56a;text-decoration:none;white-space:nowrap}.company-link:hover{color:#fff}
+    .orangesoft-credit{text-align:center;padding:30px 18px 38px;font-size:.78rem;letter-spacing:.09em;color:#8f897d}.orangesoft-credit a{color:#d6b56a;text-decoration:none;font-weight:700}.orangesoft-credit a:hover{color:#fff}
+    @media(max-width:760px){.company-link{font-size:.62rem;letter-spacing:.04em}.orangesoft-credit{padding:24px 14px 32px}}
   </style>
 </head>
 <body class="library-body block-ui">
@@ -25,59 +27,19 @@
     <div class="chapter-status"><span id="libraryLabel">STORYLINGO LIBRARY</span><strong id="chooseLabel">FIND YOUR NEXT STORY</strong></div>
     <div class="top-actions">
       <label class="language-control"><select id="languageSelect"><option value="en">🇬🇧</option><option value="uk">🇺🇦</option><option value="pl">🇵🇱</option><option value="fr">🇫🇷</option><option value="de">🇩🇪</option><option value="es">🇪🇸</option></select></label>
-      <a class="company-link" href="https://orangesoft.uk" target="_blank" rel="noopener noreferrer">BY ORANGESOFT ↗</a>
+      <a class="company-link" href="https://orangesoft.uk" target="_blank" rel="noopener noreferrer">BUILT BY ORANGESOFT ↗</a>
       <a class="instagram" href="https://www.instagram.com/storylingo.uk/" target="_blank" rel="noopener noreferrer">@STORYLINGO.UK</a>
     </div>
   </header>
   <main class="library-main">
-    <section class="library-intro">
-      <p id="eyebrow">A reading room for language learners</p>
-      <h1 id="libraryTitle">STORYLINGO LIBRARY</h1>
-      <p id="libraryCopy">Pick a story you genuinely want to read. Translation, vocabulary and practice stay close at hand when you need them.</p>
-    </section>
-
-    <section class="shelf" id="universalShelf">
-      <div class="shelf-head"><span>One story, many languages</span><h2 id="coreShelfTitle">THE LOST KEY — SHARED-LANGUAGE EDITION</h2></div>
-      <div class="folk-grid">
-        <article class="book-card">
-          <div class="book-cover core-cover"><span id="coreBadge">THE SAME STORY · SIX LANGUAGES</span><h3 id="coreTitle">THE LOST<br>KEY</h3></div>
-          <div class="book-info"><p id="coreCopy">Read The Lost Key in any of six languages, then switch versions whenever you want to compare a phrase or revisit a familiar scene.</p><div class="book-actions"><a id="coreRead" href="/universal-stories/lost-key">OPEN THE STORY</a></div></div>
-        </article>
-      </div>
-    </section>
-
+    <section class="library-intro"><p id="eyebrow">A reading room for language learners</p><h1 id="libraryTitle">STORYLINGO LIBRARY</h1><p id="libraryCopy">Pick a story you genuinely want to read. Translation, vocabulary and practice stay close at hand when you need them.</p></section>
+    <section class="shelf" id="universalShelf"><div class="shelf-head"><span>One story, many languages</span><h2 id="coreShelfTitle">THE LOST KEY — SHARED-LANGUAGE EDITION</h2></div><div class="folk-grid"><article class="book-card"><div class="book-cover core-cover"><span id="coreBadge">THE SAME STORY · SIX LANGUAGES</span><h3 id="coreTitle">THE LOST<br>KEY</h3></div><div class="book-info"><p id="coreCopy">Read The Lost Key in any of six languages, then switch versions whenever you want to compare a phrase or revisit a familiar scene.</p><div class="book-actions"><a id="coreRead" href="/universal-stories/lost-key">OPEN THE STORY</a></div></div></article></div></section>
     <section class="shelf" id="fantasyShelf"><div class="shelf-head"><span>An original StoryLingo serial</span><h2>HELLBOY CHRONICLES</h2></div></section>
-
-    <section class="shelf" id="ukrainianShelf">
-      <div class="shelf-head"><span>Stories from the Ukrainian folk tradition</span><h2>UKRAINIAN FOLK TALES</h2></div>
-      <div class="folk-grid">
-        <article class="book-card collection-card">
-          <div class="book-cover"><span>ILLUSTRATED COLLECTION · VOLUME I</span><h3>THIRTEEN<br>TALES</h3></div>
-          <div class="book-info"><p>Thirteen Ukrainian folk tales gathered in one illustrated volume, with a text edition for slower reading and language practice.</p><div class="book-actions"><a href="/folk-tales/collection/comic">ILLUSTRATED EDITION</a><a href="/folk-tales/collection">TEXT EDITION</a></div></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="shelf" id="polishShelf">
-      <div class="shelf-head"><span>Legends carried from Kraków, Warsaw and the Tatras</span><h2>POLISH FOLK TALES</h2></div>
-      <div class="folk-grid">
-        <article class="book-card polish-collection-card">
-          <div class="book-cover"><span>ILLUSTRATED COLLECTION · VOLUME I</span><h3>EIGHT<br>LEGENDS</h3></div>
-          <div class="book-info"><p>Eight Polish legends, from the Wawel Dragon to the sleeping knights of the Tatras.</p><div class="book-actions"><a href="/polish-folk-tales/collection/comic">ILLUSTRATED EDITION</a><a href="/polish-folk-tales/collection">TEXT EDITION</a></div></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="shelf" id="frenchShelf">
-      <div class="shelf-head"><span id="frenchShelfKicker">Classics from the French fairy-tale tradition</span><h2 id="frenchShelfTitle">FRENCH FOLK TALES</h2></div>
-      <div class="folk-grid">
-        <article class="book-card french-collection-card">
-          <div class="book-cover"><span id="frenchBadge">BILINGUAL EN / FR · VOLUME I</span><h3 id="frenchCardTitle">SIX<br>TALES</h3></div>
-          <div class="book-info"><p id="frenchCopy">Cinderella, Little Red Riding Hood, Puss in Boots, Sleeping Beauty, The Three Little Pigs and Bluebeard in one bilingual collection.</p><div class="book-actions"><a id="frenchComic" href="/french-folk-tales/collection/comic">ILLUSTRATED EDITION</a><a id="frenchText" href="/french-folk-tales/collection">TEXT EDITION</a></div></div>
-        </article>
-      </div>
-    </section>
+    <section class="shelf" id="ukrainianShelf"><div class="shelf-head"><span>Stories from the Ukrainian folk tradition</span><h2>UKRAINIAN FOLK TALES</h2></div><div class="folk-grid"><article class="book-card collection-card"><div class="book-cover"><span>ILLUSTRATED COLLECTION · VOLUME I</span><h3>THIRTEEN<br>TALES</h3></div><div class="book-info"><p>Thirteen Ukrainian folk tales gathered in one illustrated volume, with a text edition for slower reading and language practice.</p><div class="book-actions"><a href="/folk-tales/collection/comic">ILLUSTRATED EDITION</a><a href="/folk-tales/collection">TEXT EDITION</a></div></div></article></div></section>
+    <section class="shelf" id="polishShelf"><div class="shelf-head"><span>Legends carried from Kraków, Warsaw and the Tatras</span><h2>POLISH FOLK TALES</h2></div><div class="folk-grid"><article class="book-card polish-collection-card"><div class="book-cover"><span>ILLUSTRATED COLLECTION · VOLUME I</span><h3>EIGHT<br>LEGENDS</h3></div><div class="book-info"><p>Eight Polish legends, from the Wawel Dragon to the sleeping knights of the Tatras.</p><div class="book-actions"><a href="/polish-folk-tales/collection/comic">ILLUSTRATED EDITION</a><a href="/polish-folk-tales/collection">TEXT EDITION</a></div></div></article></div></section>
+    <section class="shelf" id="frenchShelf"><div class="shelf-head"><span id="frenchShelfKicker">Classics from the French fairy-tale tradition</span><h2 id="frenchShelfTitle">FRENCH FOLK TALES</h2></div><div class="folk-grid"><article class="book-card french-collection-card"><div class="book-cover"><span id="frenchBadge">BILINGUAL EN / FR · VOLUME I</span><h3 id="frenchCardTitle">SIX<br>TALES</h3></div><div class="book-info"><p id="frenchCopy">Cinderella, Little Red Riding Hood, Puss in Boots, Sleeping Beauty, The Three Little Pigs and Bluebeard in one bilingual collection.</p><div class="book-actions"><a id="frenchComic" href="/french-folk-tales/collection/comic">ILLUSTRATED EDITION</a><a id="frenchText" href="/french-folk-tales/collection">TEXT EDITION</a></div></div></article></div></section>
   </main>
+  <footer class="orangesoft-credit">STORYLINGO IS BUILT BY <a href="https://orangesoft.uk" target="_blank" rel="noopener noreferrer">ORANGESOFT.UK ↗</a></footer>
   <script src="/storylingo-cookie.js?v=20260912-1"></script>
   <script src="/library.js?v=french-text-20260915-1"></script>
 </body>
