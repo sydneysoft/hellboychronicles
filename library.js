@@ -14,7 +14,27 @@
   set('libraryLabel',t.lib);set('chooseLabel',t.choose);set('libraryTitle',t.title);set('libraryCopy',t.intro);set('coreCopy',t.copy);set('coreRead',t.read);
   const coreTitle=document.getElementById('coreTitle');if(coreTitle)coreTitle.innerHTML=t.core.replace(' ','<br>');
   const fantasy=document.getElementById('fantasyShelf'),ua=document.getElementById('ukrainianShelf'),pl=document.getElementById('polishShelf'),frShelf=document.getElementById('frenchShelf');
-  if(lang==='uk'){fantasy.hidden=true;pl.hidden=true;frShelf.hidden=true}else if(lang==='pl'){fantasy.hidden=true;ua.hidden=true;frShelf.hidden=true}else if(lang==='fr'){fantasy.hidden=true;ua.hidden=true;pl.hidden=true;set('frenchShelfKicker','Classiques de la tradition des contes français');set('frenchShelfTitle','CONTES POPULAIRES FRANÇAIS');set('frenchBadge','BILINGUE FR / EN · VOLUME I');const h=document.getElementById('frenchCardTitle');if(h)h.innerHTML='SIX<br>CONTES';set('frenchCopy','Cendrillon, Le Petit Chaperon rouge, Le Chat botté, La Belle au bois dormant, Les Trois Petits Cochons et La Barbe bleue réunis dans une collection bilingue.');set('frenchComic','ÉDITION ILLUSTRÉE');set('frenchText','ÉDITION TEXTE');const a=document.getElementById('frenchComic');if(a)a.href='/fr/french-folk-tales/collection/comic';const b=document.getElementById('frenchText');if(b)b.href='/fr/french-folk-tales/collection'}else if(['de','es'].includes(lang)){fantasy.hidden=true;ua.hidden=true;pl.hidden=true;frShelf.hidden=true}
-  const core=document.getElementById('coreRead');core.href=(lang==='uk'?'/ua':lang==='pl'?'/pl':lang==='fr'?'/fr':lang==='de'?'/de':lang==='es'?'/es':'')+'/universal-stories/lost-key';
-  const sel=document.getElementById('languageSelect');sel.value=lang;sel.onchange=()=>location.href=sel.value==='uk'?'/ua':sel.value==='pl'?'/pl':sel.value==='fr'?'/fr':sel.value==='de'?'/de':sel.value==='es'?'/es':'/';
+  if(lang==='uk'){if(fantasy)fantasy.hidden=true;if(pl)pl.hidden=true;if(frShelf)frShelf.hidden=true}
+  else if(lang==='pl'){if(fantasy)fantasy.hidden=true;if(ua)ua.hidden=true;if(frShelf)frShelf.hidden=true}
+  else if(lang==='fr'){
+    if(fantasy)fantasy.hidden=true;if(ua)ua.hidden=true;if(pl)pl.hidden=true;
+    set('frenchShelfKicker','Classiques de la tradition des contes français');set('frenchShelfTitle','CONTES POPULAIRES FRANÇAIS');set('frenchBadge','BILINGUE FR / EN · VOLUME I');
+    const h=document.getElementById('frenchCardTitle');if(h)h.innerHTML='SIX<br>CONTES';set('frenchCopy','Cendrillon, Le Petit Chaperon rouge, Le Chat botté, La Belle au bois dormant, Les Trois Petits Cochons et La Barbe bleue réunis dans une collection bilingue.');set('frenchComic','ÉDITION ILLUSTRÉE');set('frenchText','ÉDITION TEXTE');
+    const a=document.getElementById('frenchComic');if(a)a.href='/fr/french-folk-tales/collection/comic';const b=document.getElementById('frenchText');if(b)b.href='/fr/french-folk-tales/collection';
+  } else if(lang==='de'){
+    if(fantasy)fantasy.hidden=true;if(ua)ua.hidden=true;if(pl)pl.hidden=true;if(frShelf)frShelf.hidden=true;
+    const main=document.querySelector('.library-main');
+    if(main&&!document.getElementById('germanShelf')){
+      const s=document.createElement('section');s.className='shelf';s.id='germanShelf';
+      s.innerHTML=`<div class="shelf-head"><span>KLASSISCHE MÄRCHEN AUS DEUTSCHLAND</span><h2>DEUTSCHE VOLKSMÄRCHEN</h2></div><article class="book-card"><div class="book-cover"><span>5 GRAPHIC NOVELS · 5 TEXTFASSUNGEN</span><h3>DEUTSCHE<br>MÄRCHEN</h3></div><div class="book-info"><p>Hänsel und Gretel, Schneewittchen, Rotkäppchen, Frau Holle und Die Bremer Stadtmusikanten — mit Misha in einer neuen StoryLingo-Fassung.</p><div class="book-actions"><a href="/de/german-folk-tales/collection/comic">GRAPHIC NOVEL</a><a href="/de/german-folk-tales/collection">NOVEL</a></div></div></article>`;
+      main.appendChild(s);
+    }
+  } else if(lang==='es'){if(fantasy)fantasy.hidden=true;if(ua)ua.hidden=true;if(pl)pl.hidden=true;if(frShelf)frShelf.hidden=true}
+  const core=document.getElementById('coreRead');if(core)core.href=(lang==='uk'?'/ua':lang==='pl'?'/pl':lang==='fr'?'/fr':lang==='de'?'/de':lang==='es'?'/es':'')+'/universal-stories/lost-key';
+  const sel=document.getElementById('languageSelect');
+  if(sel){
+    const labels={en:'🇬🇧',uk:'🇺🇦',pl:'🇵🇱',fr:'🇫🇷',de:'🇩🇪',es:'🇪🇸'};
+    Object.entries(labels).forEach(([v,label])=>{if(![...sel.options].some(o=>o.value===v)){const o=document.createElement('option');o.value=v;o.textContent=label;sel.appendChild(o)}});
+    sel.value=lang;sel.onchange=()=>location.href=sel.value==='uk'?'/ua':sel.value==='pl'?'/pl':sel.value==='fr'?'/fr':sel.value==='de'?'/de':sel.value==='es'?'/es':'/';
+  }
 })();
