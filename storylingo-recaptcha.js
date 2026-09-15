@@ -8,6 +8,12 @@
   let overlay = null;
   let scriptPromise = null;
 
+  // Embedded social browsers can prevent reCAPTCHA from completing reliably.
+  // StoryLingo's public reading experience must never be blocked by that.
+  const ua = navigator.userAgent || "";
+  const isEmbeddedSocialBrowser = /Instagram|FBAN|FBAV|FB_IAB|Messenger|Threads/i.test(ua);
+  if (isEmbeddedSocialBrowser) return;
+
   try {
     if (sessionStorage.getItem(SESSION_KEY) === "yes") return;
   } catch {}
@@ -76,7 +82,9 @@
       overlay?.remove();
       overlay = null;
     } catch {
-      showOverlay("HUMAN VERIFICATION FAILED", true);
+      // Fail open for public reading. reCAPTCHA must not trap visitors on a blocking screen.
+      overlay?.remove();
+      overlay = null;
     }
   }
 
@@ -87,7 +95,10 @@
       if (!config?.enabled || !config?.siteKey) return;
       siteKey = config.siteKey;
       await verify();
-    } catch {}
+    } catch {
+      overlay?.remove();
+      overlay = null;
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
