@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0d0d0f">
   <title>French Folk Tales — Illustrated Collection | StoryLingo</title>
-  <meta name="description" content="Read four illustrated French folk tales in a bilingual English and French collection.">
+  <meta name="description" content="Read five illustrated French folk tales in a bilingual English and French collection.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://storylingo.uk/french-folk-tales/collection/comic">
   <style>
@@ -16,7 +16,7 @@
   <header class="top"><a class="back" href="/">‹ LIBRARY</a><div class="lang"><a id="enTab" href="/french-folk-tales/collection/comic">🇬🇧 EN</a><a id="frTab" href="/fr/french-folk-tales/collection/comic">🇫🇷 FR</a></div></header>
   <main>
     <div id="indexView">
-      <section class="hero"><div class="eyebrow" id="eyebrow">Four classics from the French fairy-tale tradition</div><h1 id="heroTitle">FRENCH FOLK TALES</h1><p id="heroCopy">Four illustrated tales in one bilingual volume. Choose a story, then turn the pages in English or French.</p></section>
+      <section class="hero"><div class="eyebrow" id="eyebrow">Five illustrated folk tales in English and French</div><h1 id="heroTitle">FRENCH FOLK TALES</h1><p id="heroCopy">Five illustrated tales in one bilingual collection. Choose a story, then turn the pages in English or French.</p></section>
       <section class="wrap"><div class="chapter-index" id="chapters"></div></section>
     </div>
     <section class="reader" id="reader"><div class="reader-head"><div class="no" id="storyNumber"></div><h2 id="readerTitle"></h2><p id="readerPlace"></p></div><div class="page-shell" id="pageShell"><img id="pageImage" alt="" decoding="async"><div class="image-error" id="imageError">This illustration did not load. Return to the index and choose the story again.</div></div><div class="counter" id="counter"></div><div class="controls"><button id="prev">←</button><button id="indexBtn">INDEX</button><button id="next">→</button></div></section>
@@ -27,13 +27,14 @@
     const stories=[['CINDERELLA','CENDRILLON','France','cinderella'],['LITTLE RED RIDING HOOD','LE PETIT CHAPERON ROUGE','France','little-red-riding-hood'],['PUSS IN BOOTS','LE CHAT BOTTÉ','France','puss-in-boots'],['SLEEPING BEAUTY','LA BELLE AU BOIS DORMANT','France','sleeping-beauty']];
     document.documentElement.lang=fr?'fr':'en';document.getElementById(fr?'frTab':'enTab').classList.add('active');
     const back=document.querySelector('.back');back.href=fr?'/fr':'/';back.textContent=fr?'‹ BIBLIOTHÈQUE':'‹ LIBRARY';
-    if(fr){eyebrow.textContent='Quatre classiques de la tradition des contes français';heroTitle.textContent='CONTES POPULAIRES FRANÇAIS';heroCopy.textContent='Quatre contes illustrés réunis dans un volume bilingue. Choisissez une histoire, puis tournez les pages en français ou en anglais.';imageError.textContent='Cette illustration ne s’est pas chargée. Revenez à l’index et choisissez de nouveau l’histoire.';footer.textContent='StoryLingo · Contes populaires français, Volume I'}
+    if(fr){eyebrow.textContent='Cinq contes illustrés en français et en anglais';heroTitle.textContent='CONTES POPULAIRES FRANÇAIS';heroCopy.textContent='Cinq contes illustrés réunis dans une collection bilingue. Choisissez une histoire, puis tournez les pages en français ou en anglais.';imageError.textContent='Cette illustration ne s’est pas chargée. Revenez à l’index et choisissez de nouveau l’histoire.';footer.textContent='StoryLingo · Contes populaires français, Volume I'}
     chapters.innerHTML=stories.map((s,i)=>`<a class="chapter" href="?page=${i*6+1}#reader" data-page="${i*6}"><span class="no">${String(i+1).padStart(2,'0')}</span><h2>${fr?s[1]:s[0]}</h2><div class="alt">${fr?s[0]:s[1]}</div><span class="place">${s[2]}</span></a>`).join('');
+    chapters.insertAdjacentHTML('beforeend',`<a class="chapter" href="${fr?'/fr/french-folk-tales/three-little-pigs':'/french-folk-tales/three-little-pigs'}" data-standalone="1"><span class="no">05</span><h2>${fr?'LES TROIS PETITS COCHONS':'THE THREE LITTLE PIGS'}</h2><div class="alt">${fr?'THE THREE LITTLE PIGS':'LES TROIS PETITS COCHONS'}</div><span class="place">France</span></a>`);
     let page=0;function src(p){const s=stories[Math.floor(p/6)];return `${base}${s[3]}/page-${String(p%6+1).padStart(2,'0')}.webp?v=fr-20260912-1`}
     function render(){page=Math.max(0,Math.min(23,page));const si=Math.floor(page/6),s=stories[si],local=page%6;pageShell.classList.remove('is-error');pageImage.src=src(page);pageImage.alt=`${fr?s[1]:s[0]} — ${fr?'page':'page'} ${local+1}`;readerTitle.textContent=fr?s[1]:s[0];readerPlace.textContent=s[2];storyNumber.textContent=`${fr?'CONTE':'STORY'} ${si+1} / 4`;counter.textContent=`PAGE ${page+1} / 24`;indexBtn.textContent=fr?'INDEX':'INDEX';prev.disabled=page===0;next.disabled=page===23;indexView.classList.add('hidden');reader.classList.add('open');history.replaceState(null,'',`${location.pathname}?page=${page+1}#reader`);if(page<23){const im=new Image;im.src=src(page+1)}scrollTo(0,0)}
     function showIndex(){reader.classList.remove('open');indexView.classList.remove('hidden');history.replaceState(null,'',location.pathname);scrollTo(0,0)}
     pageImage.onerror=()=>pageShell.classList.add('is-error');pageImage.onload=()=>pageShell.classList.remove('is-error');
-    chapters.onclick=e=>{const a=e.target.closest('.chapter');if(!a)return;e.preventDefault();page=+a.dataset.page;render()};prev.onclick=()=>{if(page){page--;render()}};next.onclick=()=>{if(page<23){page++;render()}};indexBtn.onclick=showIndex;
+    chapters.onclick=e=>{const a=e.target.closest('.chapter');if(!a)return;if(a.dataset.standalone==='1')return;e.preventDefault();page=+a.dataset.page;render()};prev.onclick=()=>{if(page){page--;render()}};next.onclick=()=>{if(page<23){page++;render()}};indexBtn.onclick=showIndex;
     addEventListener('keydown',e=>{if(!reader.classList.contains('open'))return;if(e.key==='ArrowLeft'&&page){page--;render()}else if(e.key==='ArrowRight'&&page<23){page++;render()}else if(e.key==='Escape')showIndex()});
     const q=+new URLSearchParams(location.search).get('page');if(q>=1&&q<=24){page=q-1;render()}
   </script>
