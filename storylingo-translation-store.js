@@ -1,13 +1,14 @@
 (()=>{
-  const VERSION='20260916-4';
+  const VERSION='20260916-6';
   const STATE_KEY=`storylingo:translation-store:${VERSION}:state`;
   const KEY_PREFIX=`storylingo:translation-store:${VERSION}:`;
   const resources={
-    vocabulary:'/translations/vocabulary.json?v=4',
-    'ru-forms':'/translations/ru/word-forms.json?v=4',
-    'ru:lost-key':'/translations/ru/lost-key.json?v=4',
-    'ru:iliad':'/translations/ru/iliad.json?v=4',
-    'ru:odyssey':'/translations/ru/odyssey.json?v=4'
+    vocabulary:'/translations/vocabulary.json?v=6',
+    'ru-forms':'/translations/ru/word-forms.json?v=6',
+    'ru-glosses':'/translations/ru/story-glosses.json?v=6',
+    'ru:lost-key':'/translations/ru/lost-key.json?v=6',
+    'ru:iliad':'/translations/ru/iliad.json?v=6',
+    'ru:odyssey':'/translations/ru/odyssey.json?v=6'
   };
 
   const storageKey=name=>`${KEY_PREFIX}${name}`;
@@ -20,8 +21,10 @@
   }
 
   function allPresent(){
-    if(localStorage.getItem(STATE_KEY)!=='1')return false;
-    return Object.keys(resources).every(name=>read(name)!==null);
+    try{
+      if(localStorage.getItem(STATE_KEY)!=='1')return false;
+      return Object.keys(resources).every(name=>read(name)!==null);
+    }catch{return false}
   }
 
   async function initialize(){
@@ -64,6 +67,10 @@
     getState(){
       try{return Number(localStorage.getItem(STATE_KEY)||'0')}catch{return 0}
     },
+    getResourceCount(){
+      try{return Object.keys(resources).filter(name=>read(name)!==null).length}catch{return 0}
+    },
+    getResourceTotal(){return Object.keys(resources).length},
     reset(){
       try{
         localStorage.setItem(STATE_KEY,'0');
