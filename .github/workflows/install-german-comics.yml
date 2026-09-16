@@ -1,0 +1,32 @@
+name: Install German comic assets
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'asset-staging/de/READY'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct German comic images
+        run: |
+          set -euo pipefail
+          mkdir -p german-folk-tales/images
+          for slug in hansel-gretel schneewittchen rotkaeppchen frau-holle bremer-stadtmusikanten; do
+            parts=(asset-staging/de/${slug}.b64.*)
+            test -e "${parts[0]}"
+            cat "${parts[@]}" | tr -d '\n\r ' | base64 -d > "german-folk-tales/images/${slug}.webp"
+            file "german-folk-tales/images/${slug}.webp" | grep -qi 'webp'
+            test -s "german-folk-tales/images/${slug}.webp"
+          done
+          rm -rf asset-staging/de
+      - name: Commit German comic images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add german-folk-tales/images asset-staging/de
+          git commit -m "Add German folk tale graphic novels" || exit 0
+          git push
