@@ -19,7 +19,7 @@ jobs:
           s=p.read_text()
           if '<body id="story" data-novel-language="de">' not in s:
               s=s.replace('<body>','<body id="story" data-novel-language="de">',1)
-          script='<script src="/universal-vocabulary.js?v=german-reader-2"></script>'
+          script='<script src="/universal-vocabulary.js?v=german-reader-3"></script>'
           if script not in s:
               s=s.replace('</body>',script+'\n</body>',1)
           p.write_text(s)
