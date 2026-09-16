@@ -1,12 +1,11 @@
 (()=>{
   const root=document.getElementById('story');
+  const store=window.StoryLingoTranslationStore;
   if(!root)return;
 
   const names={en:'ENGLISH',ru:'RUSSIAN',pl:'POLISH',fr:'FRENCH',de:'GERMAN',es:'SPANISH'};
   const locales={en:'en-US',ru:'ru-RU',pl:'pl-PL',fr:'fr-FR',de:'de-DE',es:'es-ES'};
   const codes=['es','de','fr','pl','ru'];
-  const DICT_KEY='storylingo:vocabulary:v3';
-  const RU_KEY='storylingo:vocabulary:ru-forms:v2';
   let dictionary=null,ruForms=null,pop=null,timer=null;
   const reverseMaps=new Map();
 
@@ -31,19 +30,18 @@
     return /^\/fr(?:\/|$)/.test(path)?'fr':/^\/pl(?:\/|$)/.test(path)?'pl':/^\/de(?:\/|$)/.test(path)?'de':/^\/es(?:\/|$)/.test(path)?'es':'en';
   }
 
-  function validDictionary(v){return v&&v.version===1&&v.entries&&typeof v.entries==='object'}
-  function validRuForms(v){return v&&v.version===1&&v.language==='ru'&&v.forms&&typeof v.forms==='object'}
-
-  async function loadDictionary(){
+  async function getDictionary(){
     if(dictionary)return dictionary;
-    try{const saved=localStorage.getItem(DICT_KEY);if(saved){const p=JSON.parse(saved);if(validDictionary(p)){dictionary=p;return p}}}catch{}
-    try{const r=await fetch('/translations/vocabulary.json?v=3',{headers:{Accept:'application/json'},cache:'force-cache'});if(!r.ok)return null;const p=await r.json();if(!validDictionary(p))return null;dictionary=p;try{localStorage.setItem(DICT_KEY,JSON.stringify(p))}catch{}return p}catch{return null}
+    if(!store)return null;
+    dictionary=await store.get('vocabulary');
+    return dictionary;
   }
 
-  async function loadRuForms(){
+  async function getRuForms(){
     if(ruForms)return ruForms;
-    try{const saved=localStorage.getItem(RU_KEY);if(saved){const p=JSON.parse(saved);if(validRuForms(p)){ruForms=p;return p}}}catch{}
-    try{const r=await fetch('/translations/ru/word-forms.json?v=2',{headers:{Accept:'application/json'},cache:'force-cache'});if(!r.ok)return null;const p=await r.json();if(!validRuForms(p))return null;ruForms=p;try{localStorage.setItem(RU_KEY,JSON.stringify(p))}catch{}return p}catch{return null}
+    if(!store)return null;
+    ruForms=await store.get('ru-forms');
+    return ruForms;
   }
 
   function russianStem(value){
@@ -58,8 +56,8 @@
     const wanted=norm(text).replace(/ё/g,'е');
     if(!wanted)return null;
 
-    const forms=await loadRuForms();
-    if(forms){
+    const forms=await getRuForms();
+    if(forms?.forms){
       for(const [surface,english] of Object.entries(forms.forms)){
         if(norm(surface).replace(/ё/g,'е')===wanted)return english;
       }
@@ -71,10 +69,10 @@
       }
     }
 
-    const dict=await loadDictionary();
-    if(!dict)return null;
+    const dict=await getDictionary();
+    if(!dict?.entries)return null;
     const stem=russianStem(wanted);
-    for(const [english,entry] of Object.entries(dict.entries||{})){
+    for(const [english,entry] of Object.entries(dict.entries)){
       const ru=entry?.ru;
       if(typeof ru!=='string'||!ru.trim())continue;
       const n=norm(ru).replace(/ё/g,'е');
@@ -97,30 +95,36 @@
       const value=entry?.[lang];
       if(typeof value==='string'&&value.trim()){const k=norm(value);if(k&&!map.has(k))map.set(k,english)}
     }
-    reverseMaps.set(lang,map);return map;
+    reverseMaps.set(lang,map);
+    return map;
   }
 
   async function lookup(text,source,target){
     if(source==='ru'&&target==='en')return lookupRussian(text);
-    const dict=await loadDictionary();
-    if(!dict)return null;
+    const dict=await getDictionary();
+    if(!dict?.entries)return null;
     if(source==='en')return englishEntry(dict,text)?.entry?.[target]||null;
     if(target==='en')return reverseMap(dict,source).get(norm(text))||null;
     return null;
   }
 
   function save(word,translation,source,target){
-    const key='hellboy-universal-vocabulary';let items=[];
+    const key='hellboy-universal-vocabulary';
+    let items=[];
     try{items=JSON.parse(localStorage.getItem(key)||'[]')}catch{}
     if(!items.some(x=>norm(x.word)===norm(word)&&x.source===source))items.unshift({word,translation,source,target,savedAt:Date.now()});
     localStorage.setItem(key,JSON.stringify(items.slice(0,300)));
   }
 
   function place(rect){
-    if(!pop)return;const margin=12,w=Math.min(360,innerWidth-24);
+    if(!pop)return;
+    const margin=12,w=Math.min(360,innerWidth-24);
     pop.style.left=`${Math.max(margin,Math.min(innerWidth-w-margin,rect.left+rect.width/2-w/2))}px`;
-    let top=rect.bottom+10;if(top+360>innerHeight)top=Math.max(margin,rect.top-360);
-    pop.style.top=`${top}px`;pop.style.maxHeight=`${innerHeight-24}px`;pop.style.overflowY='auto';
+    let top=rect.bottom+10;
+    if(top+360>innerHeight)top=Math.max(margin,rect.top-360);
+    pop.style.top=`${top}px`;
+    pop.style.maxHeight=`${innerHeight-24}px`;
+    pop.style.overflowY='auto';
   }
 
   function contextEnglish(range){
@@ -131,52 +135,83 @@
 
   async function show(){
     clearTimeout(timer);
-    const sel=getSelection();if(!sel||sel.isCollapsed||!sel.rangeCount)return;
-    const a=sel.anchorNode,f=sel.focusNode;if(!root.contains(a)||!root.contains(f))return;
-    const word=clean(sel.toString());if(!word||word.length>80||word.split(/\s+/).length>5)return;
-    const range=sel.getRangeAt(0),rect=range.getBoundingClientRect();if(!rect.width&&!rect.height)return;
+    const sel=getSelection();
+    if(!sel||sel.isCollapsed||!sel.rangeCount)return;
+    const a=sel.anchorNode,f=sel.focusNode;
+    if(!root.contains(a)||!root.contains(f))return;
+    const word=clean(sel.toString());
+    if(!word||word.length>80||word.split(/\s+/).length>5)return;
+    const range=sel.getRangeAt(0),rect=range.getBoundingClientRect();
+    if(!rect.width&&!rect.height)return;
     const source=currentLang(word);
 
-    close();pop=document.createElement('div');pop.className='ucv-pop';
-    pop.innerHTML=`<div class="ucv-top"><div><div class="ucv-word"></div><div class="ucv-label"></div></div><button class="ucv-close" aria-label="Close">×</button></div><div class="ucv-translation ucv-loading">Checking local JSON…</div><div class="ucv-actions"><button class="ucv-save">SAVE WORD</button><button class="ucv-listen">🔊 LISTEN</button><button class="ucv-practice-open">✎ PRACTICE WORD</button></div><div class="ucv-practice"></div>`;
+    close();
+    pop=document.createElement('div');
+    pop.className='ucv-pop';
+    pop.innerHTML=`<div class="ucv-top"><div><div class="ucv-word"></div><div class="ucv-label"></div></div><button class="ucv-close" aria-label="Close">×</button></div><div class="ucv-translation ucv-loading">Reading localStorage…</div><div class="ucv-actions"><button class="ucv-save">SAVE WORD</button><button class="ucv-listen">🔊 LISTEN</button><button class="ucv-practice-open">✎ PRACTICE WORD</button></div><div class="ucv-practice"></div>`;
     pop.querySelector('.ucv-word').textContent=word;
-    pop.querySelector('.ucv-label').textContent=source==='ru'?'LOCAL RU JSON v3 · RUSSIAN → ENGLISH':source==='en'?'LOCAL JSON · ENGLISH → ES / DE / FR / PL / RU':`LOCAL JSON · ${names[source]} → ENGLISH`;
-    document.body.appendChild(pop);place(rect);
-    pop.querySelector('.ucv-close').onclick=close;pop.querySelector('.ucv-listen').onclick=()=>speak(word,source);
+    const state=store?.getState?.()||0;
+    pop.querySelector('.ucv-label').textContent=source==='ru'?`LOCAL STORE STATE ${state} · RUSSIAN → ENGLISH`:source==='en'?`LOCAL STORE STATE ${state} · ENGLISH → ES / DE / FR / PL / RU`:`LOCAL STORE STATE ${state} · ${names[source]} → ENGLISH`;
+    document.body.appendChild(pop);
+    place(rect);
+    pop.querySelector('.ucv-close').onclick=close;
+    pop.querySelector('.ucv-listen').onclick=()=>speak(word,source);
+
+    if(store)await store.ready;
 
     let primary='',target='en';
     if(source==='en'){
-      const vals=await Promise.all(codes.map(c=>lookup(word,'en',c)));const [es,de,fr,pl,ru]=vals;
-      primary=es||de||fr||pl||ru||'';target=es?'es':de?'de':fr?'fr':pl?'pl':'ru';
-      if(!pop)return;const row=(flag,label,value)=>`<div><b>${flag} ${label}:</b> ${value?esc(value):'<span class="ucv-missing">not in local dictionary</span>'}</div>`;
+      const vals=await Promise.all(codes.map(c=>lookup(word,'en',c)));
+      const [es,de,fr,pl,ru]=vals;
+      primary=es||de||fr||pl||ru||'';
+      target=es?'es':de?'de':fr?'fr':pl?'pl':'ru';
+      if(!pop)return;
+      const row=(flag,label,value)=>`<div><b>${flag} ${label}:</b> ${value?esc(value):'<span class="ucv-missing">not in local dictionary</span>'}</div>`;
       pop.querySelector('.ucv-translation').innerHTML=`<div class="ucv-other">${row('🇪🇸','Spanish',es)}${row('🇩🇪','German',de)}${row('🇫🇷','French',fr)}${row('🇵🇱','Polish',pl)}${row('🇷🇺','Russian',ru)}</div>`;
     }else{
-      primary=await lookup(word,source,'en')||'';target='en';if(!pop)return;
+      primary=await lookup(word,source,'en')||'';
+      target='en';
+      if(!pop)return;
       const box=pop.querySelector('.ucv-translation');
       if(primary)box.textContent=primary;
       else if(source==='ru'){
         const ctx=contextEnglish(range);
-        box.innerHTML=`<span class="ucv-missing">Word entry not added yet.</span>${ctx?`<div class="ucv-context"><b>ENGLISH CONTEXT:</b> ${esc(ctx)}</div>`:''}`;
+        box.innerHTML=`<span class="ucv-missing">Word entry not added to the bundled JSON yet.</span>${ctx?`<div class="ucv-context"><b>ENGLISH CONTEXT:</b> ${esc(ctx)}</div>`:''}`;
       }else box.textContent='Not in the local dictionary yet.';
     }
 
+    pop.querySelector('.ucv-label').textContent=pop.querySelector('.ucv-label').textContent.replace(/STATE \d/,'STATE '+(store?.getState?.()||0));
     pop.querySelector('.ucv-translation').classList.remove('ucv-loading');
     const saveBtn=pop.querySelector('.ucv-save'),practiceBtn=pop.querySelector('.ucv-practice-open');
     if(!primary){saveBtn.disabled=true;practiceBtn.disabled=true;return}
+
     saveBtn.onclick=e=>{save(word,primary,source,target);e.currentTarget.textContent='✓ SAVED'};
     practiceBtn.onclick=()=>{
-      save(word,primary,source,target);const box=pop.querySelector('.ucv-practice');box.classList.add('open');
+      save(word,primary,source,target);
+      const box=pop.querySelector('.ucv-practice');
+      box.classList.add('open');
       if(source==='en')box.innerHTML=`<div class="ucv-step">PRACTICE</div><div class="ucv-cue">Switch language to practise this word.</div>`;
       else box.innerHTML=`<div class="ucv-step">WRITE THE ${names[source]} WORD</div><div class="ucv-cue">${esc(primary)}</div><input autocomplete="off" spellcheck="false" placeholder="Type the word…"><button type="button" style="margin-top:8px;width:100%">CHECK</button><div class="ucv-feedback"></div>`;
       const input=box.querySelector('input'),checkBtn=box.querySelector('button'),fb=box.querySelector('.ucv-feedback');
-      if(checkBtn)checkBtn.onclick=()=>{if(norm(input.value)===norm(word)){fb.className='ucv-feedback ucv-ok';fb.textContent='✓ CORRECT'}else{fb.className='ucv-feedback ucv-bad';fb.textContent=`Not quite. Correct form: ${word}`}};
+      if(checkBtn)checkBtn.onclick=()=>{
+        if(norm(input.value)===norm(word)){fb.className='ucv-feedback ucv-ok';fb.textContent='✓ CORRECT'}
+        else{fb.className='ucv-feedback ucv-bad';fb.textContent=`Not quite. Correct form: ${word}`}
+      };
       place(rect);
     };
   }
 
   root.addEventListener('mouseup',()=>timer=setTimeout(show,25));
   root.addEventListener('touchend',()=>timer=setTimeout(show,180),{passive:true});
-  document.addEventListener('selectionchange',()=>{clearTimeout(timer);timer=setTimeout(()=>{const s=getSelection();if(s&&!s.isCollapsed&&root.contains(s.anchorNode))show()},350)});
+  document.addEventListener('selectionchange',()=>{
+    clearTimeout(timer);
+    timer=setTimeout(()=>{const s=getSelection();if(s&&!s.isCollapsed&&root.contains(s.anchorNode))show()},350);
+  });
   document.querySelectorAll('.langs button').forEach(b=>b.addEventListener('click',close));
   document.addEventListener('pointerdown',e=>{if(pop&&!pop.contains(e.target)&&!root.contains(e.target))close()});
+
+  window.StoryLingoVocabularyDebug={
+    async lookupRussian(word){if(store)await store.ready;return lookupRussian(word)},
+    state(){return store?.getState?.()||0}
+  };
 })();
