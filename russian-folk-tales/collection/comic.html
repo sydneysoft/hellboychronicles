@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d0d0f">
+<title>Русские народные сказки — Графические новеллы | StoryLingo</title>
+<meta name="description" content="Шесть русских народных сказок в формате StoryLingo Graphic Novel: Василиса Прекрасная, Иван-царевич и Серый волк, Царевна-лягушка, Морозко, Марья Моревна и По щучьему велению.">
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0d0d0f;color:#f4ead7;font-family:Inter,system-ui,sans-serif}body{background:radial-gradient(circle at 50% -10%,rgba(150,40,30,.2),transparent 38%),#0d0d0f}.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;background:rgba(13,13,15,.95);border-bottom:1px solid #d5b86840}.top a{color:#e4c565;text-decoration:none;font-weight:900}.hero{max-width:940px;margin:auto;padding:52px 20px 28px;text-align:center}.hero small{color:#d8b85f;letter-spacing:.12em;font-weight:900}.hero h1{margin:10px 0;font:700 clamp(2.3rem,7vw,4.6rem)/.96 Georgia,serif}.hero p{max-width:720px;margin:16px auto;color:#c9bead;font:1.05rem/1.65 Georgia,serif}.switch{display:inline-block;margin-top:8px;padding:10px 15px;border:1px solid #d4b65f77;border-radius:12px;color:#ead077;text-decoration:none;font-weight:900}.grid{max-width:1040px;margin:auto;padding:12px 18px 70px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.card{display:block;padding:22px;border:1px solid #d6b65c55;border-radius:14px;background:linear-gradient(145deg,#1b1a18,#121315);color:inherit;text-decoration:none;box-shadow:0 14px 40px #0005}.card:hover{border-color:#d6b65caa;transform:translateY(-1px)}.no{color:#d9ba61;font-weight:900;letter-spacing:.12em;font-size:.76rem}.card h2{margin:11px 0 7px;font:700 clamp(1.35rem,3vw,1.9rem)/1.05 Georgia,serif}.card p{margin:0;color:#a89e90;line-height:1.55}.reader{display:none;max-width:900px;margin:auto;padding:26px 12px 80px}.reader.open{display:block}.reader h2{text-align:center;font:700 clamp(1.5rem,4vw,2.3rem) Georgia,serif}.page{max-width:760px;margin:16px auto;background:#1e1711;border:1px solid #d5b86866;border-radius:10px;padding:7px;box-shadow:0 28px 70px #0008}.page img{display:block;width:100%;height:auto;border-radius:5px}.controls{display:flex;justify-content:center;gap:10px;margin:18px}.controls button{padding:11px 16px;border:1px solid #d6b65c70;border-radius:12px;background:#1c1a18;color:#f4ead7;font-weight:900;cursor:pointer}.hidden{display:none}@media(max-width:680px){.grid{grid-template-columns:1fr}.hero{padding-top:34px}.top{font-size:.78rem;padding-inline:10px}}
+</style>
+</head>
+<body>
+<header class="top"><a href="/?lang=ru">‹ БИБЛИОТЕКА</a><strong>РУССКИЕ СКАЗКИ</strong><a href="/russian-folk-tales/collection">ТЕКСТ ›</a></header>
+<main>
+<section id="indexView"><div class="hero"><small>GRAPHIC NOVEL · РУССКИЙ ФОЛЬКЛОР</small><h1>РУССКИЕ<br>НАРОДНЫЕ СКАЗКИ</h1><p>Шесть классических сказочных сюжетов в новой визуальной серии StoryLingo. Миша с красной татуировкой на лице появляется в каждой истории как спутник, свидетель или союзник героев.</p><a class="switch" href="/russian-folk-tales/collection">ЧИТАТЬ ТЕКСТОВУЮ ВЕРСИЮ</a></div><div class="grid" id="grid"></div></section>
+<section class="reader" id="reader"><h2 id="readerTitle"></h2><div class="page"><img id="pageImage" alt=""></div><div class="controls"><button id="backBtn">← К СПИСКУ</button></div></section>
+</main>
+<script>
+const stories=[
+ ['ВАСИЛИСА ПРЕКРАСНАЯ','Тёмный лес, Баба-яга, волшебная куколка и испытание доброго сердца.','vasilisa'],
+ ['ИВАН-ЦАРЕВИЧ И СЕРЫЙ ВОЛК','Жар-птица, опасная дорога и верный Серый волк, который становится настоящим другом.','ivan-grey-wolf'],
+ ['ЦАРЕВНА-ЛЯГУШКА','Стрела судьбы, Василиса Премудрая и путь к Кощею Бессмертному.','frog-princess'],
+ ['МОРОЗКО','Зимний лес проверяет терпение, доброту и способность оставаться человеком даже в холоде.','morozko'],
+ ['МАРЬЯ МОРЕВНА','Воительница Марья, запретная тайна, Кощей и путешествие ради спасения близкого человека.','maria-morevna'],
+ ['ПО ЩУЧЬЕМУ ВЕЛЕНИЮ','Емеля, говорящая щука и печь, которая превращает ленивую жизнь в невероятное приключение.','emelya-pike']
+];
+const grid=document.getElementById('grid'),reader=document.getElementById('reader'),indexView=document.getElementById('indexView'),img=document.getElementById('pageImage'),title=document.getElementById('readerTitle'),backBtn=document.getElementById('backBtn');
+grid.innerHTML=stories.map((s,i)=>`<a class="card" href="?story=${s[2]}#reader" data-i="${i}"><span class="no">${String(i+1).padStart(2,'0')} · GRAPHIC NOVEL</span><h2>${s[0]}</h2><p>${s[1]}</p></a>`).join('');
+function openStory(i){const s=stories[i];if(!s)return;title.textContent=s[0];img.src=`/russian-folk-tales/images/${s[2]}.webp?v=ru-20260916-1`;img.alt=`${s[0]} — Graphic Novel`;indexView.classList.add('hidden');reader.classList.add('open');history.replaceState(null,'',`${location.pathname}?story=${s[2]}#reader`);scrollTo(0,0)}
+grid.onclick=e=>{const a=e.target.closest('.card');if(!a)return;e.preventDefault();openStory(+a.dataset.i)};
+backBtn.onclick=()=>{reader.classList.remove('open');indexView.classList.remove('hidden');history.replaceState(null,'',location.pathname);scrollTo(0,0)};
+const slug=new URLSearchParams(location.search).get('story');if(slug){const i=stories.findIndex(s=>s[2]===slug);if(i>=0)openStory(i)}
+</script>
+</body></html>
