@@ -11,22 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Reconstruct German comic images
+      - name: Reconstruct and verify German comic images
         run: |
           set -euo pipefail
           mkdir -p german-folk-tales/images
-          for slug in hansel-gretel schneewittchen rotkaeppchen frau-holle bremer-stadtmusikanten; do
-            parts=(asset-staging/de/${slug}.x.*)
-            test -e "${parts[0]}"
-            cat "${parts[@]}" | tr -d '\n\r ' | base64 -d > "german-folk-tales/images/${slug}.webp"
-            file "german-folk-tales/images/${slug}.webp" | grep -qi 'webp'
-            test -s "german-folk-tales/images/${slug}.webp"
-          done
+
+          cat asset-staging/de/hansel-gretel.fix.* | tr -d '\n\r ' | base64 -d > german-folk-tales/images/hansel-gretel.webp
+          echo '92e2670674f35ceb8d6951ef9e1667ae8c8e62076876db3139875000640d241e  german-folk-tales/images/hansel-gretel.webp' | sha256sum -c -
+
+          cat asset-staging/de/schneewittchen.x.* | tr -d '\n\r ' | base64 -d > german-folk-tales/images/schneewittchen.webp
+          echo 'ca2a0fe28bdd11ba81faf88376dcb617626ba51505b0204d48feffa7ea1181ea  german-folk-tales/images/schneewittchen.webp' | sha256sum -c -
+
+          cat asset-staging/de/rotkaeppchen.x.* | tr -d '\n\r ' | base64 -d > german-folk-tales/images/rotkaeppchen.webp
+          echo 'ac2fbe85de66581ba1e8b71ba7142a6c76f4d650058f5ef3af74c111bc4ce642  german-folk-tales/images/rotkaeppchen.webp' | sha256sum -c -
+
+          cat asset-staging/de/frau-holle.x.* | tr -d '\n\r ' | base64 -d > german-folk-tales/images/frau-holle.webp
+          echo '85dcb3bcba89f049ccf847712974d99bd517be88c32ed0fc5a4e9a0fd01e4cd2  german-folk-tales/images/frau-holle.webp' | sha256sum -c -
+
+          cat asset-staging/de/bremer-stadtmusikanten.x.* | tr -d '\n\r ' | base64 -d > german-folk-tales/images/bremer-stadtmusikanten.webp
+          echo '59688c75f094aa7b99ea8189c49efb9ef5f1876d4fda0f331b51c719ce477292  german-folk-tales/images/bremer-stadtmusikanten.webp' | sha256sum -c -
+
+          file german-folk-tales/images/*.webp | grep -qi 'webp'
           rm -rf asset-staging/de
       - name: Commit German comic images
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add german-folk-tales/images asset-staging/de
-          git commit -m "Add German folk tale graphic novels" || exit 0
+          git commit -m "Add verified German folk tale graphic novels" || exit 0
           git push
