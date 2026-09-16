@@ -16,7 +16,7 @@ jobs:
           set -euo pipefail
           mkdir -p german-folk-tales/images
           for slug in hansel-gretel schneewittchen rotkaeppchen frau-holle bremer-stadtmusikanten; do
-            parts=(asset-staging/de/${slug}.b64.*)
+            parts=(asset-staging/de/${slug}.x.*)
             test -e "${parts[0]}"
             cat "${parts[@]}" | tr -d '\n\r ' | base64 -d > "german-folk-tales/images/${slug}.webp"
             file "german-folk-tales/images/${slug}.webp" | grep -qi 'webp'
