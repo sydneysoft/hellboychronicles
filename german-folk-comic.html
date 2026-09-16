@@ -24,7 +24,7 @@ const stories=[
 ];
 const grid=document.getElementById('grid'),reader=document.getElementById('reader'),indexView=document.getElementById('indexView'),img=document.getElementById('pageImage'),title=document.getElementById('readerTitle');
 grid.innerHTML=stories.map((s,i)=>`<a class="card" href="?story=${s[2]}#reader" data-i="${i}"><span class="no">${String(i+1).padStart(2,'0')} · GRAPHIC NOVEL</span><h2>${s[0]}</h2><p>${s[1]}</p></a>`).join('');
-function openStory(i){const s=stories[i];if(!s)return;title.textContent=s[0];img.src=`/german-folk-tales/images/${s[2]}.webp?v=de-20260915-1`;img.alt=`${s[0]} — Graphic Novel`;indexView.classList.add('hidden');reader.classList.add('open');history.replaceState(null,'',`${location.pathname}?story=${s[2]}#reader`);scrollTo(0,0)}
+function openStory(i){const s=stories[i];if(!s)return;title.textContent=s[0];img.src=`/german-folk-tales/images/${s[2]}.webp?v=de-20260916-2`;img.alt=`${s[0]} — Graphic Novel`;indexView.classList.add('hidden');reader.classList.add('open');history.replaceState(null,'',`${location.pathname}?story=${s[2]}#reader`);scrollTo(0,0)}
 grid.onclick=e=>{const a=e.target.closest('.card');if(!a)return;e.preventDefault();openStory(+a.dataset.i)};
 backBtn.onclick=()=>{reader.classList.remove('open');indexView.classList.remove('hidden');history.replaceState(null,'',location.pathname);scrollTo(0,0)};
 const slug=new URLSearchParams(location.search).get('story');if(slug){const i=stories.findIndex(s=>s[2]===slug);if(i>=0)openStory(i)}
