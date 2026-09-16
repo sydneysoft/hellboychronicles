@@ -5,8 +5,9 @@
   const names={en:'ENGLISH',ru:'RUSSIAN',pl:'POLISH',fr:'FRENCH',de:'GERMAN',es:'SPANISH'};
   const locales={en:'en-US',ru:'ru-RU',pl:'pl-PL',fr:'fr-FR',de:'de-DE',es:'es-ES'};
   const codes=['es','de','fr','pl','ru'];
-  const dictStorageKey='storylingo:vocabulary:v1';
-  let dictionary=null;
+  const dictStorageKey='storylingo:vocabulary:v2';
+  const ruFormsStorageKey='storylingo:vocabulary:ru-forms:v1';
+  let dictionary=null,ruForms=null;
   const reverseMaps=new Map();
   let pop=null,timer=null;
 
@@ -30,6 +31,7 @@
   function speak(text,lang){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=locales[lang]||'en-US';speechSynthesis.speak(u)}
 
   function validDictionary(value){return value&&value.version===1&&value.entries&&typeof value.entries==='object'}
+  function validRuForms(value){return value&&value.version===1&&value.language==='ru'&&value.forms&&typeof value.forms==='object'}
 
   async function loadDictionary(){
     if(dictionary)return dictionary;
@@ -41,13 +43,33 @@
       }
     }catch{}
     try{
-      const response=await fetch('/translations/vocabulary.json?v=1',{headers:{Accept:'application/json'},cache:'force-cache'});
+      const response=await fetch('/translations/vocabulary.json?v=2',{headers:{Accept:'application/json'},cache:'force-cache'});
       if(!response.ok)throw new Error('dictionary-not-found');
       const parsed=await response.json();
       if(!validDictionary(parsed))throw new Error('invalid-dictionary');
       dictionary=parsed;
       try{localStorage.setItem(dictStorageKey,JSON.stringify(parsed))}catch{}
       return dictionary;
+    }catch{return null}
+  }
+
+  async function loadRuForms(){
+    if(ruForms)return ruForms;
+    try{
+      const saved=localStorage.getItem(ruFormsStorageKey);
+      if(saved){
+        const parsed=JSON.parse(saved);
+        if(validRuForms(parsed)){ruForms=parsed;return ruForms}
+      }
+    }catch{}
+    try{
+      const response=await fetch('/translations/ru/word-forms.json?v=1',{headers:{Accept:'application/json'},cache:'force-cache'});
+      if(!response.ok)throw new Error('ru-forms-not-found');
+      const parsed=await response.json();
+      if(!validRuForms(parsed))throw new Error('invalid-ru-forms');
+      ruForms=parsed;
+      try{localStorage.setItem(ruFormsStorageKey,JSON.stringify(parsed))}catch{}
+      return ruForms;
     }catch{return null}
   }
 
@@ -73,10 +95,59 @@
     return map;
   }
 
+  function russianStem(value){
+    let s=norm(value).replace(/ё/g,'е');
+    if(!s||s.includes(' '))return s;
+    const endings=[
+      'иями','ями','ами','иями','ого','его','ому','ему','ыми','ими','иях','ях','ах','ов','ев','ей',
+      'ую','юю','ая','яя','ое','ее','ые','ие','ый','ий','ой','ым','им','ом','ем','ых','их',
+      'ешь','ишь','ете','ите','ют','ут','ят','ат','ет','ит','ем','им','ла','ли','ло','л',
+      'ться','ся','ть','ами','ями','ам','ям','ом','ем','ой','ей','ою','ею','а','я','ы','и','у','ю','е','о','ь','й'
+    ];
+    for(const ending of endings){
+      if(s.length-ending.length>=4&&s.endsWith(ending)){
+        s=s.slice(0,-ending.length);
+        break;
+      }
+    }
+    return s;
+  }
+
+  async function russianLookup(dict,text){
+    const wanted=norm(text).replace(/ё/g,'е');
+    if(!wanted)return null;
+
+    const forms=await loadRuForms();
+    if(forms){
+      for(const [surface,english] of Object.entries(forms.forms)){
+        if(norm(surface).replace(/ё/g,'е')===wanted)return english;
+      }
+    }
+
+    const exact=reverseMap(dict,'ru').get(wanted);
+    if(exact)return exact;
+
+    const wantedStem=russianStem(wanted);
+    if(wantedStem.length<4)return null;
+
+    if(forms){
+      for(const [surface,english] of Object.entries(forms.forms)){
+        if(russianStem(surface)===wantedStem)return english;
+      }
+    }
+
+    for(const [english,entry] of Object.entries(dict?.entries||{})){
+      const value=entry?.ru;
+      if(typeof value==='string'&&value.trim()&&russianStem(value)===wantedStem)return english;
+    }
+    return null;
+  }
+
   async function lookup(text,source,target){
     const dict=await loadDictionary();
     if(!dict)return null;
     if(source==='en')return englishEntry(dict,text)?.entry?.[target]||null;
+    if(source==='ru'&&target==='en')return russianLookup(dict,text);
     if(target==='en')return reverseMap(dict,source).get(norm(text))||null;
     return null;
   }
@@ -117,7 +188,7 @@
     pop.className='ucv-pop';
     pop.innerHTML=`<div class="ucv-top"><div><div class="ucv-word"></div><div class="ucv-label"></div></div><button class="ucv-close" aria-label="Close">×</button></div><div class="ucv-translation ucv-loading">Checking local dictionary…</div><div class="ucv-actions"><button class="ucv-save">SAVE WORD</button><button class="ucv-listen">🔊 LISTEN</button><button class="ucv-practice-open">✎ PRACTICE WORD</button></div><div class="ucv-practice"></div>`;
     pop.querySelector('.ucv-word').textContent=word;
-    pop.querySelector('.ucv-label').textContent=source==='en'?'LOCAL JSON · ENGLISH → ES / DE / FR / PL / RU':`LOCAL JSON · ${names[source]} → ENGLISH`;
+    pop.querySelector('.ucv-label').textContent=source==='en'?'LOCAL JSON · ENGLISH → ES / DE / FR / PL / RU':source==='ru'?'LOCAL JSON · RUSSIAN WORD FORM → ENGLISH':`LOCAL JSON · ${names[source]} → ENGLISH`;
     document.body.appendChild(pop);
     place(rect);
     pop.querySelector('.ucv-close').onclick=close;
