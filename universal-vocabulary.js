@@ -6,7 +6,7 @@
   const names={en:'ENGLISH',ru:'RUSSIAN',pl:'POLISH',fr:'FRENCH',de:'GERMAN',es:'SPANISH'};
   const locales={en:'en-US',ru:'ru-RU',pl:'pl-PL',fr:'fr-FR',de:'de-DE',es:'es-ES'};
   const codes=['es','de','fr','pl','ru'];
-  let dictionary=null,ruForms=null,pop=null,timer=null;
+  let dictionary=null,ruForms=null,ruGlosses=null,pop=null,timer=null;
   const reverseMaps=new Map();
 
   const style=document.createElement('style');
@@ -44,6 +44,13 @@
     return ruForms;
   }
 
+  async function getRuGlosses(){
+    if(ruGlosses)return ruGlosses;
+    if(!store)return null;
+    ruGlosses=await store.get('ru-glosses');
+    return ruGlosses;
+  }
+
   function russianStem(value){
     let s=norm(value).replace(/ё/g,'е');
     if(!s||s.includes(' '))return s;
@@ -52,9 +59,34 @@
     return s;
   }
 
+  function lookupGloss(glosses,text){
+    if(!glosses)return null;
+    const wanted=norm(text).replace(/ё/g,'е');
+    if(!wanted)return null;
+
+    for(const [surface,english] of Object.entries(glosses.words||{})){
+      if(norm(surface).replace(/ё/g,'е')===wanted)return english;
+    }
+
+    const stemmed=russianStem(wanted);
+    const stems=Object.entries(glosses.stems||{})
+      .map(([stem,english])=>[norm(stem).replace(/ё/g,'е'),english])
+      .filter(([stem])=>stem.length>=3)
+      .sort((a,b)=>b[0].length-a[0].length);
+
+    for(const [stem,english] of stems){
+      if(wanted.startsWith(stem)||stemmed.startsWith(stem)||stem.startsWith(stemmed)&&stemmed.length>=4)return english;
+    }
+    return null;
+  }
+
   async function lookupRussian(text){
     const wanted=norm(text).replace(/ё/g,'е');
     if(!wanted)return null;
+
+    const glosses=await getRuGlosses();
+    const broad=lookupGloss(glosses,wanted);
+    if(broad)return broad;
 
     const forms=await getRuForms();
     if(forms?.forms){
@@ -133,6 +165,14 @@
     return txt?.dataset?.en||'';
   }
 
+  function stateLabel(source){
+    const state=store?.getState?.()||0;
+    const count=store?.getResourceCount?.()||0;
+    const total=store?.getResourceTotal?.()||0;
+    const lang=source==='ru'?'RUSSIAN → ENGLISH':source==='en'?'ENGLISH → ES / DE / FR / PL / RU':`${names[source]} → ENGLISH`;
+    return `LOCAL STORE STATE ${state} · ${count}/${total} FILES · ${lang}`;
+  }
+
   async function show(){
     clearTimeout(timer);
     const sel=getSelection();
@@ -150,14 +190,14 @@
     pop.className='ucv-pop';
     pop.innerHTML=`<div class="ucv-top"><div><div class="ucv-word"></div><div class="ucv-label"></div></div><button class="ucv-close" aria-label="Close">×</button></div><div class="ucv-translation ucv-loading">Reading localStorage…</div><div class="ucv-actions"><button class="ucv-save">SAVE WORD</button><button class="ucv-listen">🔊 LISTEN</button><button class="ucv-practice-open">✎ PRACTICE WORD</button></div><div class="ucv-practice"></div>`;
     pop.querySelector('.ucv-word').textContent=word;
-    const state=store?.getState?.()||0;
-    pop.querySelector('.ucv-label').textContent=source==='ru'?`LOCAL STORE STATE ${state} · RUSSIAN → ENGLISH`:source==='en'?`LOCAL STORE STATE ${state} · ENGLISH → ES / DE / FR / PL / RU`:`LOCAL STORE STATE ${state} · ${names[source]} → ENGLISH`;
+    pop.querySelector('.ucv-label').textContent=stateLabel(source);
     document.body.appendChild(pop);
     place(rect);
     pop.querySelector('.ucv-close').onclick=close;
     pop.querySelector('.ucv-listen').onclick=()=>speak(word,source);
 
     if(store)await store.ready;
+    if(pop)pop.querySelector('.ucv-label').textContent=stateLabel(source);
 
     let primary='',target='en';
     if(source==='en'){
@@ -176,11 +216,10 @@
       if(primary)box.textContent=primary;
       else if(source==='ru'){
         const ctx=contextEnglish(range);
-        box.innerHTML=`<span class="ucv-missing">Word entry not added to the bundled JSON yet.</span>${ctx?`<div class="ucv-context"><b>ENGLISH CONTEXT:</b> ${esc(ctx)}</div>`:''}`;
+        box.innerHTML=`<span class="ucv-missing">No exact local word gloss yet.</span>${ctx?`<div class="ucv-context"><b>ENGLISH PARAGRAPH:</b> ${esc(ctx)}</div>`:''}`;
       }else box.textContent='Not in the local dictionary yet.';
     }
 
-    pop.querySelector('.ucv-label').textContent=pop.querySelector('.ucv-label').textContent.replace(/STATE \d/,'STATE '+(store?.getState?.()||0));
     pop.querySelector('.ucv-translation').classList.remove('ucv-loading');
     const saveBtn=pop.querySelector('.ucv-save'),practiceBtn=pop.querySelector('.ucv-practice-open');
     if(!primary){saveBtn.disabled=true;practiceBtn.disabled=true;return}
@@ -212,6 +251,7 @@
 
   window.StoryLingoVocabularyDebug={
     async lookupRussian(word){if(store)await store.ready;return lookupRussian(word)},
-    state(){return store?.getState?.()||0}
+    state(){return store?.getState?.()||0},
+    resources(){return [store?.getResourceCount?.()||0,store?.getResourceTotal?.()||0]}
   };
 })();
