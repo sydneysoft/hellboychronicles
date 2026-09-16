@@ -124,3 +124,18 @@
     }
   };
 })();
+(()=>{
+  const mark=()=>{
+    const header=document.querySelector('.top strong');
+    if(header) header.textContent='STORYLINGO · BETA';
+    const eyebrow=document.querySelector('.eyebrow');
+    if(eyebrow) eyebrow.textContent='BETA · TEST CHANNEL · /v2/';
+    const status=document.getElementById('coreStatus');
+    if(status){
+      status.dataset.releaseChannel='beta';
+      status.innerHTML='<b>BETA</b> · New StoryLingo updates are tested here first. When this version is stable, the tested changes are promoted to ALPHA.';
+    }
+    document.documentElement.dataset.storylingoChannel='beta';
+  };
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mark,{once:true}):mark();
+})();
