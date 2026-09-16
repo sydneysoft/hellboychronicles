@@ -2,6 +2,7 @@
   const story=document.getElementById('story');
   const btn=document.querySelector('.langs button[data-lang="ru"]');
   const enBtn=document.querySelector('.langs button[data-lang="en"]');
+  const store=window.StoryLingoTranslationStore;
   if(!story||!btn)return;
 
   const storyName=()=>new URLSearchParams(location.search).get('story')||'lost-key';
@@ -10,8 +11,6 @@
     iliad:'ИЛИАДА',
     odyssey:'ОДИССЕЯ'
   }[s]||'STORYLINGO');
-  const bundleKey=s=>`storylingo:translations:ru:v1:${s}`;
-  const bundleMemory=new Map();
 
   function rememberEnglish(){
     [...story.querySelectorAll('.txt')].forEach(x=>{
@@ -24,33 +23,9 @@
   }
 
   async function loadBundle(s){
-    if(bundleMemory.has(s))return bundleMemory.get(s);
-
-    try{
-      const saved=localStorage.getItem(bundleKey(s));
-      if(saved){
-        const parsed=JSON.parse(saved);
-        if(validBundle(parsed,s)){
-          bundleMemory.set(s,parsed);
-          return parsed;
-        }
-      }
-    }catch{}
-
-    try{
-      const response=await fetch(`/translations/ru/${encodeURIComponent(s)}.json?v=1`,{
-        headers:{Accept:'application/json'},
-        cache:'force-cache'
-      });
-      if(!response.ok)throw new Error('translation-json-not-found');
-      const parsed=await response.json();
-      if(!validBundle(parsed,s))throw new Error('invalid-translation-json');
-      bundleMemory.set(s,parsed);
-      try{localStorage.setItem(bundleKey(s),JSON.stringify(parsed));}catch{}
-      return parsed;
-    }catch{
-      return null;
-    }
+    if(!store)return null;
+    const value=await store.get(`ru:${s}`);
+    return validBundle(value,s)?value:null;
   }
 
   async function russian(e){
@@ -106,8 +81,9 @@
     location.href=s==='lost-key'?'/universal-stories/lost-key?lang=ru':`/universal-stories/lost-key?story=${s}&lang=ru`;
   },true));
 
-  setTimeout(()=>{
+  setTimeout(async()=>{
     rememberEnglish();
+    if(store)await store.ready;
     if(new URLSearchParams(location.search).get('lang')==='ru')btn.click();
   },0);
 })();
