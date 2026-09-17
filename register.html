@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#080706">
   <title>Register — StoryLingo</title>
   <meta name="description" content="Create a StoryLingo account.">
+  <link rel="canonical" href="https://storylingo.uk/register">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/account.css?v=20260917-1">
 </head>
@@ -14,8 +15,8 @@
     <a class="account-brand" href="/"><img src="/favicon.svg" alt=""><span><strong>STORY</strong><small>LINGO</small></span></a>
     <nav class="account-nav" aria-label="Account navigation">
       <a class="hide-mobile" href="/">LIBRARY</a>
-      <a class="primary" href="/register.html" aria-current="page">REGISTER</a>
-      <a href="/login.html">LOGIN</a>
+      <a class="primary" href="/register" aria-current="page">REGISTER</a>
+      <a href="/login">LOGIN</a>
     </nav>
   </header>
 
@@ -66,7 +67,7 @@
         <div class="account-status" id="registerStatus" role="status" aria-live="polite"></div>
         <button class="account-submit" type="submit">CREATE ACCOUNT</button>
       </form>
-      <p class="account-switch">Already registered? <a href="/login.html">Login</a></p>
+      <p class="account-switch">Already registered? <a href="/login">Login</a></p>
       <p class="fineprint">Security note: until the account backend is connected, this form does not transmit or store your password.</p>
     </section>
   </main>
@@ -85,7 +86,7 @@
       if(password!==confirm){status.className='account-status show error';status.textContent='Passwords do not match.';return;}
       status.className='account-status show';
       status.textContent='The registration interface is ready. Secure account storage is not connected yet, so your password was not sent or stored.';
-      window.StoryLingoAnalytics?.track?.('Register Form Submitted',{route:'/register.html',language:document.getElementById('learningLanguage').value});
+      window.StoryLingoAnalytics?.track?.('Register Form Submitted',{route:'/register',language:document.getElementById('learningLanguage').value});
     });
   </script>
   <script src="/storylingo-cookie.js?v=20260917-1"></script>
