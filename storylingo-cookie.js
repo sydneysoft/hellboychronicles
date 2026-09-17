@@ -1,4 +1,12 @@
 (() => {
+  if (!document.querySelector('script[data-storylingo-analytics-loader="1"]')) {
+    const analytics = document.createElement("script");
+    analytics.src = "/storylingo-analytics.js?v=20260917-1";
+    analytics.defer = true;
+    analytics.dataset.storylingoAnalyticsLoader = "1";
+    document.head.appendChild(analytics);
+  }
+
   if (!document.querySelector('script[data-storylingo-recaptcha-loader="1"]')) {
     const recaptcha = document.createElement("script");
     recaptcha.src = "/storylingo-recaptcha.js?v=20260912-1";
@@ -20,7 +28,7 @@
     <div class="sl-cookie-inner">
       <div>
         <strong>COOKIE NOTICE</strong>
-        <p>StoryLingo uses essential browser storage for language and reading preferences and Google reCAPTCHA for security and abuse prevention when enabled.</p>
+        <p>StoryLingo uses essential browser storage for language and reading preferences, privacy-friendly first-party usage analytics, and Google reCAPTCHA for security and abuse prevention when enabled.</p>
       </div>
       <button type="button" data-cookie-accept>ACCEPT</button>
     </div>
