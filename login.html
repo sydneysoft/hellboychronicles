@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#080706">
   <title>Login — StoryLingo</title>
   <meta name="description" content="Sign in to your StoryLingo account.">
+  <link rel="canonical" href="https://storylingo.uk/login">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/account.css?v=20260917-1">
 </head>
@@ -14,8 +15,8 @@
     <a class="account-brand" href="/"><img src="/favicon.svg" alt=""><span><strong>STORY</strong><small>LINGO</small></span></a>
     <nav class="account-nav" aria-label="Account navigation">
       <a class="hide-mobile" href="/">LIBRARY</a>
-      <a href="/register.html">REGISTER</a>
-      <a class="primary" href="/login.html" aria-current="page">LOGIN</a>
+      <a href="/register">REGISTER</a>
+      <a class="primary" href="/login" aria-current="page">LOGIN</a>
     </nav>
   </header>
 
@@ -44,12 +45,12 @@
         </div>
         <div class="form-row">
           <label class="check"><input type="checkbox" name="remember"> Remember me</label>
-          <a href="/register.html">Need an account?</a>
+          <a href="/register">Need an account?</a>
         </div>
         <div class="account-status" id="loginStatus" role="status" aria-live="polite"></div>
         <button class="account-submit" type="submit">LOGIN</button>
       </form>
-      <p class="account-switch">New to StoryLingo? <a href="/register.html">Create an account</a></p>
+      <p class="account-switch">New to StoryLingo? <a href="/register">Create an account</a></p>
       <p class="fineprint">Security note: until the account backend is connected, this form does not transmit or store your password.</p>
     </section>
   </main>
@@ -65,7 +66,7 @@
       if(!form.reportValidity())return;
       status.className='account-status show';
       status.textContent='The login interface is ready. Secure account storage is not connected yet, so your password was not sent or stored.';
-      window.StoryLingoAnalytics?.track?.('Login Form Submitted',{route:'/login.html'});
+      window.StoryLingoAnalytics?.track?.('Login Form Submitted',{route:'/login'});
     });
   </script>
   <script src="/storylingo-cookie.js?v=20260917-1"></script>
