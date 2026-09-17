@@ -138,7 +138,7 @@
     const status=document.getElementById('coreStatus');
     if(status&&!status.dataset.releaseChannel){
       status.dataset.releaseChannel='alpha';
-      status.innerHTML=`<b>ALPHA</b> · Current stable reader. New changes are tested in BETA at <a href="/v2/" style="color:#efd47d">/v2/</a> before promotion here.`;
+      status.innerHTML=`<b>ALPHA</b> · Current stable reader.`;
     }
     document.documentElement.dataset.storylingoChannel='alpha';
   };
