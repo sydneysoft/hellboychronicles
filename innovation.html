@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080706">
+  <title>StoryLingo — Product & Innovation</title>
+  <meta name="description" content="A technical and product overview of StoryLingo, a multilingual reading and language-learning platform built by OrangeSoft.">
+  <link rel="canonical" href="https://storylingo.uk/innovation.html">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css?v=perf-2">
+  <link rel="stylesheet" href="/storylingo-block-ui.css?v=20260912-1">
+  <style>
+    :root{color-scheme:dark}.innovation{max-width:980px;margin:0 auto;padding:72px 22px 90px}.innovation h1{font-size:clamp(2.5rem,7vw,5.5rem);line-height:.92;margin:8px 0 24px}.innovation h2{font-size:1.6rem;margin:48px 0 14px}.innovation h3{font-size:1rem;letter-spacing:.08em;margin:0 0 8px}.innovation p,.innovation li{line-height:1.75;color:#c9c3b8}.innovation .eyebrow{color:#d6b56a;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}.innovation .lead{font-size:1.2rem;max-width:780px}.innovation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:24px}.innovation-card{border:1px solid #38342f;background:#11100e;padding:22px}.innovation-card p{margin:0}.innovation .metric-note{border-left:3px solid #d6b56a;padding:2px 0 2px 18px;margin:28px 0}.innovation a{color:#e2c679}.innovation-nav{display:flex;gap:18px;flex-wrap:wrap;margin-top:38px}.innovation-nav a{text-decoration:none;border-bottom:1px solid #76633f;padding-bottom:4px}@media(max-width:720px){.innovation-grid{grid-template-columns:1fr}.innovation{padding-top:44px}}
+  </style>
+</head>
+<body class="library-body block-ui">
+  <main class="innovation">
+    <p class="eyebrow">StoryLingo · Product & Innovation Record</p>
+    <h1>READING FIRST.<br>LANGUAGE LEARNING INSIDE THE STORY.</h1>
+    <p class="lead">StoryLingo is a multilingual reading product designed around a simple idea: a learner should be able to stay inside a story while comparing languages, practising vocabulary and moving between different reading formats.</p>
+
+    <h2>What the product is building</h2>
+    <div class="innovation-grid">
+      <article class="innovation-card"><h3>STORY-ALIGNED MULTILINGUAL READING</h3><p>The same narrative can be represented across multiple languages, allowing readers to revisit equivalent scenes and phrases without changing learning products.</p></article>
+      <article class="innovation-card"><h3>READING-FIRST LEARNING UX</h3><p>Language support is attached to the reading experience instead of being limited to isolated lesson screens.</p></article>
+      <article class="innovation-card"><h3>MULTIPLE READING MODES</h3><p>Illustrated, graphic and text editions can coexist in the same library so learners can choose a reading format that matches how they want to engage with the language.</p></article>
+      <article class="innovation-card"><h3>CROSS-CULTURAL CONTENT SYSTEM</h3><p>The library is structured to hold collections from different language traditions alongside original StoryLingo material and shared-language stories.</p></article>
+    </div>
+
+    <h2>Current product architecture</h2>
+    <p>StoryLingo uses a static-first web architecture deployed on Vercel, with lightweight serverless endpoints for security-related functions. This keeps the reading experience fast while allowing individual language, reader and collection experiences to evolve independently.</p>
+    <p>The production library currently contains multilingual and language-specific material, including Ukrainian, Polish, French, German and Russian collections plus a shared-language edition of <em>The Lost Key</em>.</p>
+
+    <h2>Measuring real use</h2>
+    <p>From 17 September 2026, StoryLingo began instrumenting aggregate product usage so development decisions can be supported by measurable reader behaviour.</p>
+    <div class="metric-note"><p>Tracked product signals include story openings, language changes, practice starts and audio starts, alongside aggregate page views, visitors, routes, referrers and country distribution provided by the production analytics platform.</p></div>
+    <p>Analytics metadata is intentionally limited to product interaction data such as routes, interface language and event names. Story text or vocabulary entered by a reader is not sent as custom analytics metadata by this instrumentation.</p>
+
+    <h2>Development record</h2>
+    <p>StoryLingo is developed through the public <strong>sydneysoft/hellboychronicles</strong> GitHub repository and deployed through OrangeSoft's Vercel project. Git history, dated deployments and release screenshots provide a chronological record of the product's development.</p>
+
+    <h2>Built by OrangeSoft</h2>
+    <p>Product direction and development are led by Mijail Quesada through OrangeSoft. This page documents the product itself; independent recognition, partnerships, press, users and other third-party evidence are maintained separately when available.</p>
+
+    <nav class="innovation-nav" aria-label="Related links">
+      <a href="/">StoryLingo Library</a>
+      <a href="https://github.com/sydneysoft/hellboychronicles" target="_blank" rel="noopener noreferrer">Development Repository ↗</a>
+      <a href="https://orangesoft.uk" target="_blank" rel="noopener noreferrer">OrangeSoft ↗</a>
+    </nav>
+  </main>
+  <script src="/storylingo-cookie.js?v=20260917-1"></script>
+</body>
+</html>
