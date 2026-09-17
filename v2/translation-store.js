@@ -1,16 +1,16 @@
 (()=>{
-  const VERSION='v2-20260916-1';
+  const VERSION='v2-20260917-2';
   const RESET_KEY='storylingo:v2:reset:v1';
-  const STATE_KEY='storylingo:v2:state';
-  const KEY_PREFIX='storylingo:v2:resource:';
+  const STATE_KEY='storylingo:v2:state:v2';
+  const KEY_PREFIX='storylingo:v2:resource:v2:';
   const resources={
-    vocabulary:'/translations/vocabulary.json?v=v2-1',
-    'en-glosses':'/translations/en/story-glosses.json?v=v2-1',
-    'ru-forms':'/translations/ru/word-forms.json?v=v2-1',
-    'ru-glosses':'/translations/ru/story-glosses.json?v=v2-1',
-    'ru:lost-key':'/translations/ru/lost-key.json?v=v2-1',
-    'ru:iliad':'/translations/ru/iliad.json?v=v2-1',
-    'ru:odyssey':'/translations/ru/odyssey.json?v=v2-1'
+    vocabulary:'/translations/vocabulary.json?v=v2-2',
+    'en-glosses':'/translations/en/story-glosses.json?v=v2-2',
+    'ru-forms':'/translations/ru/word-forms.json?v=v2-2',
+    'ru-glosses':'/translations/ru/story-glosses.json?v=v2-2',
+    'ru:lost-key':'/translations/ru/lost-key.json?v=v2-2',
+    'ru:iliad':'/translations/ru/iliad.json?v=v2-2',
+    'ru:odyssey':'/translations/ru/odyssey.json?v=v2-2'
   };
 
   const storageKey=name=>`${KEY_PREFIX}${name}`;
@@ -35,7 +35,7 @@
           k.startsWith('storylingo:vocabulary:') ||
           k.startsWith('storylingo:translations:') ||
           k.startsWith('storylingo:v2:resource:') ||
-          k==='storylingo:v2:state'
+          k.startsWith('storylingo:v2:state')
         ) remove.push(k);
       }
       remove.forEach(k=>localStorage.removeItem(k));
@@ -61,6 +61,15 @@
     for(const [word,value] of Object.entries(glosses?.entries||{})){
       if(value&&typeof value==='object')entries[word.toLowerCase()]={...value};
     }
+
+    const betaEntries={
+      live:{es:'vivir / vivir en',de:'leben / wohnen',fr:'vivre / habiter',pl:'żyć / mieszkać',ru:'жить / проживать'},
+      lives:{es:'vive',de:'lebt / wohnt',fr:'vit / habite',pl:'żyje / mieszka',ru:'живёт / живет'},
+      lived:{es:'vivió / vivía',de:'lebte / wohnte',fr:'a vécu / vivait / habitait',pl:'żył / żyła / mieszkał / mieszkała',ru:'жил / жила'},
+      living:{es:'viviendo',de:'lebend / wohnend',fr:'vivant / habitant',pl:'żyjąc / mieszkając',ru:'живя / проживая'}
+    };
+    for(const [word,value] of Object.entries(betaEntries))entries[word]={...value};
+
     const aliases={
       left:'leave',seen:'see',seeing:'see',looking:'look',looks:'look',heard:'hear',hearing:'hear',
       speaking:'speak',says:'say',saying:'say',asking:'ask',asks:'ask',answers:'answer',answered:'answer',
@@ -129,7 +138,7 @@
     const header=document.querySelector('.top strong');
     if(header) header.textContent='STORYLINGO · BETA';
     const eyebrow=document.querySelector('.eyebrow');
-    if(eyebrow) eyebrow.textContent='BETA · TEST CHANNEL · /v2/';
+    if(eyebrow) eyebrow.textContent='BETA · TEST CHANNEL';
     const status=document.getElementById('coreStatus');
     if(status){
       status.dataset.releaseChannel='beta';
