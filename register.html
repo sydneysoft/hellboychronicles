@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080706">
+  <title>Register — StoryLingo</title>
+  <meta name="description" content="Create a StoryLingo account.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/account.css?v=20260917-1">
+</head>
+<body class="account-page">
+  <header class="account-topbar">
+    <a class="account-brand" href="/"><img src="/favicon.svg" alt=""><span><strong>STORY</strong><small>LINGO</small></span></a>
+    <nav class="account-nav" aria-label="Account navigation">
+      <a class="hide-mobile" href="/">LIBRARY</a>
+      <a class="primary" href="/register.html" aria-current="page">REGISTER</a>
+      <a href="/login.html">LOGIN</a>
+    </nav>
+  </header>
+
+  <main class="account-shell">
+    <section class="account-copy">
+      <p class="account-kicker">Build your reading profile</p>
+      <h1>START<br>READING.</h1>
+      <p>Create a StoryLingo profile for future saved stories, reading history, preferred languages and learning progress.</p>
+      <div class="account-notes"><span>Multi-language</span><span>Progress profile</span><span>Saved reading</span></div>
+    </section>
+
+    <section class="account-card" aria-labelledby="register-title">
+      <h2 id="register-title">Create account</h2>
+      <p class="sub">Set up your StoryLingo profile.</p>
+      <form class="account-form" id="registerForm" novalidate>
+        <div class="split">
+          <div class="field">
+            <label for="displayName">Name</label>
+            <input id="displayName" name="name" type="text" autocomplete="name" maxlength="60" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label for="learningLanguage">Learning language</label>
+            <select id="learningLanguage" name="language" required>
+              <option value="">Choose</option>
+              <option value="en">English</option><option value="de">German</option><option value="fr">French</option><option value="it">Italian</option><option value="pl">Polish</option><option value="ru">Russian</option><option value="es">Spanish</option><option value="uk">Ukrainian</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="registerEmail">Email</label>
+          <input id="registerEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="registerPassword">Password</label>
+          <div class="password-row">
+            <input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+            <button class="toggle-password" type="button" data-toggle-password="registerPassword">SHOW</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="confirmPassword">Confirm password</label>
+          <div class="password-row">
+            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Repeat password" required>
+            <button class="toggle-password" type="button" data-toggle-password="confirmPassword">SHOW</button>
+          </div>
+        </div>
+        <label class="check"><input id="terms" type="checkbox" required> I agree to create a StoryLingo account when secure account services are enabled.</label>
+        <div class="account-status" id="registerStatus" role="status" aria-live="polite"></div>
+        <button class="account-submit" type="submit">CREATE ACCOUNT</button>
+      </form>
+      <p class="account-switch">Already registered? <a href="/login.html">Login</a></p>
+      <p class="fineprint">Security note: until the account backend is connected, this form does not transmit or store your password.</p>
+    </section>
+  </main>
+
+  <script>
+    document.querySelectorAll('[data-toggle-password]').forEach((button)=>button.addEventListener('click',()=>{
+      const input=document.getElementById(button.dataset.togglePassword);if(!input)return;
+      input.type=input.type==='password'?'text':'password';button.textContent=input.type==='password'?'SHOW':'HIDE';
+    }));
+    document.getElementById('registerForm').addEventListener('submit',(event)=>{
+      event.preventDefault();
+      const form=event.currentTarget;const status=document.getElementById('registerStatus');
+      if(!form.reportValidity())return;
+      const password=document.getElementById('registerPassword').value;
+      const confirm=document.getElementById('confirmPassword').value;
+      if(password!==confirm){status.className='account-status show error';status.textContent='Passwords do not match.';return;}
+      status.className='account-status show';
+      status.textContent='The registration interface is ready. Secure account storage is not connected yet, so your password was not sent or stored.';
+      window.StoryLingoAnalytics?.track?.('Register Form Submitted',{route:'/register.html',language:document.getElementById('learningLanguage').value});
+    });
+  </script>
+  <script src="/storylingo-cookie.js?v=20260917-1"></script>
+</body>
+</html>
