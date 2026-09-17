@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080706">
+  <title>Login — StoryLingo</title>
+  <meta name="description" content="Sign in to your StoryLingo account.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/account.css?v=20260917-1">
+</head>
+<body class="account-page">
+  <header class="account-topbar">
+    <a class="account-brand" href="/"><img src="/favicon.svg" alt=""><span><strong>STORY</strong><small>LINGO</small></span></a>
+    <nav class="account-nav" aria-label="Account navigation">
+      <a class="hide-mobile" href="/">LIBRARY</a>
+      <a href="/register.html">REGISTER</a>
+      <a class="primary" href="/login.html" aria-current="page">LOGIN</a>
+    </nav>
+  </header>
+
+  <main class="account-shell">
+    <section class="account-copy">
+      <p class="account-kicker">Your reading space</p>
+      <h1>WELCOME<br>BACK.</h1>
+      <p>Sign in to continue your StoryLingo reading profile. Account pages are now in place; the secure account backend is the next connection step.</p>
+      <div class="account-notes"><span>Reading profile</span><span>Language progress</span><span>Saved stories</span></div>
+    </section>
+
+    <section class="account-card" aria-labelledby="login-title">
+      <h2 id="login-title">Login</h2>
+      <p class="sub">Enter the email and password for your StoryLingo account.</p>
+      <form class="account-form" id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <div class="password-row">
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="Your password" required>
+            <button class="toggle-password" type="button" data-toggle-password="loginPassword">SHOW</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="check"><input type="checkbox" name="remember"> Remember me</label>
+          <a href="/register.html">Need an account?</a>
+        </div>
+        <div class="account-status" id="loginStatus" role="status" aria-live="polite"></div>
+        <button class="account-submit" type="submit">LOGIN</button>
+      </form>
+      <p class="account-switch">New to StoryLingo? <a href="/register.html">Create an account</a></p>
+      <p class="fineprint">Security note: until the account backend is connected, this form does not transmit or store your password.</p>
+    </section>
+  </main>
+
+  <script>
+    document.querySelectorAll('[data-toggle-password]').forEach((button)=>button.addEventListener('click',()=>{
+      const input=document.getElementById(button.dataset.togglePassword);if(!input)return;
+      input.type=input.type==='password'?'text':'password';button.textContent=input.type==='password'?'SHOW':'HIDE';
+    }));
+    document.getElementById('loginForm').addEventListener('submit',(event)=>{
+      event.preventDefault();
+      const form=event.currentTarget;const status=document.getElementById('loginStatus');
+      if(!form.reportValidity())return;
+      status.className='account-status show';
+      status.textContent='The login interface is ready. Secure account storage is not connected yet, so your password was not sent or stored.';
+      window.StoryLingoAnalytics?.track?.('Login Form Submitted',{route:'/login.html'});
+    });
+  </script>
+  <script src="/storylingo-cookie.js?v=20260917-1"></script>
+</body>
+</html>
